@@ -1,0 +1,17 @@
+Header:
+  Type: REPUTATION_DB
+  Version: 1
+
+Body:
+  - Id: 1
+    Min: -3000
+    Max: 3000
+    Name: Orc Village
+  - Id: 2
+    Min: -3000
+    Max: 3000
+    Name: Goblin Village
+  - Id: 3
+    Min: -5000
+    Max: 5000
+    Name: Gray Wolf Village

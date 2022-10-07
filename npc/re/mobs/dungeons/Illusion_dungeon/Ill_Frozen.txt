@@ -1,0 +1,173 @@
+ice_dun03,155,43,6	script	Jaya	10035,{   
+	mes "[ Jaya ]";
+	menu
+	"^FF0000•^000000 Illusion of Frozen [ Lv 110+ ]",go1,
+	"^FF0000•^000000 Cancle",cancle;
+	go1:
+	if(baselevel > 109){
+	warp "ice_d03_i",149,27;
+	end;
+	}
+	mes "Base Lv ของเจ้าน้อยเกินไป";
+	end;
+	cancle:
+	end;
+}
+
+
+
+
+ice_d03_i,0,0	monster	Angry Gazeti	3792,30,5000
+ice_d03_i,0,0	monster	Angry Snowier	3793,30,5000
+ice_d03_i,0,0	monster	Angry Ice Titan	3794,20,5000
+ice_d03_i,0,0	monster	Solid Icicle	3795,20,5000
+
+ice_d03_i,0,0,0	script	#Ill_Frozen	-1,{
+
+OnInit:
+$Ill_Frozen = 0;
+$Ill_Frozen_delay = 0;
+$Ill_FrozenBOSS = 0;
+$Ill_Frozen_Crystal = 0;
+$spawn1 = 0;
+$spawn2 = 0;
+$spawn3 = 0;
+$spawn4 = 0;
+end;
+
+OnStart:
+monster "ice_d03_i",0,0,"Awaken Ktullanux",3796,1,strnpcinfo(0)+"::OnEnd";
+$Ill_MoonBOSS += 1;
+announce "Illusion of Frozen : ขณะนี้บอสได้ปรากฏตัวออกมาแล้ว นักผจญภัยทุกท่านโปรดระวังตัวให้ดี !!",bc_all,0xFFFF00;
+sleep 2000;
+mapannounce "ice_d03_i","Awaken Ktullanux : ย๊าากกกกกกกก !!! นี้เจ้าคิดว่าจะท้าทายกับฉันได้อย่างนั้นรึ ?",bc_map,0xFFFF00,FW_NORMAL,16;
+disablenpc "Crystal Seal#Crystal Seal1";
+disablenpc "Crystal Seal#Crystal Seal2";
+disablenpc "Crystal Seal#Crystal Seal3";
+disablenpc "Crystal Seal#Crystal Seal4";
+end;
+
+
+OnEnd:
+initnpctimer;
+$Ill_Frozen_delay = 1;
+mapannounce "ice_d03_i","Awaken Ktullanux : ความตายจะอยู่กับข้าชั่วนิรันดร์ !!",bc_map,0xFFFF00,FW_NORMAL,16;
+sleep 2000;
+announce "Illusion of Frozen : เหลือเวลาอีก "+ (120-($Ill_Frozen_delay)) +" นาที บอสจะฟื้นคืนชีพอีกครั้ง !!",bc_all,0xFFFF00;
+$Ill_Frozen = 0;
+$Ill_FrozenBOSS = 0;
+end;
+
+
+OnTimer60000:
+	$Ill_Frozen_delay += 1;
+
+	if ($Ill_Frozen_delay < 120) { // unknown delay (currently 100 mins)
+		initnpctimer;
+	}
+	else {
+		stopnpctimer;	
+		$Ill_Frozen_delay = 0;
+		enablenpc "Crystal Seal#Crystal Seal1";
+		enablenpc "Crystal Seal#Crystal Seal2";
+		enablenpc "Crystal Seal#Crystal Seal3";
+		enablenpc "Crystal Seal#Crystal Seal4";
+		$Ill_Frozen_Crystal = 0;
+		$spawn1 = 0;
+		$spawn2 = 0;
+		$spawn3 = 0;
+		$spawn4 = 0;
+	}
+	end;
+
+}
+
+ice_d03_i,126,173,5	script	Crystal Seal#Crystal Seal1	111,{
+if($spawn1 > 0)end;
+
+mes "[ Crystal Seal ]";
+menu
+"^FF0000•^000000 Touch",bossok,
+"^FF0000•^000000 Cancle",cancle;
+	
+bossok:
+$spawn1 = 1;
+$Ill_Frozen_Crystal += 1;
+if($Ill_Frozen_Crystal > 3){
+donpcevent "#Ill_Frozen::OnStart";
+end;
+}
+end;
+
+
+cancle:
+end;
+
+}
+
+ice_d03_i,173,172,5	script	Crystal Seal#Crystal Seal2	111,{
+if($spawn2 > 0)end;
+
+mes "[ Crystal Seal ]";
+menu
+"^FF0000•^000000 Touch",bossok,
+"^FF0000•^000000 Cancle",cancle;
+	
+bossok:
+$spawn2 = 1;
+$Ill_Frozen_Crystal += 1;
+if($Ill_Frozen_Crystal > 3){
+donpcevent "#Ill_Frozen::OnStart";
+end;
+}
+end;
+
+
+cancle:
+end;
+
+}
+ice_d03_i,173,126,5	script	Crystal Seal#Crystal Seal3	111,{
+if($spawn3 > 0)end;
+
+mes "[ Crystal Seal ]";
+menu
+"^FF0000•^000000 Touch",bossok,
+"^FF0000•^000000 Cancle",cancle;
+	
+bossok:
+$spawn3 = 1;
+$Ill_Frozen_Crystal += 1;
+if($Ill_Frozen_Crystal > 3){
+donpcevent "#Ill_Frozen::OnStart";
+end;
+}
+end;
+
+
+cancle:
+end;
+
+}
+ice_d03_i,126,126,5	script	Crystal Seal#Crystal Seal4	111,{
+if($spawn4 > 0)end;
+
+mes "[ Crystal Seal ]";
+menu
+"^FF0000•^000000 Touch",bossok,
+"^FF0000•^000000 Cancle",cancle;
+	
+bossok:
+$spawn4 = 1;
+$Ill_Frozen_Crystal += 1;
+if($Ill_Frozen_Crystal > 3){
+donpcevent "#Ill_Frozen::OnStart";
+end;
+}
+end;
+
+
+cancle:
+end;
+
+}

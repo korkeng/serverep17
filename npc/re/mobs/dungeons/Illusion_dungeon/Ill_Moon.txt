@@ -1,0 +1,88 @@
+pay_dun03,141,46,4	script	Shimmering Portal	4_energy_blue,{
+	mes "[ Shimmering Portal ]";
+	menu
+	"^FF0000•^000000 Illusion of Moonlight [ Lv 100+ ]",go1,
+	"^FF0000•^000000 Cancle",cancle;
+	go1:
+	if(baselevel > 99){
+	warp "pay_d03_i",145,143;
+	end;
+	}
+	mes "Base Lv ของเจ้าน้อยเกินไป";
+	end;
+	cancle:
+	end;
+}
+
+pay_d03_i,0,0	monster	Angry Nine Tail	3759,10,5000,5000,"#Ill_Moon::OnIllMobDead"
+pay_d03_i,0,0	monster	Resentful Munak	3760,20,5000
+pay_d03_i,0,0	monster	Resentful Bongun	3761,20,5000
+pay_d03_i,0,0	monster	Resentful Sohee	3762,20,5000
+pay_d03_i,0,0	monster	Resentful Soldier	3763,15,5000
+pay_d03_i,0,0	monster	Deranged Adventurer	3765,5,5000
+pay_d03_i,0,0	monster	Wizard of The Truth	3764,1,5000
+
+
+
+pay_d03_i,0,0,0	script	#Ill_Moon	-1,{
+
+OnInit:
+$Ill_Moon = 0;
+$Ill_Moon_delay = 0;
+$Ill_MoonBOSS = 0;
+end;
+
+
+OnIllMobDead:
+if($Ill_Moon_delay == 0 && $Ill_MoonBOSS == 0){  
+if($Ill_Moon == 450){
+mapannounce "pay_d03_i","Illusion of Moonlight : ต้องสังหาร Angry Nine Tail อีก "+callfunc("F_InsertComma",(500-($Ill_Moon)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_Moon == 400){
+mapannounce "pay_d03_i","Illusion of Moonlight : ต้องสังหาร Angry Nine Tail อีก "+callfunc("F_InsertComma",(500-($Ill_Moon)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_Moon == 250){
+mapannounce "pay_d03_i","Illusion of Moonlight : ต้องสังหาร Angry Nine Tail อีก "+callfunc("F_InsertComma",(500-($Ill_Moon)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_Moon == 0){
+mapannounce "pay_d03_i","Illusion of Moonlight : ต้องสังหาร Angry Nine Tail อีก "+callfunc("F_InsertComma",(500-($Ill_Moon)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+$Ill_Moon += 1;
+if($Ill_Moon >= 500){
+monster "pay_d03_i",0,0,"Angry Moonlight Flower",3758,1,strnpcinfo(0)+"::OnEnd";
+$Ill_MoonBOSS += 1;
+announce "Illusion of Moonlight : ขณะนี้บอสได้ปรากฏตัวออกมาแล้ว นักผจญภัยทุกท่านโปรดระวังตัวให้ดี !!",bc_all,0xFFFF00;
+sleep 2000;
+mapannounce "pay_d03_i","Angry Moonlight : ย๊าากกกกกกกก !!! นี้เจ้าคิดว่าจะท้าทายกับฉันได้อย่างนั้นรึ ?",bc_map,0xFFFF00,FW_NORMAL,16;
+end;
+}
+}
+end;
+
+
+
+OnEnd:
+initnpctimer;
+$Ill_Moon_delay = 1;
+mapannounce "pay_d03_i","Angry Moonlight Flower : โอ้ยยยยยยยยย !!! ข้าเจ็บเหลือเกิน เมื่อวันเวลาหวนคืน ข้าจะกลับมาล้างแค้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+sleep 2000;
+announce "Illusion of Moonlight : เหลือเวลาอีก "+ (120-($Ill_Moon_delay)) +" นาที บอสจะฟื้นคืนชีพอีกครั้ง !!",bc_all,0xFFFF00;
+$Ill_Moon = 0;
+$Ill_MoonBOSS = 0;
+end;
+
+
+OnTimer60000:
+	$Ill_Moon_delay += 1;
+
+	if ($Ill_Moon_delay < 120) { // unknown delay (currently 100 mins)
+		initnpctimer;
+	}
+	else {
+		stopnpctimer;		
+		$Ill_Moon_delay = 0;
+		//mapannounce "pay_d03_i","Illusion of Moonlight : Angry Moonlight Flower พร้อมแล้ว",bc_map,0xFFFF00,FW_NORMAL,16;
+	}
+	end;
+
+}

@@ -1,0 +1,208 @@
+// Boss Level 1
+bossnia_01,0,0,0,0	monster	Osiris	1038,1,0,0,1
+bossnia_01,0,0,0,0	monster	Baphomet	1039,1,0,0,1
+bossnia_01,0,0,0,0	monster	Doppelganger	1046,1,0,0,1
+bossnia_01,0,0,0,0	monster	Mistress	1059,1,0,0,1
+bossnia_01,0,0,0,0	monster	Golden Thief Bug	1086,1,0,0,1
+bossnia_01,0,0,0,0	monster	Orc Hero	1087,1,0,0,1
+bossnia_01,0,0,0,0	monster	Angeling	1096,1,0,0,1
+bossnia_01,0,0,0,0	monster	Drake	1112,1,0,0,1
+bossnia_01,0,0,0,0	monster	Eddga	1115,1,0,0,1
+bossnia_01,0,0,0,0	monster	Ghostring	1120,1,0,0,1
+bossnia_01,0,0,0,0	monster	Maya	1147,1,0,0,1
+bossnia_01,0,0,0,0	monster	Moonlight Flower	1150,1,0,0,1
+bossnia_01,0,0,0,0	monster	Pharaoh	1157,1,0,0,1
+bossnia_01,0,0,0,0	monster	Phreeoni	1159,1,0,0,1
+bossnia_01,0,0,0,0	monster	Orc Lord	1190,1,0,0,1
+bossnia_01,0,0,0,0	monster	Stormy Knight	1251,1,0,0,1
+bossnia_01,0,0,0,0	monster	Garm	1252,1,0,0,1
+bossnia_01,0,0,0,0	monster	Dark Lord	1272,1,0,0,1
+bossnia_01,0,0,0,0	monster	Turtle General	1312,1,0,0,1
+bossnia_01,0,0,0,0	monster	Lord of the Dead	1373,1,0,0,1
+bossnia_01,0,0,0,0	monster	Arc Angeling	1388,1,0,0,1
+bossnia_01,0,0,0,0	monster	Dracula	1389,1,0,0,1
+bossnia_01,0,0,0,0	monster	Evil Snake Lord	1418,1,0,0,1
+bossnia_01,0,0,0,0	monster	Samurai Specter	1492,1,0,0,1
+bossnia_01,0,0,0,0	monster	Amon Ra	1511,1,0,0,1
+bossnia_01,0,0,0,0	monster	Deviling	1582,1,0,0,1
+bossnia_01,0,0,0,0	monster	Tao Gunka	1583,1,0,0,1
+bossnia_01,0,0,0,0	monster	RSX-0806	1623,1,0,0,1
+bossnia_01,0,0,0,0	monster	White Lady	1630,1,0,0,1
+bossnia_01,0,0,0,0	monster	Egnigem Cenia	1658,1,0,0,1
+bossnia_01,0,0,0,0	monster	Vesper	1685,1,0,0,1
+bossnia_01,0,0,0,0	monster	Lady Tanee	1688,1,0,0,1
+bossnia_01,0,0,0,0	monster	Thanatos Phantom	1708,1,0,0,1
+bossnia_01,0,0,0,0	monster	Detardeurus	1719,1,0,0,1
+bossnia_01,0,0,0,0	monster	Kiel D-01	1734,1,0,0,1
+bossnia_01,0,0,0,0	monster	Valkyrie Randgris	1751,1,0,0,1
+bossnia_01,0,0,0,0	monster	Gloom Under Night	1768,1,0,0,1
+bossnia_01,0,0,0,0	monster	Ktullanux	1779,1,0,0,1
+bossnia_01,0,0,0,0	monster	Atros	1785,1,0,0,1
+bossnia_01,0,0,0,0	monster	ifrit	1832,1,0,0,1
+bossnia_01,0,0,0,0	monster	High Wizard Boss	1651,1,0,0,1
+bossnia_01,0,0,0,0	monster	Whitesmith Boss	1648,1,0,0,1
+bossnia_01,0,0,0,0	monster	Lord Knight Boss	1646,1,0,0,1
+bossnia_01,0,0,0,0	monster	High Priest Boss	1649,1,0,0,1
+bossnia_01,0,0,0,0	monster	Assassin Cross Boss	1647,1,0,0,1
+bossnia_01,0,0,0,0	monster	Sniper Boss	1650,1,0,0,1
+bossnia_01,0,0,0,0	monster	Fallen Bishop	1871,1,0,0,1
+bossnia_01,0,0,0,0	monster	Satan Morroc	1917,1,0,0,1
+bossnia_01,0,0,0,0	monster	Beelzebub	1874,1,0,0,1
+
+
+// Boss Level 2
+bossnia_02,0,0,0,0	monster	Osiris	1038,5,0,0,1
+bossnia_02,0,0,0,0	monster	Baphomet	1039,5,0,0,1
+bossnia_02,0,0,0,0	monster	Doppelganger	1046,5,0,0,1
+bossnia_02,0,0,0,0	monster	Mistress	1059,5,0,0,1
+bossnia_02,0,0,0,0	monster	Golden Thief Bug	1086,5,0,0,1
+bossnia_02,0,0,0,0	monster	Orc Hero	1087,5,0,0,1
+bossnia_02,0,0,0,0	monster	Angeling	1096,5,0,0,1
+bossnia_02,0,0,0,0	monster	Drake	1112,5,0,0,1
+bossnia_02,0,0,0,0	monster	Eddga	1115,5,0,0,1
+bossnia_02,0,0,0,0	monster	Ghostring	1120,5,0,0,1
+bossnia_02,0,0,0,0	monster	Maya	1147,5,0,0,1
+bossnia_02,0,0,0,0	monster	Moonlight Flower	1150,5,0,0,1
+bossnia_02,0,0,0,0	monster	Pharaoh	1157,5,0,0,1
+bossnia_02,0,0,0,0	monster	Phreeoni	1159,5,0,0,1
+bossnia_02,0,0,0,0	monster	Orc Lord	1190,5,0,0,1
+bossnia_02,0,0,0,0	monster	Stormy Knight	1251,5,0,0,1
+bossnia_02,0,0,0,0	monster	Garm	1252,5,0,0,1
+bossnia_02,0,0,0,0	monster	Dark Lord	1272,5,0,0,1
+bossnia_02,0,0,0,0	monster	Turtle General	1312,5,0,0,1
+bossnia_02,0,0,0,0	monster	Lord of the Dead	1373,5,0,0,1
+bossnia_02,0,0,0,0	monster	Arc Angeling	1388,5,0,0,1
+bossnia_02,0,0,0,0	monster	Dracula	1389,5,0,0,1
+bossnia_02,0,0,0,0	monster	Evil Snake Lord	1418,5,0,0,1
+bossnia_02,0,0,0,0	monster	Samurai Specter	1492,5,0,0,1
+bossnia_02,0,0,0,0	monster	Amon Ra	1511,5,0,0,1
+bossnia_02,0,0,0,0	monster	Deviling	1582,5,0,0,1
+bossnia_02,0,0,0,0	monster	Tao Gunka	1583,5,0,0,1
+bossnia_02,0,0,0,0	monster	RSX-0806	1623,5,0,0,1
+bossnia_02,0,0,0,0	monster	White Lady	1630,5,0,0,1
+bossnia_02,0,0,0,0	monster	Egnigem Cenia	1658,5,0,0,1
+bossnia_02,0,0,0,0	monster	Vesper	1685,5,0,0,1
+bossnia_02,0,0,0,0	monster	Lady Tanee	1688,5,0,0,1
+bossnia_02,0,0,0,0	monster	Thanatos Phantom	1708,5,0,0,1
+bossnia_02,0,0,0,0	monster	Detardeurus	1719,5,0,0,1
+bossnia_02,0,0,0,0	monster	Kiel D-01	1734,5,0,0,1
+bossnia_02,0,0,0,0	monster	Valkyrie Randgris	1751,5,0,0,1
+bossnia_02,0,0,0,0	monster	Gloom Under Night	1768,5,0,0,1
+bossnia_02,0,0,0,0	monster	Ktullanux	1779,5,0,0,1
+bossnia_02,0,0,0,0	monster	Atros	1785,5,0,0,1
+bossnia_02,0,0,0,0	monster	ifrit	1832,5,0,0,1
+bossnia_02,0,0,0,0	monster	High Wizard Boss	1651,5,0,0,1
+bossnia_02,0,0,0,0	monster	Whitesmith Boss	1648,5,0,0,1
+bossnia_02,0,0,0,0	monster	Lord Knight Boss	1646,5,0,0,1
+bossnia_02,0,0,0,0	monster	High Priest Boss	1649,5,0,0,1
+bossnia_02,0,0,0,0	monster	Assassin Cross Boss	1647,5,0,0,1
+bossnia_02,0,0,0,0	monster	Sniper Boss	1650,5,0,0,1
+bossnia_02,0,0,0,0	monster	Fallen Bishop	1871,5,0,0,1
+bossnia_02,0,0,0,0	monster	Satan Morroc	1917,5,0,0,1
+bossnia_02,0,0,0,0	monster	Beelzebub	1874,5,0,0,1
+
+
+// Boss Level 3
+bossnia_03,0,0,0,0	monster	Osiris	1038,2,0,0,1
+bossnia_03,0,0,0,0	monster	Baphomet	1039,2,0,0,1
+bossnia_03,0,0,0,0	monster	Doppelganger	1046,2,0,0,1
+bossnia_03,0,0,0,0	monster	Mistress	1059,2,0,0,1
+bossnia_03,0,0,0,0	monster	Golden Thief Bug	1086,2,0,0,1
+bossnia_03,0,0,0,0	monster	Orc Hero	1087,2,0,0,1
+bossnia_03,0,0,0,0	monster	Angeling	1096,2,0,0,1
+bossnia_03,0,0,0,0	monster	Drake	1112,2,0,0,1
+bossnia_03,0,0,0,0	monster	Eddga	1115,2,0,0,1
+bossnia_03,0,0,0,0	monster	Ghostring	1120,2,0,0,1
+bossnia_03,0,0,0,0	monster	Maya	1147,2,0,0,1
+bossnia_03,0,0,0,0	monster	Moonlight Flower	1150,2,0,0,1
+bossnia_03,0,0,0,0	monster	Pharaoh	1157,2,0,0,1
+bossnia_03,0,0,0,0	monster	Phreeoni	1159,2,0,0,1
+bossnia_03,0,0,0,0	monster	Orc Lord	1190,2,0,0,1
+bossnia_03,0,0,0,0	monster	Stormy Knight	1251,2,0,0,1
+bossnia_03,0,0,0,0	monster	Garm	1252,2,0,0,1
+bossnia_03,0,0,0,0	monster	Dark Lord	1272,2,0,0,1
+bossnia_03,0,0,0,0	monster	Turtle General	1312,2,0,0,1
+bossnia_03,0,0,0,0	monster	Lord of the Dead	1373,2,0,0,1
+bossnia_03,0,0,0,0	monster	Arc Angeling	1388,2,0,0,1
+bossnia_03,0,0,0,0	monster	Dracula	1389,2,0,0,1
+bossnia_03,0,0,0,0	monster	Evil Snake Lord	1418,2,0,0,1
+bossnia_03,0,0,0,0	monster	Samurai Specter	1492,2,0,0,1
+bossnia_03,0,0,0,0	monster	Amon Ra	1511,2,0,0,1
+bossnia_03,0,0,0,0	monster	Deviling	1582,2,0,0,1
+bossnia_03,0,0,0,0	monster	Tao Gunka	1583,2,0,0,1
+bossnia_03,0,0,0,0	monster	RSX-0806	1623,2,0,0,1
+bossnia_03,0,0,0,0	monster	White Lady	1630,2,0,0,1
+bossnia_03,0,0,0,0	monster	Egnigem Cenia	1658,2,0,0,1
+bossnia_03,0,0,0,0	monster	Vesper	1685,2,0,0,1
+bossnia_03,0,0,0,0	monster	Lady Tanee	1688,2,0,0,1
+bossnia_03,0,0,0,0	monster	Thanatos Phantom	1708,2,0,0,1
+bossnia_03,0,0,0,0	monster	Detardeurus	1719,2,0,0,1
+bossnia_03,0,0,0,0	monster	Kiel D-01	1734,2,0,0,1
+bossnia_03,0,0,0,0	monster	Valkyrie Randgris	1751,2,0,0,1
+bossnia_03,0,0,0,0	monster	Gloom Under Night	1768,2,0,0,1
+bossnia_03,0,0,0,0	monster	Ktullanux	1779,2,0,0,1
+bossnia_03,0,0,0,0	monster	Atros	1785,2,0,0,1
+bossnia_03,0,0,0,0	monster	ifrit	1832,2,0,0,1
+bossnia_03,0,0,0,0	monster	High Wizard Boss	1651,2,0,0,1
+bossnia_03,0,0,0,0	monster	Whitesmith Boss	1648,2,0,0,1
+bossnia_03,0,0,0,0	monster	Lord Knight Boss	1646,2,0,0,1
+bossnia_03,0,0,0,0	monster	High Priest Boss	1649,2,0,0,1
+bossnia_03,0,0,0,0	monster	Assassin Cross Boss	1647,2,0,0,1
+bossnia_03,0,0,0,0	monster	Sniper Boss	1650,2,0,0,1
+bossnia_03,0,0,0,0	monster	Fallen Bishop	1871,2,0,0,1
+bossnia_03,0,0,0,0	monster	Satan Morroc	1917,2,0,0,1
+bossnia_03,0,0,0,0	monster	Beelzebub	1874,2,0,0,1
+
+
+
+// Boss Level 4
+bossnia_04,0,0,0,0	monster	Osiris	1038,5,0,0,1
+bossnia_04,0,0,0,0	monster	Baphomet	1039,5,0,0,1
+bossnia_04,0,0,0,0	monster	Doppelganger	1046,5,0,0,1
+bossnia_04,0,0,0,0	monster	Mistress	1059,5,0,0,1
+bossnia_04,0,0,0,0	monster	Golden Thief Bug	1086,5,0,0,1
+bossnia_04,0,0,0,0	monster	Orc Hero	1087,5,0,0,1
+bossnia_04,0,0,0,0	monster	Angeling	1096,5,0,0,1
+bossnia_04,0,0,0,0	monster	Drake	1112,5,0,0,1
+bossnia_04,0,0,0,0	monster	Eddga	1115,5,0,0,1
+bossnia_04,0,0,0,0	monster	Ghostring	1120,5,0,0,1
+bossnia_04,0,0,0,0	monster	Maya	1147,5,0,0,1
+bossnia_04,0,0,0,0	monster	Moonlight Flower	1150,5,0,0,1
+bossnia_04,0,0,0,0	monster	Pharaoh	1157,5,0,0,1
+bossnia_04,0,0,0,0	monster	Phreeoni	1159,5,0,0,1
+bossnia_04,0,0,0,0	monster	Orc Lord	1190,5,0,0,1
+bossnia_04,0,0,0,0	monster	Stormy Knight	1251,5,0,0,1
+bossnia_04,0,0,0,0	monster	Garm	1252,5,0,0,1
+bossnia_04,0,0,0,0	monster	Dark Lord	1272,5,0,0,1
+bossnia_04,0,0,0,0	monster	Turtle General	1312,5,0,0,1
+bossnia_04,0,0,0,0	monster	Lord of the Dead	1373,5,0,0,1
+bossnia_04,0,0,0,0	monster	Arc Angeling	1388,5,0,0,1
+bossnia_04,0,0,0,0	monster	Dracula	1389,5,0,0,1
+bossnia_04,0,0,0,0	monster	Evil Snake Lord	1418,5,0,0,1
+bossnia_04,0,0,0,0	monster	Samurai Specter	1492,5,0,0,1
+bossnia_04,0,0,0,0	monster	Amon Ra	1511,5,0,0,1
+bossnia_04,0,0,0,0	monster	Deviling	1582,5,0,0,1
+bossnia_04,0,0,0,0	monster	Tao Gunka	1583,5,0,0,1
+bossnia_04,0,0,0,0	monster	RSX-0806	1623,5,0,0,1
+bossnia_04,0,0,0,0	monster	White Lady	1630,5,0,0,1
+bossnia_04,0,0,0,0	monster	Egnigem Cenia	1658,5,0,0,1
+bossnia_04,0,0,0,0	monster	Vesper	1685,5,0,0,1
+bossnia_04,0,0,0,0	monster	Lady Tanee	1688,5,0,0,1
+bossnia_04,0,0,0,0	monster	Thanatos Phantom	1708,5,0,0,1
+bossnia_04,0,0,0,0	monster	Detardeurus	1719,5,0,0,1
+bossnia_04,0,0,0,0	monster	Kiel D-01	1734,5,0,0,1
+bossnia_04,0,0,0,0	monster	Valkyrie Randgris	1751,5,0,0,1
+bossnia_04,0,0,0,0	monster	Gloom Under Night	1768,5,0,0,1
+bossnia_04,0,0,0,0	monster	Ktullanux	1779,5,0,0,1
+bossnia_04,0,0,0,0	monster	Atros	1785,5,0,0,1
+bossnia_04,0,0,0,0	monster	ifrit	1832,5,0,0,1
+bossnia_04,0,0,0,0	monster	High Wizard Boss	1651,5,0,0,1
+bossnia_04,0,0,0,0	monster	Whitesmith Boss	1648,5,0,0,1
+bossnia_04,0,0,0,0	monster	Lord Knight Boss	1646,5,0,0,1
+bossnia_04,0,0,0,0	monster	High Priest Boss	1649,5,0,0,1
+bossnia_04,0,0,0,0	monster	Assassin Cross Boss	1647,5,0,0,1
+bossnia_04,0,0,0,0	monster	Sniper Boss	1650,5,0,0,1
+bossnia_04,0,0,0,0	monster	Fallen Bishop	1871,5,0,0,1
+bossnia_04,0,0,0,0	monster	Satan Morroc	1917,5,0,0,1
+bossnia_04,0,0,0,0	monster	Beelzebub	1874,5,0,0,1
+

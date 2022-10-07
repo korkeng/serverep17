@@ -1,0 +1,234 @@
+/*
+	Script Template (no need to duplicate the code):
+	** How to use **
+	Use duplicate to call this script and add #cash or #zeny at the end of npc name.
+	there are 2 global variables -> $zeny_jackpot and $cash_jackpot to store current jackpot price.
+	** How to use **
+*/
+
+
+-	script	Lucky Card	-1,{
+	ignoretimeout 1;
+	mes getd(".header_" + strnpcinfo(2) + "$");
+	mes "- ในการสุ่ม 1 ครั้ง -";
+	mes "ข้าต้องการ ^FF6699" + F_InsertComma(getd(".amount_" + strnpcinfo(2))) + "^000000 " + strnpcinfo(2);
+	mes "Jackpot สะสมตอนนี้ ^0000FF" + F_InsertComma(getd("$" + strnpcinfo(2) + "_jackpot")) + "^000000 " + strnpcinfo(2);
+	mes "ท่านสนใจร่วมสนุกไหมหล่ะ ?";
+	next;
+	if (select("~ เริ่มเล่นเลย","~ ดูรางวัลที่จะได้รับในแต่ละระดับ") == 2) {
+		for (set .@i, 0; .@i < getarraysize(getd(".reward_" + strnpcinfo(2) + "_chance")); set .@i, .@i + 1) {
+			set .@menu$, .@menu$ + "~ ดูรางวัลในระดับที่ " + (.@i+1);
+			set .@menu$, .@menu$ + ":";
+		}
+		mes getd(".header_" + strnpcinfo(2) + "$");
+		mes "เลือกระดับที่จะดูรางวัล";
+		next;
+		set .@step_selected, select(.@menu$);
+		close2;
+		callshop "lucky_" + strnpcinfo(2) + "_step_" + .@step_selected, 1;
+		npcshopattach "lucky_" + strnpcinfo(2) + "_step_" + .@step_selected;
+		end;
+	}
+	
+	mes getd(".header_" + strnpcinfo(2) + "$");
+	mes "ท่านสามารถเลือกได้ว่าต้องการที่";
+	mes "จะเล่นในรูปแบบไหน ? ";
+	//mes " ^FF0000*" + getitemname(getd("." + strnpcinfo(2) + "_fail_itemid")) + " จะได้รับเมื่อ Fail^000000";
+	next;
+	switch(select("~ เล่นแบบใช้ " + strnpcinfo(2),"~ ไม่เล่นแล้วดีกว่า")) {
+		case 1:
+			if ((strnpcinfo(2) == "zeny" ? Zeny : #CASHPOINTS) <  getd(".amount_" + strnpcinfo(2))) {
+				mes getd(".header_" + strnpcinfo(2) + "$");
+				mes "ท่านมี ^FF0000" + strnpcinfo(2) + "^000000 ไม่เพียงพอ";
+				mes "ต้องการ ^FF0000[ " + F_InsertComma(getd(".amount_" + strnpcinfo(2))) + " ]^000000 " + strnpcinfo(2);
+				mes "กลับมาหาข้าใหม่เมื่อท่าน มีของครบนะ .";
+				close;
+			}
+			set (strnpcinfo(2) == "zeny" ? Zeny : #CASHPOINTS), (strnpcinfo(2) == "zeny" ? Zeny : #CASHPOINTS) - getd(".amount_" + strnpcinfo(2));
+			dispbottom getd(".header_" + strnpcinfo(2) + "$") + " : ใช้ " + strnpcinfo(2) + " ไป " + F_InsertComma(getd(".amount_" + strnpcinfo(2))) + " คงเหลือ " +  F_InsertComma(strnpcinfo(2) == "zeny" ? Zeny : #CASHPOINTS) + " " + strnpcinfo(2);
+			break;
+			delitem getd("." + strnpcinfo(2) + "_fail_itemid"), getd("." + strnpcinfo(2) + "_fail_amount");
+			break;
+		default:
+			end;
+	}
+	
+	// Logic to Random
+	set .@total_shuffle, rand(4,6);
+	set .@slow_delay_time, rand(4,6);
+	
+	for (set .@i, 0; .@i < .@total_shuffle; set .@i, .@i + 1) {
+		cutin .zeny_texture_card$[rand(0,getarraysize(getd(".reward_" + strnpcinfo(2) + "_chance"))+1)], 4;
+		sleep2 1 + .@sleep;
+		if (.@i + .@slow_delay_time >= .@total_shuffle ) 
+			set .@sleep, .@sleep + rand(2,6);
+		else 
+			set .@sleep, .@sleep + rand(2,6);
+		cutin "", 255;
+		sleep2 100;
+	}
+	
+	// Finish Random
+	set .@donot_loop, false;
+	specialeffect2 EF_REPAIRWEAPON;
+	set .@real_random, rand(1, getd("." + strnpcinfo(2) + "_total_chance"));
+	
+	for (set .@i, 0; .@i < getarraysize(getd(".reward_" + strnpcinfo(2) + "_chance")) + 2; set .@i, .@i + 1) {
+		if (.@i == 0) set .@step_random, getd("." + strnpcinfo(2) + "_jackpot_chance");
+		else if (.@i == 1) set .@step_random, getd("." + strnpcinfo(2) + "_fail_chance");
+		else set .@step_random, .@step_random + getd(".reward_" + strnpcinfo(2) + "_chance[" + (.@i-2) + "]");
+		if (.@real_random <= .@step_random) {
+			switch (.@i+1) {
+				case 1:
+					// return max_index + 1 if Got jackpot [6]
+				case 2:
+					// return max_index + 2 if Got Fail [7]
+					set .@price_index, getarraysize(getd(".reward_" + strnpcinfo(2) + "_chance")) + (.@i+1);
+					break;
+				default:
+					set .@price_index, (.@i+1)-2;
+					break;
+			}
+			break;
+		}
+	}
+	cutin .zeny_texture_card$[.@price_index-1], 4;
+	
+	switch (.@price_index) {
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+			set .@item_rate, rand(1, getd("." + strnpcinfo(2) + "_item_" + .@price_index + "_total_chance"));
+			for (set .@i, 0; .@i < getarraysize(getd(".reward_" + strnpcinfo(2) + "_" + .@price_index)); set .@i, .@i + 2) {
+				set .@item_rate_runner, .@item_rate_runner + getd(".reward_" + strnpcinfo(2) + "_" + .@price_index + "[" + (.@i+1) + "]");
+				if (.@item_rate <= .@item_rate_runner) {
+					getitem getd(".reward_" + strnpcinfo(2) + "_" + .@price_index + "[" + .@i + "]"),1;
+					//announce getd(".header_" + strnpcinfo(2) + "$") + " : ท่าน " + strcharinfo(0) + " ได้รับไอเทม " + getitemname(getd(".reward_" + strnpcinfo(2) + "_" + .@price_index + "[" + .@i + "]")),0;
+					break;
+				}
+			}
+			break;
+		case 6:
+			//announce getd(".header_" + strnpcinfo(2) + "$") + " : ท่าน " + strcharinfo(0) + " ถูกรางวัล Jackpot ได้รับ " + strnpcinfo(2) + " จำนวน " + F_InsertComma(getd("$" + strnpcinfo(2) + "_jackpot")),0;
+			set (strnpcinfo(2) == "zeny" ? Zeny : #CASHPOINTS), (strnpcinfo(2) == "zeny" ? Zeny : #CASHPOINTS) + getd("$" + strnpcinfo(2) + "_jackpot");
+			setd("$" + strnpcinfo(2) + "_jackpot"), getd("." + strnpcinfo(2) + "_jackpot_start");
+			delwaitingroom strnpcinfo(0);
+			donpcevent strnpcinfo(0) + "::OnInit";
+			break;
+		case 7:
+			mes getd(".header_" + strnpcinfo(2) + "$");
+			mes "เสียใจด้วยท่านไม่ได้รับรางวัลแต่เรา";
+			mes "ยังมีรางวัลปลอบใจให้ท่าน";
+			mes "ไว้โอกาสหน้าเรามาเล่นกันใหม่นะ";
+			//getitem getd("." + strnpcinfo(2) + "_fail_itemid") ,1;
+			setd("$" + strnpcinfo(2) + "_jackpot"), getd("$" + strnpcinfo(2) + "_jackpot") + getd("." + strnpcinfo(2) + "_fail_addition");
+			delwaitingroom strnpcinfo(0);
+			donpcevent strnpcinfo(0) + "::OnInit";
+			break;
+	}
+	next;
+	cutin "", 255;
+	end;
+	
+	OnBuyItem:
+		message strcharinfo(0), "ขออภัย . . . ไม่สามารถซื้อไอเทมได้ เนื่องจากนี่เป็นระบบดูไอเทม";
+		end;
+	
+	OnInit:
+		if (strnpcinfo(2) != "") {
+			sleep 2000;
+			waitingroom strnpcinfo(2) + " " + F_InsertComma(getd("$" + strnpcinfo(2) + "_jackpot")),0;
+			end;
+		}
+		
+		// ==================== CONFIGURE FOR ZENY ====================
+		set .header_zeny$, "[ Lucky Zeny ]";
+		set .amount_zeny, 200000000;				// จำนวน zeny ที่ใช้ในการสุ่ม 1 ครั้ง
+		set .zeny_jackpot_chance, 10;					// โอกาสที่จะถูก Jackpot ( เอาทุกโอกาสไปรวมกันแล้วหา )
+		set .zeny_jackpot_start, 1000000;			// จำนวน zeny Jackpot เริ่มต้น ( หลังจากที่ Jackpot แตกไปแล้ว )
+		set .zeny_fail_chance, 200;						// โอกาสที่ Fail ( เอาทุกโอกาสไปรวมกันแล้วหา )
+		set .zeny_fail_addition, 1000000;				// จำนวน zeny ที่ถูกเพิ่มลงไปเมื่อล้มเหลว
+		//set .zeny_fail_itemid, 0;						// รหัสไอเทมี่จะนำมาใช้หมุนได้แทนการใช้ zeny
+		//set .zeny_fail_amount, 0;						// จำนวนของไอเทมที่จะใช้
+		setarray .reward_zeny_chance, 100,80,60,40,3;	// ลิสโอกาสที่จะออกในระดับ 1 - 5
+		setarray .reward_zeny_1, 61001,20,61005,20,7227,20,61010,20,12202,20,12203,20,12204,20,12205,20,12206,20,12506,20;			// ลิสรางวัลในระดับที่ 1 <รหัสไอเทม>,<โอกาส>,.....
+		setarray .reward_zeny_2, 32765,100,14607,10,14608,10,14601,20,14616,20,14617,20,14618,20,14619,20,14620,20,14621,20;			// ลิสรางวัลในระดับที่ 2 <รหัสไอเทม>,<โอกาส>,.....
+		setarray .reward_zeny_3, 61404,10,6225,30,6226,30,61003,10,61044,30,61007,10,61046,10,61219,20,61213,20;			// ลิสรางวัลในระดับที่ 3 <รหัสไอเทม>,<โอกาส>,.....
+		setarray .reward_zeny_4, 34129,1,4365,20,4367,10,4359,15,4357,20,4361,10,4363,20,32010,10,18747,10,19274,10,24000,10,24001,10,24002,10,24003,10,24004,10,24005,10;			// ลิสรางวัลในระดับที่ 4 <รหัสไอเทม>,<โอกาส>,.....
+		setarray .reward_zeny_5, 63005,0,63511,1,63512,1,63513,1,50966,1,15048,1,2587,1,34117,1,34115,1,63503,1,34141,1,34138,1,62301,1,62016,1,62300,1,50863,1,62317,5,62303,3,40042,2,19138,3,63020,10,63021,10,63022,10,63023,10,63024,10,63025,10,63026,10,63027,10,63028,10,63029,10,63030,10,63031,10,63032,10,63033,10,63034,10,63035,10,63036,10,63037,10,63038,10,63039,10,63040,10,63041,10,63042,10,63043,10,63044,10,63045,10,63046,10,63047,10,63048,10,63049,10,63050,10,63051,10,63052,10,63053,10,63054,10,63055,10,63056,10,63057,10,63058,10,63059,10,63060,10,63061,10,63062,10,63063,10,63064,10,63065,10,63066,10,63067,10,63068,10,63069,10,63070,10,63071,10,63072,10,63073,10,63074,10,63075,10,63076,10,63077,10,63078,10,63079,10;			// ลิสรางวัลในระดับที่ 5 <รหัสไอเทม>,<โอกาส>,.....
+		// นำรูปไปวางไว้ใน GRF -> data\texture\ภฏภ๚ภฮลอฦไภฬฝบ\illust [คำแนะนำให้ใช้ชื่อไฟล์ที่เป็นภาษาอังกฤษล้วนเพื่อที่จะได้ง่าย]
+		setarray .zeny_texture_card$, "177_01.bmp",	// รูปรางวัลระดับที่ 1
+									  "177_02.bmp",		// รูปรางวัลระดับที่ 2
+									  "177_03.bmp",	// รูปรางวัลระดับที่ 3
+									  "177_04.bmp",			// รูปรางวัลระดับที่ 4
+									  "177_05.bmp",				// รูปรางวัลระดับที่ 5
+									  "cat_g_win.bmp",			// รูปรางวัล Jackpot
+									  "cat_g_lose.bmp";		// รูปสำหรับ Fail
+		
+		// ==================== CONFIGURE FOR CASH ====================
+		set .header_cash$, "[ Lucky Cash ]";
+		set .amount_cash, 2000;							// จำนวน cash ที่ใช้ในการสุ่ม 1 ครั้ง
+		set .cash_jackpot_chance, 1;					// โอกาสที่จะถูก Jackpot ( เอาทุกโอกาสไปรวมกันแล้วหา )
+		set .cash_jackpot_start, 100;					// จำนวน cash Jackpot เริ่มต้น ( หลังจากที่ Jackpot แตกไปแล้ว )
+		set .cash_fail_chance, 200;						// โอกาสที่ Fail ( เอาทุกโอกาสไปรวมกันแล้วหา )
+		set .cash_fail_addition, 50;					// จำนวน cash ที่ถูกเพิ่มลงไปเมื่อล้มเหลว
+		//set .cash_fail_itemid, 677;						// รหัสไอเทมี่จะนำมาใช้หมุนได้แทนการใช้ cash
+		//set .cash_fail_amount, 5;						// จำนวนของไอเทมที่จะใช้
+		setarray .reward_cash_chance, 100,80,60,40,20;	// ลิสโอกาสที่จะออกในระดับ 1 - 5
+		setarray .reward_cash_1, 61002,20,61007,20,61012,20,14607,20,14608,20,14601,20,14616,20,14617,20,14618,20,14619,20,14620,20,14621,20;			// ลิสรางวัลในระดับที่ 1 <รหัสไอเทม>,<โอกาส>,.....
+		setarray .reward_cash_2, 61404,20,6225,20,6226,20,61003,20,61044,20,61007,20,61046,20,61219,20,61213,20;			// ลิสรางวัลในระดับที่ 2 <รหัสไอเทม>,<โอกาส>,.....
+		setarray .reward_cash_3, 32010,20,61507,20,61210,20,22214,5,19024,10,19381,10,34087,10,34088,10,34089,5;			// ลิสรางวัลในระดับที่ 3 <รหัสไอเทม>,<โอกาส>,.....
+		setarray .reward_cash_4, 34130,1,27108,10,27107,10,27150,10,27176,10,27177,10,27180,10,27326,10,27334,10,4137,10,4625,10,4305,10,4559,10,4174,10,4441,10,27358,10,27327,10,27322,10,27323,10,4403,10,4302,10;			// ลิสรางวัลในระดับที่ 4 <รหัสไอเทม>,<โอกาส>,.....
+		setarray .reward_cash_5, 34091,1,34069,1,63000,1,63001,1,63002,1,63003,1,61720,1,2587,1,2485,1,34127,1,34111,1,34126,1,34113,1,63501,2,34140,3,34137,5,19327,3,63510,3,62304,3,40005,3,50860,1,50966,1,40000,5,32120,5,32121,5,32122,5,32123,5,32124,5,32125,5,32126,5,32127,5,32128,5,32129,5,32130,5,32131,5,32132,5,32133,5;			// ลิสรางวัลในระดับที่ 5 <รหัสไอเทม>,<โอกาส>,.....
+		// นำรูปไปวางไว้ใน GRF -> data\texture\ภฏภ๚ภฮลอฦไภฬฝบ\illust [คำแนะนำให้ใช้ชื่อไฟล์ที่เป็นภาษาอังกฤษล้วนเพื่อที่จะได้ง่าย]
+		setarray .cash_texture_card$, "177_01.bmp",	// รูปรางวัลระดับที่ 1
+									  "177_02.bmp",		// รูปรางวัลระดับที่ 2
+									  "177_03.bmp",	// รูปรางวัลระดับที่ 3
+									  "177_04.bmp",			// รูปรางวัลระดับที่ 4
+									  "177_05.bmp",				// รูปรางวัลระดับที่ 5
+									  "cat_g_win.bmp",			// รูปรางวัล Jackpot
+									  "cat_g_lose.bmp";		// รูปสำหรับ Fail
+		
+		// ============================================================
+		set .zeny_total_chance, .zeny_total_chance + .zeny_jackpot_chance;
+		set .zeny_total_chance, .zeny_total_chance + .zeny_fail_chance;
+		for (set .@i, 0; .@i < getarraysize(.reward_zeny_chance); set .@i, .@i + 1) {
+			npcshopdelitem "lucky_zeny_step_" + (.@i+1), 909;
+			set .zeny_total_chance, .zeny_total_chance + .reward_zeny_chance[.@i];
+			for (set .@j, 0; .@j < getarraysize(getd(".reward_zeny_" + (.@i+1))); set .@j, .@j + 2) {
+				npcshopadditem "lucky_zeny_step_" + (.@i+1), getd(".reward_zeny_" + (.@i+1) + "[" + .@j + "]"), -1;
+				setd(".zeny_item_" + (.@i+1) + "_total_chance"), getd(".zeny_item_" + (.@i+1) + "_total_chance") + getd(".reward_zeny_" + (.@i+1) + "[" + (.@j+1) + "]");
+			}
+		}
+		
+		set .cash_total_chance, .cash_total_chance + .cash_jackpot_chance;
+		set .cash_total_chance, .cash_total_chance + .cash_fail_chance;
+		for (set .@i, 0; .@i < getarraysize(.reward_cash_chance); set .@i, .@i + 1) {
+			npcshopdelitem "lucky_cash_step_" + (.@i+1), 909;
+			set .cash_total_chance, .cash_total_chance + .reward_cash_chance[.@i];
+			for (set .@j, 0; .@j < getarraysize(getd(".reward_cash_" + (.@i+1))); set .@j, .@j + 2) {
+				npcshopadditem "lucky_cash_step_" + (.@i+1), getd(".reward_cash_" + (.@i+1) + "[" + .@j + "]"), -1;
+				setd(".cash_item_" + (.@i+1) + "_total_chance"), getd(".cash_item_" + (.@i+1) + "_total_chance") + getd(".reward_zeny_" + (.@i+1) + "[" + (.@j+1) + "]");
+			}
+		}
+		if (!$zeny_jackpot) set $zeny_jackpot, .zeny_jackpot_start;
+		if (!$cash_jackpot) set $cash_jackpot, .cash_jackpot_start;
+		end;
+}
+
+moroccz,125,110,4	duplicate(Lucky Card)	Jackpot Zeny (Zeny)#zeny	2_SLOT_MACHINE
+moroccz,134,110,4	duplicate(Lucky Card)	Jackpot Cash (Cash)#cash	2_SLOT_MACHINE
+
+// ===================== ห้ามแก้ไข =====================
+-	shop	lucky_zeny_step_1	-1, 909:-1
+-	shop	lucky_zeny_step_2	-1, 909:-1
+-	shop	lucky_zeny_step_3	-1, 909:-1
+-	shop	lucky_zeny_step_4	-1, 909:-1
+-	shop	lucky_zeny_step_5	-1, 909:-1
+-	shop	lucky_cash_step_1	-1, 909:-1
+-	shop	lucky_cash_step_2	-1, 909:-1
+-	shop	lucky_cash_step_3	-1, 909:-1
+-	shop	lucky_cash_step_4	-1, 909:-1
+-	shop	lucky_cash_step_5	-1, 909:-1

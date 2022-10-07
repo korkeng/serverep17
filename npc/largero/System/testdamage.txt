@@ -1,0 +1,37 @@
+-	script	DamageTester	-1,{
+	OnInit:
+		setarray $@DMT_EMPSPAWN1$, "moroccz","182","77";	// æ‘°—¥∑¥≈Õß¥“‡¡®À‘π°‘≈	
+		setarray $@DMT_HUMSPAWN1$, "moroccz","186","77";	// æ‘°—¥∑¥≈Õß¥“‡¡®§π
+		setarray $@DMT_BOSS1$, "core","146","114","21153";	// æ‘°—¥∑¥≈Õß∫Õ ‰´ Ï‡≈Á° param4 = √À— ‰Õ¥’
+		setarray $@DMT_BOSS2$, "core","150","114","21154";	// æ‘°—¥∑¥≈Õß∫Õ ‰´ Ï°≈“ß param4 = √À— ‰Õ¥’
+		setarray $@DMT_BOSS3$, "core","154","114","21155";	// æ‘°—¥∑¥≈Õß∫Õ ‰´ Ï„À≠Ë param4 = √À— ‰Õ¥’
+	OnMyMobDead:
+		sleep 1000;
+		donpcevent strnpcinfo(0) + "::OnEmperium1";
+		donpcevent strnpcinfo(0) + "::OnHuman1";		
+		donpcevent strnpcinfo(0) + "::OnBoss1";
+		donpcevent strnpcinfo(0) + "::OnBoss2";
+		donpcevent strnpcinfo(0) + "::OnBoss3";
+		end;
+		
+		
+	OnEmperium1:
+		monster $@DMT_EMPSPAWN1$[0], atoi($@DMT_EMPSPAWN1$[1]), atoi($@DMT_EMPSPAWN1$[2]), "∑¥ Õ∫µ’À‘π", 21151, 1, strnpcinfo(0) + "::OnEmperium1";
+		end;
+	OnHuman1:
+		monster $@DMT_HUMSPAWN1$[0], atoi($@DMT_HUMSPAWN1$[1]), atoi($@DMT_HUMSPAWN1$[2]), "∑¥ Õ∫µ’¡πÿ…¬Ï", 21152, 1, strnpcinfo(0) + "::OnHuman1";
+		end;		
+	OnBoss1:
+		monster $@DMT_BOSS1$[0], atoi($@DMT_BOSS1$[1]), atoi($@DMT_BOSS1$[2]), "Small Neutral Boss", atoi($@DMT_BOSS1$[3]), 1, strnpcinfo(0) + "::OnBoss1";
+		end;
+	OnBoss2:
+		monster $@DMT_BOSS2$[0], atoi($@DMT_BOSS2$[1]), atoi($@DMT_BOSS2$[2]), "Medium Neutral Boss", atoi($@DMT_BOSS2$[3]), 1, strnpcinfo(0) + "::OnBoss2";
+		end;
+	OnBoss3:
+		monster $@DMT_BOSS3$[0], atoi($@DMT_BOSS3$[1]), atoi($@DMT_BOSS3$[2]), "Large Neutral Boss", atoi($@DMT_BOSS3$[3]), 1, strnpcinfo(0) + "::OnBoss3";
+		end;
+	
+}
+
+
+			

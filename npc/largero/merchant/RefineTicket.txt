@@ -1,0 +1,147 @@
+moroccz,112,75,6	script	ใช้ใบตีบวก	880,{
+
+
+	disable_items;
+	if (countitem(6238) || countitem(6228) || countitem(6229) || countitem(6230) || countitem(6231) || countitem(6456))
+		set .@bWeaponUp,1;
+	if (countitem(6239) || countitem(6232) || countitem(6233) || countitem(6234) || countitem(6235) || countitem(6457))
+		set .@bArmorUp,1;
+	if (!.@bWeaponUp && !.@bArmorUp) {
+		mes "เมื่อใช้ Refine Ticket";
+		mes "ไอเทมจะถูกอัพเกรด";
+		mes "แบบปลอดภัย 100%";
+		next;
+		switch(select("^FF0000•^000000 ฉันจะไปตามทางของฉัน:^FF0000•^000000 อืม ... มันทำให้ข้าสงสัย")) {
+		case 1:
+			mes "[อัพเกรด Refine Ticket]";
+			mes "โอเค ฉันเข้าใจแล้ว";
+			close;
+		case 2:
+			mes "[อัพเกรด Refine Ticket]";
+			mes "ในบางครั้งฉันก็ให้บริการปรับแต่งสำหรับนักผจญภัยด้วย";
+			close;
+		}
+	}
+	emotion ET_SURPRISE;
+		mes "เมื่อใช้ Refine Ticket";
+		mes "ไอเทมจะถูกอัพเกรด";
+		mes "แบบปลอดภัย 100%";
+	next;
+	if(select("^FF0000•^000000 ยกเลิก:^FF0000•^000000 ตกลง") == 1) {
+		mes "[อัพเกรด Refine Ticket]";
+		mes "คุณสามารถกลับมาใหม่ได้ในภายหลัง";
+		close;
+	}
+	mes "[อัพเกรด Refine Ticket]";
+	mes "เจ้าจะตี อุปกรณ์ชิ้นไหนล่ะ ?.";
+	next;
+		setarray .@position$[1], "ส่วนหัว","ชุดเกาะ","โล่","อาวุธ","ผ้าคลุม","รองเท้า","เครื่องประดับ 1","เครื่องประดับ 2","ส่วนหู","ส่วนปาก";
+		setarray .@compare[1], EQI_HEAD_TOP, EQI_ARMOR, EQI_HAND_L, EQI_HAND_R, EQI_GARMENT, EQI_SHOES, EQI_ACC_L, EQI_ACC_R, EQI_HEAD_MID, EQI_HEAD_LOW;
+		for( set .@i,1; .@i <= 10; set .@i,.@i+1 )
+		{
+			if( getequipisequiped(.@compare[.@i]) )
+				set .@menu$, .@menu$ + .@position$[.@i] + "-" + "[" + getequipname(.@compare[.@i]) + "]";
+				set .@menu$, .@menu$ + ":";
+		}
+		set .@part,.@compare[select(.@menu$)];
+	if (!getequipisequiped(.@part)) {
+		mes "[อัพเกรด Refine Ticket]";
+		mes "คุณต้องติดตั้งไอเท็มที่คุณต้องการปรับแต่ง";
+		close;
+	}
+	if (!getequipisenableref(.@part)) {
+		emotion ET_OTL;
+		mes "[อัพเกรด Refine Ticket]";
+		mes "ไอเทมนี้ไม่สามารถปรับแต่งได้";
+		close;
+	}
+	switch(getequipweaponlv(.@part)) {
+	default:
+	case 0:
+		setarray .@tickets[0],6457,6235,6234,6233,6232,6239;
+		setarray .@levels[0],5,6,7,8,9,11;
+		set .@type$,"Armor";
+		set .@check,.@bArmorUp;
+		break;
+	case 1:
+	case 2:
+	case 3:
+	case 4:
+		setarray .@tickets[0],6456,6231,6230,6229,6228,6238;
+		setarray .@levels[0],5,6,7,8,9,11;
+		set .@type$,"Weapon";
+		set .@check,.@bWeaponUp;
+		break;
+	}
+	if (!.@check) {
+		emotion ET_THINK;
+		mes "[อัพเกรด Refine Ticket]";
+		mes "หากคุณต้องการปรับแต่งสิ่งนี้ ^006400"+.@type$+"^000000, โปรดนำ ^006400"+.@type$+" Refine Ticket มาให้ข้าด้วยนะ^000000.";
+		mes "แล้วพบกันใหม่!";
+		close;
+	}
+	mes "[อัพเกรด Refine Ticket]";
+	mes "คุณมีต้องการใช้งาน  ^006400 Refine Ticket ^000000 ชิ้นใด";
+	next;
+	set .@menu$,"";
+	for(set .@i,0; .@i<getarraysize(.@tickets); set .@i,.@i+1)
+		set .@menu$, .@menu$+getitemname(.@tickets[.@i])+":";
+	set .@select, select(.@menu$)-1;
+	set .@ticket_lv, .@levels[.@select];
+	set .@ticket_id, .@tickets[.@select];
+	if (countitem(.@ticket_id) == 0) {
+		emotion ET_QUESTION;
+		mes "[อัพเกรด Refine Ticket]";
+		mes getitemname(.@ticket_id)+" ไม่พบ Item บนตัวละคร คุณ เก็บไว้ที่คลัง หรือ ไม่";
+		mes "โปรดตรวจสอบอีกครั้ง";
+		mes "แล้วพบกันใหม่!";
+		close;
+	}
+	if (getequiprefinerycnt(.@part) >= .@ticket_lv) {
+		emotion ET_PROFUSELY_SWEAT;
+		mes "[อัพเกรด Refine Ticket]";
+		mes "^8B4513รายการนี้ได้รับการปรับแต่งให้ดีเท่ากับการกระทำของคุณ^000000";
+		mes "โปรดมาพร้อม กับ Item ที่อยู่ระดับ ต่ำกว่า Refine Ticket ของคุณ";
+		close;
+	}
+	mes "[อัพเกรด Refine Ticket]";
+	mes "ฉันจะปรับแต่ง ^006400"+getequipname(.@part)+"^8B4513 ขึ้นอยู่กับ +"+.@ticket_lv+" ระดับ ^000000 กับ ^006400"+getitemname(.@ticket_id)+"^000000.";
+	mes "ต้องการดำเนินการต่อไหม";
+	next;
+	if(select("^FF0000•^000000 ยกเลิก:^FF0000•^000000 ตกลง") == 1) {
+		emotion ET_THINK;
+		mes "[อัพเกรด Refine Ticket]";
+		mes "คุณสามารถกลับมาใหม่ได้ในภายหลัง";
+		close;
+	}
+	mes "[อัพเกรด Refine Ticket]";
+	mes "เรียบร้อย";
+	mes "นี่คือผลงานชิ้นเอกของข้าเลย";
+	specialeffect EF_SUI_EXPLOSION;
+	if (countitem(.@ticket_id))
+		delitem .@ticket_id,1;
+	else {
+		next;
+		mes "ผิดพลาด!";
+		mes "โปรดรายงานสิ่งนี้";
+		close;
+	}
+	for(set .@i,getequiprefinerycnt(.@part); .@i<.@ticket_lv; set .@i,.@i+1)
+		successrefitem .@part;
+	next;
+	emotion ET_DELIGHT;
+	mes "[อัพเกรด Refine Ticket]";
+	mes "เอาล่ะนี่มัน";
+	mes "เยี่ยมไปเลย ^0000FF"+strcharinfo(0)+"^000000!";
+	mes "ขอแสดงความยินดีกับการส่องแสงของคุณ "+.@type$+".";
+	mes "คุณดูดีมาก!";
+	mes "ลาก่อน !";
+close;
+end;
+OnInit: 
+while (1) {
+			showscript "[ ใช้ใบตีบวก ]";
+			sleep 500;
+		}
+end;
+}

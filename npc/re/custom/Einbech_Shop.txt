@@ -1,0 +1,140 @@
+//===== rAthena Script =======================================
+//= Einbech 03 Script
+//===== By: ================================================== 
+//= mr.TAURUS
+//===== Current Version: =====================================
+//= 1.3
+//===== Compatible With: ===================================== 
+//= rAthena Project
+//============================================================
+
+-	script	NPC_Elmen	-1,{
+	disable_items;
+	mes .NPCname$;
+	mes "สวัสดี "+strcharinfo(0)+"";
+	mes "ข้าสามารถสร้าง <ITEM>"+getitemname(.material[6])+"<INFO>"+.material[6]+"</INFO></ITEM>";
+	mes "และอะไรก็ตามที่เกี่ยวข้องกับ Einbech.";
+	next;
+	switch(select(
+		""+.sb$+" สร้างไอเทม",
+		""+.sb$+" ไม่มีอะไร"
+	)) {
+		case 1:
+			switch(select(
+				""+.sb$+" แลก Dynite",
+				""+.sb$+" สร้าง อาวุธ",
+				""+.sb$+" ไม่มีอะไร"
+			)) {
+				case 1:
+					close2;
+					callshop "Elmen_Dynite",1;
+					end;
+					
+				case 2:
+					//if (.wpcraft_mode) {
+					//	close2;
+					//	callshop "Elmen_WP",1;
+					//	end;
+					//}
+					next;
+					mes .NPCname$;
+					mes "การสร้างอาวุธจะต้องใช้ <ITEM>"+getitemname(.material[6])+"<INFO>"+.material[6]+"</INFO></ITEM> x^FF0000"+.wpcraft+"^000000";
+					mes "และจะได้รับอาวุธแบบสุ่ม.";
+					mes "เจ้าต้องการจะสร้างอาวุธหรือไม่?";
+					next;
+					switch(select(""+.sb$+" ใช่",""+.sb$+" ไม่" )) {
+						case 1:
+							if (countitem(.material[6]) < .wpcraft) {
+								mes .NPCname$;
+								mes "ขอโทษด้วย";
+								mes "แต่เจ้ามี <ITEM>"+getitemname(.material[6])+"<INFO>"+.material[6]+"</INFO></ITEM> ไม่เพียงพอ.";
+								close;
+							}
+							delitem .material[6],.wpcraft;
+							specialeffect 101;
+							next;
+							.@reward = .weapons[rand(getarraysize(.weapons))];
+							getitem .@reward,1;
+							mes .NPCname$;
+							mes "การแลกเปลี่ยนเสร็จสิ้น";
+							mes "เจ้าได้รับ <ITEM>"+getitemname(.@reward)+"<INFO>"+.@reward+"</INFO></ITEM>";
+							close;
+							
+						case 2:
+							mes .NPCname$;
+							mes "ยกเลิกเรียบร้อยแล้ว.";
+							close;
+					}
+					
+				case 3:
+					close2;
+					callshop "Elmen_Acc",1;
+					end;
+			}
+		case 2:
+			close2;
+			callshop "Elmen_Shop",1;
+			end;
+		case 3: end;
+	}
+	
+OnInit:
+	.NPCname$ = "[^0000FF Elmen ^000000]";
+	.sb$ = "~";
+	setarray .material,
+		0,//null
+		25809,//Redium
+		25810,//Rindium
+		25811,//Odium
+		25812,//Purdium
+		25813,//Whidium
+		25814;//Dynite
+		
+	setarray .weapons,
+		1867,//Safety Knuckle
+		2058,//Detecting Staff
+		13346,//Grinder Huuma Shuriken
+		16099,//Rubber Hammer
+		18190,//Bolt Shooter
+		21054,//Claw Sword
+		26162,//Welding Wand
+		26215,//Safety Whip
+		28045,//Bolt Crusher
+		28140,//Saw Axe
+		28635,//Safety Manual
+		28771,//Metal Detector Mk47
+		28772,//Jewel Detector Mk47
+		550006,//Safety Foxtail
+		32026,//Blocking Spear
+		32110,//Safety Lute
+		32303,//Bolt Revolver
+		32352;//Safety Saber
+	.wpcraft = 50;
+	.wpcraft_mode = false; // false = random | true = select
+	setunitdata getnpcid(0),UNPC_GROUP_ID,1016;
+	end;
+}
+//--------------------------------------------------
+// npc position.
+//--------------------------------------------------
+einbech,149,257,3	duplicate(NPC_Elmen)	Elmen#1	4_M_ALCHE_E
+
+
+//-	bartershop	Elmen_Dynite	-1
+//-	script	Elmen_Dynite1	-1,{
+//	end;
+//
+//OnInit:
+//	npcshopadditem "Elmen_Dynite",9514,25814,30,-1;
+//	npcshopadditem "Elmen_Dynite",9529,25814,30,-1;
+//	npcshopadditem "Elmen_Dynite",25814,25809,5,-1;
+//	npcshopadditem "Elmen_Dynite",25814,25810,5,-1;
+//	npcshopadditem "Elmen_Dynite",25814,25811,5,-1;
+//	npcshopadditem "Elmen_Dynite",25814,25812,5,-1;
+//	npcshopadditem "Elmen_Dynite",25814,25813,5,-1;
+//	npcshopadditem "Elmen_Dynite",32248,25814,75,-1;
+//	npcshopadditem "Elmen_Dynite",32249,25814,75,-1;
+//	npcshopadditem "Elmen_Dynite",32250,25814,75,-1;
+//	npcshopadditem "Elmen_Dynite",32251,25814,75,-1;
+//	end;
+//}

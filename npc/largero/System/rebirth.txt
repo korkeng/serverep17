@@ -1,0 +1,85 @@
+moroccz,171,106,4	script	Rebirth Mastery	801 1,{
+	mes ""+ .header$ +"";
+	mes "สวัสดีครับคุณ ^9370DB" + strcharinfo(0) + "^000000";
+	mes "=======================";
+	mes "คุณจุติไปแล้วทั้งหมด [ "+PC_REBIRTH_COUNT+" ] รอบ";
+	mes "ระบบจุติออโต้ [ " + (PC_AUTOREBIRTH?"On":"Off") + " ]";
+	mes "GM เปิดระบบจุติออโต้ [ " + (.automode?"เปิด":"ปิด") + " ]";
+	mes "=======================";		
+	next;	
+	switch(select("• จุติเลเวล 1 ครั้ง","• เปิด / ปิดระบบจุติออโต้","• รับ AllSkill ","• รับสกิลเสริม ","• ยกเลิก")){
+		case 1:
+			if (BaseLevel == 200){
+				set BaseLevel,1;
+				set PC_REBIRTH_COUNT,PC_REBIRTH_COUNT + 1;
+				dispbottom .header$ + " : คุณได้จุติใหม่เรียบร้อยแล้ว รวมทั้งหมด [ "+ PC_REBIRTH_COUNT +" ] ครั้ง";
+			} else {
+				mes ""+ .header$ +"";
+				mes "เลเวลยังไม่ถึง 200 ไม่สามารถจุติได้";
+				end;
+			}
+			break;
+		case 2:
+			if(!.automode){
+				mes ""+ .header$ +"";
+				mes "GM ปิดระบบจุติออโต้ไว้";
+				mes "ไม่สามารถใช้งานได้ชั่วคราว";
+				end;
+			}
+			if (PC_AUTOREBIRTH){
+				mes ""+ .header$ +"";
+				mes "ระบบจุติออโต้ได้ปิดใช้งานแล้ว";
+				mes "หากต้องการเปิดกลับมาหาข้าอีกครั้ง";
+				set PC_AUTOREBIRTH, 0;
+				end;
+			}
+			mes ""+ .header$ +"";
+			mes "ระบบจุติออโต้ได้เปิดใช้งานแล้ว";
+			mes "เมื่อเลเวล 200 ท่านจะจุติทันที";
+			mes "หากต้องการปิดกลับมาหาข้าอีกครั้ง";
+			set PC_AUTOREBIRTH,1;
+			if (Baselevel == 200){
+				set BaseLevel,1;
+				set PC_REBIRTH_COUNT,PC_REBIRTH_COUNT + 1;
+				dispbottom .header$ + " : คุณได้จุติใหม่เรียบร้อยแล้ว รวมทั้งหมด [ "+ PC_REBIRTH_COUNT +" ] ครั้ง";
+			}
+				end;			
+		case 3:
+			atcommand "@allskill";
+			break;
+		case 4:
+			callfunc "F_GetPlatinumSkills";
+			break;
+		deafult :
+			mes ""+ .header$ +"";
+			mes "...แล้วเจอกันใหม่...";
+			break;
+	}
+	end;
+	
+	OnPCBaseLvUpEvent:
+		if(.automode){
+			if ((baselevel == 200) && (PC_AUTOREBIRTH == 1)){
+				set BaseLevel,1;
+				set PC_REBIRTH_COUNT,PC_REBIRTH_COUNT + 1;
+				dispbottom .header$ + " : คุณได้จุติใหม่เรียบร้อยแล้ว รวมทั้งหมด [ "+ PC_REBIRTH_COUNT +" ] ครั้ง";
+			}
+		}
+		end;
+	
+	OnRebirth:
+		if(.automode){
+			if(PC_AUTOREBIRTH) set PC_AUTOREBIRTH,0;
+			else set PC_AUTOREBIRTH,1;
+			if(BaseLevel == 200) set BaseLevel, 1;
+			dispbottom "[ System ] : คุณได้ทำการ ' " + (PC_AUTOREBIRTH?"เปิด":"ปิด") + " ' ระบบจุติออโต้แล้วหากต้องการ " + (PC_AUTOREBIRTH?"ปิด":"เปิด") + "พิมพ์ `@rebirth` อีกรอบ";
+		}
+		end;
+		
+	OnInit:
+		set .header$,"[ Rebirth ]";		// ชื่อข้อความตรง Npc
+		set .automode, 1;				// ให้ผู้เล่นใช้ระบบจุติออโต้ ( 0 = ไม่ให้ / 1 = ให้ )
+		// =================================================
+		bindatcmd "rebirth",strnpcinfo(3) + "::OnRebirth",0,0;
+		end;
+}

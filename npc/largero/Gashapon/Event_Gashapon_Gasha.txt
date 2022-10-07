@@ -1,0 +1,193 @@
+/*
+=================== TERMS OF SERVICES. ===================
+1. ALL RIGHT RESERVED RE-SELLER OR SHARE SCRIPT TO PUBLISH.
+2. BUT YOU RE-SELLER OR SHARE SCRIPT WITH OUT UNAUTHORIZRD
+   I WILL ALL CANCEL MY SUPPORT FOR YOU.
+3. MAINTENANCE SCRIPTS WILL BE FREE SERVICES.
+4. I WILL NOT KEEP ANY INFORMATIONS FROMS YOU SERVER THAT
+   YOU SEND FOR ME.
+5. I HOPE YOU WILL ALL ACCEPT TERMS OF SERVICES.
+==========================================================
+*/
+
+-	shop	Gashapon3a	-1,909:-1
+
+moroccz,134,118,6	script	New Rare Super gashapon#9	506,{
+	mes "[ New Rare Super gashapon ]";
+	mes "ตู้สุ่มไอเท็มกาชาปอง";
+	mes "ของรางวัลในตู้นี้ มีทั้งไอเท็มแรร์";
+	mes "ก่อนหมุนเช็คน้ำหนักให้ดี";
+	mes "ใช้ไอเทม <ITEM>Super gashapon coin<INFO>61505</INFO></ITEM>";
+	mes "คุณจะหยอดเหรียญตู้นี้หรือไม่ ?";
+	next;
+	switch(select("~ หยอดเหรียญ:~ รายการไอเท็มที่ได้รับ:~ ยกเลิกการสนทนา")) {
+		case 1:
+			mes "[ New Rare Super gashapon ]";
+			mes "หาเหรียญได้จาก CashShop";
+			mes "^FF0000โปรดเลือกรายการที่ต้องการ ?^000000";
+			next;
+			switch(select("~ ใช้ ^FF0000Super gashapon coin^000000 3 ea [มี "+callfunc("F_InsertComma",countitem(61505))+"ea]:~ ยกเลิกการสนทนา")) {
+				case 1:
+						if (countitem(.GASHA_CASH) < .GASHA_POINT) {
+							mes "[ Zeny Gashapon ]";
+							mes "คุณมีไอเท็มไม่เพียงพอ..";
+							mes " ";
+							mes " ";
+							mes "ฉันต้องการไอเท็ม";
+							mes "^FF0000"+getitemname(.GASHA_CASH)+"^000000 จำนวน "+.GASHA_POINT+"ea.";
+							mes "ในการหยอดตู้กาชาปองนี้ ?";
+							end;
+						}
+						sleep2 500;
+						mes "[ "+strnpcinfo(0)+" ]";
+						mes " ";
+						mes " ";
+						mes " ";
+						mes "^FF0000โปรดรอสักครู่...^000000";
+						next;
+						sleep2 500;
+						mes "[ "+strnpcinfo(0)+" ]";
+						mes " ";
+						mes " ";
+						mes " ";
+						mes "^0000FFกำลังสุ่มของรางวัล....^000000";
+						next;
+						sleep2 500;
+						mes "[ "+strnpcinfo(0)+" ]";
+						mes " ";
+						mes " ";
+						mes " ";
+						mes "^FF0000ของรางวัลที่ได้คือ......^000000";
+						next;
+						while(1) {
+							set .@sw, rand(.SHOPS);
+							set .@id, .SHOP[.@sw];
+							set .@count, .ITEM[.@sw];
+							set .@px, .PERX[.@sw];
+							if (.@px == 0) {
+								mes "คุณไม่ได้รับไอเท็ม เสียใจด้วย";
+								close;
+							}
+							if (rand(100) > .@px)
+								continue;
+							getitem .@id, .@count;
+							//announce "[ New Rare Super gashapon : คุณ "+strcharinfo(0)+" ได้รับไอเท็ม "+getitemname(.@id)+" จำนวน "+.@count+" ea. โอกาสได้รับ "+.PERX[.@sw]+"% ]",bc_all,0xFF0000;
+							
+							break;
+						}
+						delitem .GASHA_CASH, .GASHA_POINT;
+						mes "[ "+strnpcinfo(0)+" ]";
+						mes "คุณได้รับไอเท็ม";
+						mes "- "+getitemname(.@id)+"";
+						mes "- จำนวน "+.@count+" ea.";
+						mes " ";
+						mes " ";
+						mes "ขอบคุณที่ร่วมสนุกกิจกรรม.";
+						end;				
+				
+				case 2:
+						if (countitem(.GASHA_PORING) < .GASHA_AMOUNT) {
+							mes "[ New Rare Super gashapon ]";
+							mes "คุณมีไอเท็มไม่เพียงพอ..";
+							mes " ";
+							mes " ";
+							mes "ฉันต้องการไอเท็ม";
+							//mes "^FF0000"+getitemname(.GASHA_PORING)+"^000000 จำนวน "+.GASHA_AMOUNT+"ea.";
+							mes "ในการหยอดตู้กาชาปองนี้ ?";
+							end;
+						}
+						sleep2 500;
+						mes "[ "+strnpcinfo(0)+" ]";
+						mes " ";
+						mes " ";
+						mes " ";
+						mes "^FF0000โปรดรอสักครู่...^000000";
+						next;
+						sleep2 500;
+						mes "[ "+strnpcinfo(0)+" ]";
+						mes " ";
+						mes " ";
+						mes " ";
+						mes "^0000FFกำลังสุ่มของรางวัล....^000000";
+						next;
+						sleep2 500;
+						mes "[ "+strnpcinfo(0)+" ]";
+						mes " ";
+						mes " ";
+						mes " ";
+						mes "^FF0000ของรางวัลที่ได้คือ......^000000";
+						next;
+						while(1) {
+							set .@sw, rand(.SHOPS);
+							set .@id, .SHOP[.@sw];
+							set .@count, .ITEM[.@sw];
+							set .@px, .PERX[.@sw];
+							if (.@px == 0) {
+								mes "คุณไม่ได้รับไอเท็ม เสียใจด้วย";
+								close;
+							}
+							if (rand(100) > .@px)
+								continue;
+							getitem .@id, .@count;
+							//announce "[ Event Gashapon : คุณ "+strcharinfo(0)+" ได้รับไอเท็ม "+getitemname(.@id)+" จำนวน "+.@count+" ea. โอกาสได้รับ "+.PERX[.@sw]+"% ]",bc_all,0xFF0000;
+							
+							break;
+						}
+						delitem .GASHA_PORING, .GASHA_AMOUNT;
+						mes "[ "+strnpcinfo(0)+" ]";
+						mes "คุณได้รับไอเท็ม";
+						mes "- "+getitemname(.@id)+"";
+						mes "- จำนวน "+.@count+" ea.";
+						mes " ";
+						mes " ";
+						mes "ขอบคุณที่ร่วมสนุกกิจกรรม.";
+					end;	
+				
+				
+				case 3:
+				end;
+			}
+			
+		case 2:
+			close2;
+			npcshopattach .SHOPEX2ra$, 1;
+			callshop .SHOPEX2ra$, 1;
+			end;
+			
+		case 3:
+			end;
+			
+	}
+	
+	OnBuyItem:
+		end;
+		
+	OnInit:
+		// ป้ายหน้าร้าน
+		waitingroom "[ Rare Super gashapon ]",0;
+		// Item Gashapon Coin
+		set .GASHA_CASH, 61505;
+		set .GASHA_POINT, 3;
+
+		// Item TCG Card
+		set .GASHA_PORING, 61505;
+		set .GASHA_AMOUNT, 9999;
+		
+		// ชื่อร้านที่จะแสดง
+		set .SHOPEX2ra$, "Gashapon3a";
+
+		// รหัสไอเทมในการสุ่ม
+		setarray .SHOP[0],34069,63502,63500,19138,19327,64029,40046,62067,61505,32010,61217,61215,61216,61208,  34091,34090,34014,    32134,32135,32136,32137,32138,32139,32140,32141,32142,32143,32144,32145,32146,32147,32148        ;
+		// จำนวนไอเท็ม
+		setarray .ITEM[0],1,1,1,1,1,1,1,1,1,50,1,1,1,1,     1,1,1,    1,1,1,1,1,1,1,1,1,1,1,1,1,1,1             ;
+		// โอกาสได้รับ 1% ยากสุด && 100% ง่ายสุด
+		setarray .PERX[0],1,1,1,3,5,10,10,10,20,20,20,50,50,50,10,     30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30           ;
+
+		// Don't Touch
+		set .SHOPS, getarraysize(.SHOP);
+		npcshopdelitem .SHOPEX2ra$, 909;
+		for (set .@i, 0; .@i < .SHOPS; set .@i, .@i + 1)
+			npcshopadditem .SHOPEX2ra$, .SHOP[.@i], 0;
+		
+	end;
+}

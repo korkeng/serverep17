@@ -1,0 +1,119 @@
+-	script	Warp-PVP	-1,{
+	if(getarraysize($@pvp_map$) != getarraysize(.map_name$)){
+		mes "[ Warper PvP ]";
+		mes "GM ทำการตั้งค่าห้อง PvP ผิด";
+		end;
+	}
+	for(set .@i, 0; .@i < getarraysize($@pvp_map$); set .@i, .@i + 1)
+		setd (".@user_room"+(.@i+1)), getmapusers($@pvp_map$[.@i]);
+	for(set .@i, 0; .@i < getarraysize($@pvp_map$); set .@i, .@i + 1){
+		setarray .@menu$, .@menu$ + "• " + .map_name$[.@i] + " [ " + getd (".@user_room" + (.@i+1)) + " ]";
+		setarray .@menu$, .@menu$ + ":";
+	}
+	set .@selected, select(.@menu$);
+	if(.pvp_delbuff){
+		sc_end SC_POEMBRAGI;
+		sc_end SC_SERVICE4U;
+	}
+	warp "" + $@pvp_map$[.@selected-1],0,0;
+	announce "คุณ "+ strcharinfo(0) +" ได้เข้าสู่ PvP " + .map_name$[.@selected-1] + " รวมทั้งหมดขณะนี้ [ "+(getmapusers("" + $@pvp_map$[.@selected-1])+1)+" ] คน",0;
+	end;
+	
+	OnInit:
+		// ====================== SETTING ======================
+		set .pvp_delbuff, 1;												// เมื่อเข้าสู่ห้อง PvP บัฟพิเศษจะถูกลบออก ( 0 = ปิด / 1 = เปิด )
+		//set .pvp_waitingroom, 1;											// แสดงชื่อห้องและจำนวนคนรวมในห้อง PvP ( 0 = ปิด / 1 = เปิด )
+		setarray $@pvp_map$, "guild_vs3","pvp_y_8-2","guild_vs2";			// แมพที่จะส่งให้ผู้เล่นเข้าไป (มีเท่าไหร่เมนูที่เลือกก็จะมีเท่านั้น)
+		setarray .map_name$, "Deathmatch","izlude","1-1";					// ชื่อแมพที่แสดงบนเมนู และตอนประกาศ (เรียงตามอันบน)
+		setarray $@dm_map$[0], "guild_vs3","pvp_y_8-2","guild_vs2";			// รายชื่อแมพ pvp แบบ deathmatch ( ใส่ได้มากกว่า 1 )
+		setarray $@ovo_map$[0], "guild_vs2";								// รายชื่อแมพ pvp แบบ 1vs1 ( ใส่ได้มากกว่า 1 )
+		// =====================================================
+		
+		if(.pvp_waitingroom){
+			sleep 1000;
+			while(1) {
+				delwaitingroom;
+				set .@count, 0;
+				for(set .@i, 0; .@i < getarraysize($@pvp_map$); set .@i, .@i + 1)
+					set .@count, .@count + getmapusers($@pvp_map$[.@i]);
+				waitingroom " PvP [ "+ .@count +" ] คน ",0;
+				sleep 1000;
+			}
+		}
+		
+while (1) {
+			showscript "[ PvP Room ]";
+			sleep 500;
+		}
+end;
+}
+
+-	script	modeandmapflag	-1,{
+	OnInit:
+		sleep 1000;
+		setarray .mf_map, mf_pvp_noguild, mf_nomemo, mf_noteleport, mf_nowarp,
+						  mf_nosave, mf_noicewall, mf_noreturn, mf_nobranch;
+						  
+		for(set .@i, 0; .@i < getarraysize($@pvp_map$); set .@i, .@i + 1){
+			for(set .@j, 0; .@j < getarraysize(.mf_map); set .@j, .@j + 1){
+				setmapflag $@pvp_map$[.@i],.mf_map[.@j];
+			}
+			for(set .@k, 0; .@k < getarraysize($@ovo_map$); set .@k, .@k + 1){
+				if($@pvp_map$[.@i] == $@ovo_map$[.@k]){
+					setmapflag $@pvp_map$[.@i],mf_loadevent;
+				}
+			}
+		}
+		end;
+		
+	OnPcLoadMapEvent:
+		for(set .@i, 0; .@i < getarraysize($@ovo_map$); set .@i, .@i + 1)
+		if (strcharinfo(3) == $@ovo_map$[.@i]){
+			if(getmapusers($@ovo_map$[.@i]) > 2){
+				message strcharinfo(0),"[ PvP Room ] : ตอนนี้คนใน PvP นี้ได้เกินจำนวนที่กำหนดแล้ว";
+				sleep2 1000;
+				warp "SavePoint",0,0;
+			}
+		}
+		end;
+		
+	OnPCDieEvent:
+		for(set .@i, 0; .@i < getarraysize($@dm_map$); set .@i, .@i + 1){
+			if(strcharinfo(3) == $@dm_map$[.@i]){
+				sleep2 1000;
+				atcommand "@alive";
+				sc_start SC_INCREASEAGI, .duration*1000, 10;
+				sc_start SC_BLESSING, .duration*1000, 10;
+				sc_start SC_IMPOSITIO, .duration*1000, 5;
+				sc_start SC_MAGNIFICAT, .duration*1000, 5;
+				sc_start SC_GLORIA, .duration*1000, 10;
+				atcommand "@repairall";
+				percentheal 100,100;
+				warp $@dm_map$[.@i],0,0;
+				end;
+			}
+		}
+		end;
+}
+
+guild_vs3	mapflag	pvp
+guild_vs3	mapflag	nomemo
+guild_vs3	mapflag	nosave	SavePoint
+guild_vs3	mapflag	noteleport
+guild_vs3	mapflag	nowarp
+guild_vs3	mapflag	noreturn
+guild_vs3	mapflag	nodrop
+guild_vs3	mapflag	nobranch
+
+// ==================== DUPLICATE HERE ====================
+
+moroccz,166,99,4	duplicate(Warp-PVP)	Warper PvP#1	648
+moroccz,109,113,4	duplicate(Warp-PVP)	Warper PvP#2	648
+moroccz,228,108,4	duplicate(Warp-PVP)	Warper PvP#3	648
+moroccz,178,37,4	duplicate(Warp-PVP)	Warper PvP#4	648
+moroccz,98,39,4	duplicate(Warp-PVP)	Warper PvP#5	648
+moroccz,178,256,4	duplicate(Warp-PVP)	Warper PvP#6	648
+moroccz,289,211,4	duplicate(Warp-PVP)	Warper PvP#7	648
+moroccz,44,172,4	duplicate(Warp-PVP)	Warper PvP#8	648
+moroccz,40,290,4	duplicate(Warp-PVP)	Warper PvP#9	648
+moroccz,250,43,4	duplicate(Warp-PVP)	Warper PvP#10	648

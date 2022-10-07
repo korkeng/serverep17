@@ -1,0 +1,38 @@
+//===== Developers Script ===================================
+//= Server Rate
+//===== Current Version =====================================
+//= 1.0
+//===== Description =========================================
+//= Server Rate
+//===== Additional Comments =================================
+//= 1.0 Start Version
+//= 1.1 Edit By Ragnarok PVP GVG
+//===========================================================
+
+// Aldebaran
+moroccz,178,117,4	duplicate(OutsideFlagsA1)	Neuschwanstein#m1	GUILD_FLAG
+moroccz,182,117,4	duplicate(OutsideFlagsA2)	Hohenschwangau#m1	GUILD_FLAG
+moroccz,186,117,4	duplicate(OutsideFlagsA3)	Nuernberg#m1	GUILD_FLAG
+moroccz,190,117,4	duplicate(OutsideFlagsA4)	Wuerzburg#m1	GUILD_FLAG
+moroccz,194,117,4	duplicate(OutsideFlagsA5)	Rothenburg#m1	GUILD_FLAG
+
+// Geffen
+moroccz,176,122,4	duplicate(OutsideFlagsG1)	Repherion#m1	GUILD_FLAG
+moroccz,180,122,4	duplicate(OutsideFlagsG2)	Eeyorbriggar#m1	GUILD_FLAG
+moroccz,184,122,4	duplicate(OutsideFlagsG3)	Yesnelph#m1	GUILD_FLAG
+moroccz,188,122,4	duplicate(OutsideFlagsG4)	Bergel#m1	GUILD_FLAG
+moroccz,192,122,4	duplicate(OutsideFlagsG5)	Mersetzdeitz#m1	GUILD_FLAG
+
+// Payon
+moroccz,196,122,4	duplicate(OutsideFlagsPA1)	Bright Arbor#m1	GUILD_FLAG
+moroccz,200,122,4	duplicate(OutsideFlagsPA2)	Scarlet Palace#m1	GUILD_FLAG
+moroccz,204,122,4	duplicate(OutsideFlagsPA3)	Holy Shadow#m1	GUILD_FLAG
+moroccz,208,122,4	duplicate(OutsideFlagsPA4)	Sacred Altar#m1	GUILD_FLAG
+moroccz,212,122,4	duplicate(OutsideFlagsPA5)	Bamboo Grove Hill#m1	GUILD_FLAG
+
+// porntera
+moroccz,198,117,4	duplicate(OutsideFlagsPR1)	Kriemhild#m1	GUILD_FLAG
+moroccz,202,117,4	duplicate(OutsideFlagsPR2)	Swanhild#m1	GUILD_FLAG
+moroccz,206,117,4	duplicate(OutsideFlagsPR3)	Fadhgridh#m1	GUILD_FLAG
+moroccz,210,117,4	duplicate(OutsideFlagsPR4)	Skoegul#m1	GUILD_FLAG
+moroccz,214,117,4	duplicate(OutsideFlagsPR5)	Gondul#m1	GUILD_FLAG

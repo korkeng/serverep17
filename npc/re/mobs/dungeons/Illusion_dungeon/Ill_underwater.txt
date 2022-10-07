@@ -1,0 +1,388 @@
+izlude,132,49,6	script	Gein	97,{ 
+	mes "[ Gein ]";
+	menu
+	"^FF0000•^000000 Illusion of Underwater [ Lv 140+ ]",go1,
+	"^FF0000•^000000 Illusion of Underwater F2 [ Lv 180+ ]",go2,
+	"^FF0000•^000000 Cancle",cancle;
+	go1:
+	if(baselevel > 139){
+	warp "iz_d04_i",128,228;
+	end;
+	}
+	mes "Base Lv ของเจ้าน้อยเกินไป";
+	end;
+	go2:
+
+	if(baselevel > 179){
+	warp "iz_d05_i",141,187;
+	end;
+	}
+	mes "Base Lv ของเจ้าน้อยเกินไป";
+	end;
+	cancle:
+	end;
+}
+
+/*
+iz_d04_i,134,228,4	script	Horen#ill_underwater	704,{
+	mes "[ Horen ]";
+	mes "ต้องการอะไร?";
+	next;
+	switch(select("Horen:Upgrade Weapon.:Upgrade Armor.")){
+		case 1:
+			mes "[ Horen ]";
+			mes "ข้าจะถลุงแร่ Illusion Gemstone","โดยอยู่ที่อัตรา 5:1";
+			next;
+			mes "[ Horen ]";
+			mes "เจ้าจะทำไหม";
+			next;
+			if (select ("ทำ:ไม่ทำ") == 2 ) end;
+			if (countitem(25272) < 5 ) {
+				mes "[ Horen ]";
+				mes "รบกวยนำ Illusion Gemstone มาด้วย";
+				end;
+			}
+			.@stone_trade = countitem(25272)/5;
+			delitem 25272,.@stone_trade*5;
+			getitem 25271,.@stone_trade;
+			mes "[ Horen ]";
+			mes "เรียบร้อย นี้ Illusion stome ของเจ้า";
+			close;
+			
+		case 2:
+			disable_items;
+			if(checkweight(25271,1) == 0 || (MaxWeight - Weight) < 1000){
+				mes "- คุณถือของมากเกินไป. -";
+				close;
+			}
+			mes "[ Horen ]";
+			mes "ข้าทำของได้ตามนี้.";
+			for(.@i = 0; .@i < getarraysize(.weapons$); .@i++){
+				explode(.@T$,.weapons$[.@i],"|");
+				.@item_id = atoi(.@T$[0]);
+				mes "<ITEM>"+getitemname(.@item_id)+"<INFO>"+.@item_id+"</INFO></ITEM>";
+			}
+			next;
+			mes "[ Horen ]";
+			mes "ให้แน่ใจว่า ^0000FFอุปกรณ์ของท่านต้องมีระดับตีบวกมากกว่า 9^000000 ก่อนจะนำมาให้ข้า.";
+			next;
+			mes "[ Horen ]";
+			mes "ที่สำคัฐ, ^0000FFการ์ด และตีบวกจะหายไปทั้งหมด.^000000";
+			next;
+			mes "[ Horen ]";
+			mes "วัตถุดิบที่ต้องการจะมี ^0000FFIllusion Stones และของบางอย่าง^000000 สำหรับการพัฒนาอุปกรณ์.";
+			next;
+			for(.@i = 0; .@i < getarraysize(.weapons$); .@i++){
+				explode(.@T$,.weapons$[.@i],"|");
+				.@item_id = atoi(.@T$[0]);
+				.@menu$ += getitemname(.@item_id) +":";
+			}
+			.@s = select(.@menu$) - 1;
+			explode(.@T$,.weapons$[.@s],"|");
+			explode(.@TT$,.@T$[2],",");
+			mes "[ Horen ]";
+			mes "นี้คือของที่ต้องการ.";
+			mes "^0000FF+9 " + getitemname(atoi(.@T$[1])) + " []^000000";
+			for(.@i = 0; .@i < getarraysize(.@TT$); .@i++){
+				explode(.@data$,.@TT$[.@i],":");
+				.@item_id[.@i] = atoi(.@data$[0]);
+				.@amount[.@i] = atoi(.@data$[1]);
+				mes "^0000FF" + .@amount[.@i] +" "+ getitemname(.@item_id[.@i]) + "^000000";
+			}
+			mes "พัฒนาอุปกรณ์นี้เลยไหม";
+			next;
+			if(select("เอาเลย.:ยังต้องการวัตถุดิบเพิ่มเติม") == 2){
+				mes "[ Horen ]";
+				mes "มาหาข้า เมื่อเจ้าพร้อม.";
+				close;
+			}
+			if(getequipid(EQI_HAND_R) != atoi(.@T$[1])){
+				mes "[ Horen ]";
+				mes "กรุณาสวมใส่ " + getitemname(atoi(.@T$[1])) + " ก่อน.";
+				close;
+			}
+			for(.@i = 0; .@i < getarraysize(.@item_id); .@i++){
+				if(countitem(.@item_id[.@i]) < .@amount[.@i])
+					.@miss++;
+			}
+			if(getequiprefinerycnt(EQI_HAND_R) < 9 || .@miss > 0){
+				mes "[ Horen ]";
+				mes "วัตถุดิบไม่เพียงพอ หรือ อุปกรณ์ของเจ้าตีบวกไม่ถึงเกณฑ์";
+				end;
+			}
+			mes "[Illusion Researcher]";
+			mes "กำลังจัดทำ.";
+			delequip(EQI_HAND_R);
+			for(.@i = 0; .@i < getarraysize(.@item_id); .@i++)
+				delitem .@item_id[.@i],.@amount[.@i];
+			getitem atoi(.@T$[0]),1;			
+			break;
+			
+			
+		case 3:
+			disable_items;
+			if(checkweight(25271,1) == 0 || (MaxWeight - Weight) < 1000){
+				mes "- คุณถือของมากเกินไป. -";
+				close;
+			}
+			mes "[ Horen ]";
+			mes "ข้าทำของได้ตามนี้.";
+			for(.@i = 0; .@i < getarraysize(.armors$); .@i++){
+				explode(.@T$,.armors$[.@i],"|");
+				.@item_id = atoi(.@T$[0]);
+				mes "<ITEM>"+getitemname(.@item_id)+"<INFO>"+.@item_id+"</INFO></ITEM>";
+			}
+			next;
+			mes "[ Horen ]";
+			mes "ให้แน่ใจว่า ^0000FFอุปกรณ์ของท่านต้องมีระดับตีบวกมากกว่า 9^000000 ก่อนจะนำมาให้ข้า.";
+			next;
+			mes "[ Horen ]";
+			mes "ที่สำคัฐ, ^0000FFการ์ด และตีบวกจะหายไปทั้งหมด.^000000";
+			next;
+			mes "[ Horen ]";
+			mes "วัตถุดิบที่ต้องการจะมี ^0000FFIllusion Stones และของบางอย่าง^000000 สำหรับการพัฒนาอุปกรณ์.";
+			next;
+			for(.@i = 0; .@i < getarraysize(.armors$); .@i++){
+				explode(.@T$,.armors$[.@i],"|");
+				.@item_id = atoi(.@T$[0]);
+				.@menu$ += getitemname(.@item_id) +":";
+			}
+			.@s = select(.@menu$) - 1;
+			explode(.@T$,.armors$[.@s],"|");
+			explode(.@TT$,.@T$[2],",");
+			.@slot = atoi(.@T$[3]);
+			mes "[ Horen ]";
+			mes "นี้คือของที่ต้องการ.";
+			mes "^0000FF+9 " + getitemname(atoi(.@T$[1])) + "^000000";
+			for(.@i = 0; .@i < getarraysize(.@TT$); .@i++){
+				explode(.@data$,.@TT$[.@i],":");
+				.@item_id[.@i] = atoi(.@data$[0]);
+				.@amount[.@i] = atoi(.@data$[1]);
+				mes "^0000FF" + .@amount[.@i] +" "+ getitemname(.@item_id[.@i]) + "^000000";
+			}
+			mes "พัฒนาอุปกรณ์นี้เลยไหม";
+			next;
+			if(select("เอาเลย.:ยังต้องการวัตถุดิบเพิ่มเติม") == 2){
+				mes "[ Horen ]";
+				mes "มาหาข้า เมื่อเจ้าพร้อม.";
+				close;
+			}
+			if(getequipid(.@slot) != atoi(.@T$[1])){
+				mes "[ Horen ]";
+				mes "กรุณาสวมใส่ " + getitemname(atoi(.@T$[1])) + " ก่อน.";
+				close;
+			}
+			for(.@i = 0; .@i < getarraysize(.@item_id); .@i++){
+				if(countitem(.@item_id[.@i]) < .@amount[.@i])
+					.@miss += 1;
+			}
+			if(.@slot > 1) {
+				if(getequiprefinerycnt(.@slot) < 9 || .@miss > 0){
+					mes "[ Horen ]";
+					mes "วัตถุดิบไม่เพียงพอ หรือ อุปกรณ์ของเจ้าตีบวกไม่ถึงเกณฑ์";
+					end;
+				}
+			}
+			mes "[Illusion Researcher]";
+			mes "กำลังจัดทำ.";
+			delequip(.@slot);
+			for(.@i = 0; .@i < getarraysize(.@item_id); .@i++)
+				delitem .@item_id[.@i],.@amount[.@i];
+			getitem atoi(.@T$[0]),1;			
+			break;
+	}
+	next;
+	mes "[ Horen ]";
+	mes "เสร็จแล้ว.";
+	end;
+	
+OnInit:
+	setarray .weapons$,
+		"580008|1972|25271:120,25895:150",
+		"570008|1913|25271:120,25895:150",
+		"630006|1470|25271:120,25893:150",
+		"610012|1275|25271:120,25896:150",
+		"600011|1186|25271:120,25894:150",
+		"630007|1481|25271:120,25892:150";
+	setarray .armors$,
+		"450144|2326|25271:90,25899:20,25893:100|7",
+		"450145|2347|25271:90,25899:20,25896:100|7",
+		"450146|2315|25271:90,25899:20,25895:100|7",
+		"400053|5127|25271:100,25899:50,25896:100|6",
+		"480054|2516|25271:100,25899:50,25894:100|3",
+		"490069|2650|25271:100,25899:50,25893:100,7324:15|0",
+		"490070|2651|25271:100,25899:50,25892:100,25897:15|0";
+
+end;
+}
+*/
+
+
+//==================================================
+// illusion_Dun - Under Water Deepsea 8.1
+//==================================================
+
+
+iz_d04_i	monster	Deep Sea Sropho	20801,45,5000,5000,"#Ill_water1::OnIllMobDead"
+iz_d04_i	monster	Deep Sea Obeaune	20802,45,5000,5000,"#Ill_water1::OnIllMobDead"
+iz_d04_i	monster	Deep Sea Deviace	20803,45,5000,5000,"#Ill_water1::OnIllMobDead"
+iz_d04_i	monster	Deep Sea Marse	20804,45,5000,5000,"#Ill_water1::OnIllMobDead"
+iz_d04_i	monster	Deep Sea Merman	20805,45,5000,5000,"#Ill_water1::OnIllMobDead"
+
+//==================================================
+// illusion_Dun - Under Water Deepsea 8.1
+//==================================================
+iz_d05_i	monster	Deep Sea Sedora	20806,45,5000,5000,"#Ill_water2::OnIllMobDead"
+iz_d05_i	monster	Deep Sea Swordfish	20807,45,5000,5000,"#Ill_water2::OnIllMobDead"
+iz_d05_i	monster	Deep Sea Strouf	20808,45,5000,5000,"#Ill_water2::OnIllMobDead"
+iz_d05_i	monster	Deep Sea Phen	20809,45,5000,5000,"#Ill_water2::OnIllMobDead"
+iz_d05_i	monster	Sea King Dramoh	20810,45,5000,5000,"#Ill_water2::OnIllMobDead"
+
+
+
+
+
+iz_d04_i,0,0,0	script	#Ill_water1	-1,{
+
+OnInit:
+$Ill_water1 = 0;
+$Ill_water1_delay = 0;
+$Ill_water1BOSS = 0;
+end;
+
+OnIllMobDead:
+if($Ill_water1_delay == 0 && $Ill_water1BOSS == 0){
+if($Ill_water1 == 1950){											
+mapannounce "iz_d04_i","Illusion of Underwater : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(2000-($Ill_water1)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_water1 == 1900){											
+mapannounce "iz_d04_i","Illusion of Underwater : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(2000-($Ill_water1)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_water1 == 1750){
+mapannounce "iz_d04_i","Illusion of Underwater : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(2000-($Ill_water1)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_water1 == 1500){
+mapannounce "iz_d04_i","Illusion of Underwater : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(2000-($Ill_water1)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_water1 == 1000){
+mapannounce "iz_d04_i","Illusion of Underwater : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(2000-($Ill_water1)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_water1 == 500){
+mapannounce "iz_d04_i","Illusion of Underwater : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(2000-($Ill_water1)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_water1 == 0){
+mapannounce "iz_d04_i","Illusion of Underwater : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(2000-($Ill_water1)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+$Ill_water1 += 1;
+if($Ill_water1 >= 2000){
+monster "iz_d04_i",0,0,"Deep Sea Kraken",20811,1,strnpcinfo(0)+"::OnEnd";
+$Ill_water1BOSS += 1;
+announce "Illusion of Underwater : ขณะนี้บอสได้ปรากฏตัวออกมาแล้ว นักผจญภัยทุกท่านโปรดระวังตัวให้ดี !!",bc_all,0xFFFF00;
+sleep 2000;
+mapannounce "iz_d04_i","Deep Sea Kraken : ใคร ๆ ก็หวาดกลัวต่อข้า ราชาแห่งใต้ท้องทะเล อย่าคิดว่าเจ้าจะรอดออกไปได้ เจ้านักผจญภัย !!",bc_map,0xFFFF00,FW_NORMAL,16;
+end;
+}
+}
+end;
+
+
+
+OnEnd:
+initnpctimer;
+$Ill_water1_delay = 1;
+mapannounce "iz_d04_i","Deep Sea Kraken : เฮื้อออ... ความมืดมิดใต้ท้องทะเลจะกัดกินเจ้าเช่นข้า แล้วข้าจะกลับมา !!",bc_map,0xFFFF00,FW_NORMAL,16;
+sleep 2000;
+announce "Illusion of Underwater : เหลือเวลาอีก "+ (120-($Ill_water1_delay)) +" นาที บอสจะฟื้นคืนชีพอีกครั้ง !!",bc_all,0xFFFF00;
+$Ill_water1 = 0;											
+$Ill_water1BOSS = 0;
+end;
+
+
+OnTimer60000:
+	$Ill_water1_delay += 1;
+
+	if ($Ill_water1_delay < 120) { // unknown delay (currently 100 mins)
+		initnpctimer;
+	}
+	else {
+		stopnpctimer;		
+		$Ill_water1_delay = 0;
+		//mapannounce "iz_d04_i","Illusion of Underwater : Deep Sea Kraken พร้อมแล้ว",bc_map,0xFFFF00,FW_NORMAL,16;
+	}
+	end;
+
+}
+
+
+
+
+iz_d05_i,0,0,0	script	#Ill_water2	-1,{
+
+OnInit:
+$Ill_water2 = 0;
+$Ill_water2_delay = 0;
+$Ill_water2BOSS = 0;
+end;
+
+OnIllMobDead:
+if($Ill_water2_delay == 0 && $Ill_water2BOSS == 0){
+if($Ill_water2 == 1950){											
+mapannounce "iz_d05_i","Illusion of Underwater : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(2000-($Ill_water2)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_water2 == 1900){											
+mapannounce "iz_d05_i","Illusion of Underwater : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(2000-($Ill_water2)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_water2 == 1750){
+mapannounce "iz_d05_i","Illusion of Underwater : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(2000-($Ill_water2)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_water2 == 1500){
+mapannounce "iz_d05_i","Illusion of Underwater : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(2000-($Ill_water2)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_water2 == 1000){
+mapannounce "iz_d05_i","Illusion of Underwater : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(2000-($Ill_water2)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_water2 == 500){
+mapannounce "iz_d05_i","Illusion of Underwater : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(2000-($Ill_water2)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_water2 == 0){
+mapannounce "iz_d05_i","Illusion of Underwater : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(2000-($Ill_water2)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+$Ill_water2 += 1;
+if($Ill_water2 >= 2000){
+monster "iz_d05_i",0,0,"Deep Sea Witch",20843,1,strnpcinfo(0)+"::OnEnd";
+$Ill_water2BOSS += 1;
+announce "Illusion of Underwater : ขณะนี้บอสได้ปรากฏตัวออกมาแล้ว นักผจญภัยทุกท่านโปรดระวังตัวให้ดี !!",bc_all,0xFFFF00;
+sleep 2000;
+mapannounce "iz_d05_i","Deep Sea Witch :  หึ ! ข้าอยากจะเห็นเหลือเกิน ใบหน้าของคนที่กล้ามาท้าทายข้า !!",bc_map,0xFFFF00,FW_NORMAL,16;
+end;
+}
+}
+end;
+
+
+
+OnEnd:
+initnpctimer;
+$Ill_water2_delay = 1;
+mapannounce "iz_d05_i","Deep Sea Witch : กรี๊ดดดด !!! ความตายของข้ามันเป็นเพียงแค่จุดเริ่มต้น แล้วเจ้าจะเสียใจ !!",bc_map,0xFFFF00,FW_NORMAL,16;
+sleep 2000;
+announce "Illusion of Underwater : เหลือเวลาอีก "+ (120-($Ill_water2_delay)) +" นาที บอสจะฟื้นคืนชีพอีกครั้ง !!",bc_all,0xFFFF00;
+$Ill_water2 = 0;											
+$Ill_water2BOSS = 0;
+end;
+
+
+OnTimer60000:
+	$Ill_water2_delay += 1;
+
+	if ($Ill_water2_delay < 120) { // unknown delay (currently 100 mins)
+		initnpctimer;
+	}
+	else {
+		stopnpctimer;		
+		$Ill_water2_delay = 0;
+		//mapannounce "iz_d05_i","Illusion of Underwater : Deep Sea Witch พร้อมแล้ว",bc_map,0xFFFF00,FW_NORMAL,16;
+	}
+	end;
+
+}

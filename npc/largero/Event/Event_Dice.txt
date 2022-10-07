@@ -1,0 +1,592 @@
+moroccz,201,99,4	script	กิจกรรมทอยเต๋า	625,{
+	callfunc "Looktao_";
+	end;
+	OnInit:
+		// ================ CONFIGURE ================
+		set $@LKT_HEADER$, "[ กิจกรรมทอยเต๋า ]";
+		set $@LKT_WAITINGROOM, 1;
+		set $@LKT_WAITINGROOM$, "[ กิจกรรมทอยเต๋า ]";
+		set $@LKT_MAXIP, 2;
+		set $@LKT_SENDMAP$, "moroccz";
+		setarray $@LKT_SENDAREA, 152,117,167,106;
+		setarray $@LKT_REWARDSTART, 501,300;
+		setarray $@LKT_REWARDPERROUND, 501,300;
+		setarray $@LKT_REWARDEND, 501,300;
+		// ===========================================
+		bindatcmd "testlooktaoevent",strnpcinfo(3)+"::OnTestEvent",90,90;
+		sleep 1000;
+		if($@LKT_WAITINGROOM) waitingroom "" + $@LKT_WAITINGROOM$,0;
+		end;
+		
+	OnClock1500: OnClock2000:
+	OnTestEvent:
+		donpcevent "Looktao__::OnEventStart";
+		end;
+}
+
+function	script	Looktao_	{
+	mes "" + $@LKT_HEADER$;
+	mes "สวัสดีท่าน " + strcharinfo(0);
+	mes "ยินดีต้อนรับท่านเข้าสู่กิจกรรม";
+	mes "^FF6699`ลูกเต๋า`^000000 ท่านจะทำอะไร";
+	next;
+	switch(select( ($@LKT_STARTED ? "~ เข้าสู่กิจกรรม" : ""),"~ ฟังรายละเอียกิจกรรม","~ ไม่มีอะไร")){
+		case 1:
+			if($@LKT_STARTED){
+				announce $@LKT_HEADER$ + " : ท่าน ` " + strcharinfo(0) + " ` ได้เข้าสู่กิจกรรมทอยเต๋าแล้ว",0,0xfff59d;
+				warp "dice_event",303,253;
+			}
+			break;
+		case 2:
+			mes "" + $@LKT_HEADER$;
+			mes "เลือกห้อง 1 - 6 จากนั้นระบบจะ";
+			mes "ทำการสุ่มลูกเต๋าหากได้หมายเลขใด";
+			mes "ห้องนั้นจะแพ้ทั้งห้อง ผู้ที่อยู่ได้จนถึง";
+			mes "ห้องสุดท้ายจะได้รับรางวัลสูงสุด";
+			break;
+		default :
+			break;
+	}
+	return;
+}
+
+-	script	Looktao__	-1,{
+	
+	OnEventStart:
+		initnpctimer;
+		announce $@LKT_HEADER$ + " : ขณะนี้กิจกรรมทอยเต๋าเปิดวาร์ปให้ผู้เล่นเข้ากิจกรรมได้แล้ว มีเวลาเข้า 5 นาที !",0,0xfff59d;
+		set $@LKT_STARTED, 1;
+		callsub S_ONDOORANDSETCELL,0;
+		end;
+		
+	OnTimer240000:
+		announce $@LKT_HEADER$ + " : เหลือเวลาในการเข้ากิจกรรมอีกเพียงแค่ 1 นาทีผู้เล่นที่ยังไม่ได้เข้ารีบเข้าเลย",0,0xfff59d;
+		end;
+		
+	OnTimer300000:
+		announce $@LKT_HEADER$ + " : หมดเวลาในการเข้าร่วมกิจกรรมทอยเต๋าแล้ว พบกันใหม่ในวันพรุ่งนี้เวลาเดิม",0,0xfff59d;
+		mapannounce "dice_event",$@LKT_HEADER$ + " : ท่านมีเวลาอีก 30 วินาทีในการเลือกห้อง",0,0xfff59d;
+		set $@LKT_STARTED, 0;
+		end;
+	
+	OnTimer330000:
+		stopnpctimer;
+		donpcevent strnpcinfo(0) + "::OnGameOn";
+		end;
+	
+	OnGameOn:
+		while(.round < 6){
+			callsub S_ONDOORANDSETCELL,7;
+			callsub S_ONRESTRICTAREA;
+			sleep 1000;
+			callsub S_ONPLAYERCHEAT;
+			callsub S_GETREWARD, .round;
+			sleep 1000;
+			for(set .@i, 5; .@i > 0; set .@i, .@i - 1){
+				mapannounce "dice_event",$@LKT_HEADER$ + " : กิจกรรมทอยเต๋ารอบที่ " + (.round+1) + " กำลังจะเริ่มใน " + .@i + " ....",0,0xfff59d;
+				sleep 1000;
+			}
+			sleep 1000;
+			mapannounce "dice_event",$@LKT_HEADER$ + " : กิจกรรมทอยเต๋ารอบที่ " + (.round+1) + " เริ่มต้นขึ้นแล้ว . . .",0,0xfff59d;
+			callsub S_ONDICERANDOM;
+			callsub S_ONEFFECT, .dice;
+			donpcevent "Dice Manager::OnEmote" + .dice;
+			sleep 1000;
+			mapannounce "dice_event",$@LKT_HEADER$ + " : เลขที่ออกได้แก่เลข .... " + .dice,0,0xfff59d;
+			donpcevent "#EffectRoomNo" + .dice + "::OnEffectCrash";
+			sleep 1000;
+			setarray .dicearray[.round], .dice;
+			callsub S_DICEKICK, .dice;
+			sleep 2000;
+			set .round, .round + 1;
+			if(.round == 5) {
+				callsub S_GETREWARD, .round;
+				sleep 1000;
+				mapannounce "dice_event",$@LKT_HEADER$ + " : กิจกรรมทอยเต๋าได้จบลงแล้วขอบคุณทุกท่านที่ร่วมสนุก",0,0xfff59d;
+				sleep 3000;
+				areawarp "dice_event",0,400,400,0,$@LKT_SENDMAP$,$@LKT_SENDAREA[0],$@LKT_SENDAREA[1],$@LKT_SENDAREA[2],$@LKT_SENDAREA[3];
+				donpcevent strnpcinfo(0) + "::OnEventEnd";
+				end;
+			}
+			mapannounce "dice_event",$@LKT_HEADER$ + " : ท่านมีเวลา 15 วินาทีในการเปลี่ยนห้อง หากไม่ต้องการเปลี่ยนให้อยู่ห้องเดิม",0,0xfff59d;
+			callsub S_ONDOORANDSETCELL,0;
+			for(set .@i, 0; .@i < getarraysize(.dicearray); set .@i, .@i + 1)
+				callsub S_ONDOORANDSETCELL,.dicearray[.@i];
+			sleep 15000;
+		}
+		end;
+	
+	OnEventEnd:
+		sleep 2000;
+		set .round, 0;
+		deletearray .dicearray[0],getarraysize(.dicearray);
+		end;
+	
+	S_ONPLAYERCHEAT:
+		for(set .@i, 0; .@i < getarraysize(.dicearray); set .@i, .@i + 1){
+			switch(.dicearray[.@i]){
+				case 1: areawarp "dice_event",289,263,300,256,$@LKT_SENDMAP$,$@LKT_SENDAREA[0],$@LKT_SENDAREA[1],$@LKT_SENDAREA[2],$@LKT_SENDAREA[3]; break;
+				case 2: areawarp "dice_event",289,254,300,247,$@LKT_SENDMAP$,$@LKT_SENDAREA[0],$@LKT_SENDAREA[1],$@LKT_SENDAREA[2],$@LKT_SENDAREA[3]; break;
+				case 3: areawarp "dice_event",289,245,300,238,$@LKT_SENDMAP$,$@LKT_SENDAREA[0],$@LKT_SENDAREA[1],$@LKT_SENDAREA[2],$@LKT_SENDAREA[3]; break;
+				case 4: areawarp "dice_event",308,263,319,256,$@LKT_SENDMAP$,$@LKT_SENDAREA[0],$@LKT_SENDAREA[1],$@LKT_SENDAREA[2],$@LKT_SENDAREA[3]; break;
+				case 5: areawarp "dice_event",308,254,319,247,$@LKT_SENDMAP$,$@LKT_SENDAREA[0],$@LKT_SENDAREA[1],$@LKT_SENDAREA[2],$@LKT_SENDAREA[3]; break;
+				case 6: areawarp "dice_event",308,245,319,238,$@LKT_SENDMAP$,$@LKT_SENDAREA[0],$@LKT_SENDAREA[1],$@LKT_SENDAREA[2],$@LKT_SENDAREA[3]; break;
+			}
+		}
+		return;
+	
+	S_ONDICERANDOM:
+		set .dice, rand(1,6);
+		for(set .@i, 0; .@i < getarraysize(.dicearray); set .@i, .@i + 1)
+			if(.dice == .dicearray[.@i]){
+				callsub S_ONDICERANDOM;
+				return;
+			}
+		return .dice;
+	
+	S_ONEFFECT:
+		set .@baseround, 24;									// 24 Times = 4 rounds ( 24/6 )
+		set .@rand, rand(4,6);									// Random additional round(s)
+		set .@jumptime, .@baseround + (6*.@rand) + getarg(0);	// Argument = randomed dice
+		
+		for(set .@i, 0; .@i < .@jumptime; set .@i, .@i + 1){
+			set .@roomNo, (.@i%6)+1;
+			set .@donot_effect, false;
+			for(set .@j, 0; .@j < getarraysize(.dicearray); set .@j, .@j + 1){
+				if(.@roomNo == .dicearray[.@j]) set .@donot_effect, true;
+			}
+			if(!.@donot_effect){
+				if(.@i+1 == .@jumptime) sleep 1000 + (.@i*10);
+				else sleep 50 + (.@i*10);
+				donpcevent "#EffectRoomNo" + .@roomNo + "::OnEffect";
+			}
+		}
+		return;
+	
+	S_ONRESTRICTAREA:
+		areawarp "dice_event",301,264,304,255,"dice_event",289,263,300,256;	// Room 1
+		areawarp "dice_event",301,254,304,247,"dice_event",289,254,300,247;	// Room 2
+		areawarp "dice_event",301,246,304,237,"dice_event",289,245,300,238;	// Room 3
+		areawarp "dice_event",305,264,307,255,"dice_event",308,263,319,256;	// Room 4
+		areawarp "dice_event",305,254,307,247,"dice_event",308,254,319,247;	// Room 5
+		areawarp "dice_event",305,246,307,237,"dice_event",308,245,319,238;	// Room 6
+		return;
+	
+	S_ONDOORANDSETCELL:
+		switch(getarg(0)){
+			case 0: // เปิดทุกห้อง
+				set .wallStart, 1;  set .wallEnd, 24; set .isEnable, 0;
+				setcell "dice_event",301,261,301,258,cell_walkable,1;
+				setcell "dice_event",301,252,301,249,cell_walkable,1;
+				setcell "dice_event",301,243,301,240,cell_walkable,1;
+				setcell "dice_event",307,261,307,258,cell_walkable,1;
+				setcell "dice_event",307,252,307,249,cell_walkable,1;
+				setcell "dice_event",307,243,307,240,cell_walkable,1;
+				break;
+			case 1: // ปิดห้อง 1
+				set .wallStart, 1;  set .wallEnd, 4; set .isEnable, 1;
+				setcell "dice_event",301,261,301,258,cell_walkable,0;
+				break;
+			case 2: // ปิดห้อง 2
+				set .wallStart, 5;  set .wallEnd, 8; set .isEnable, 1;
+				setcell "dice_event",301,252,301,249,cell_walkable,0;
+				break;
+			case 3: // ปิดห้อง 3
+				set .wallStart, 9;  set .wallEnd, 12; set .isEnable, 1;
+				setcell "dice_event",301,243,301,240,cell_walkable,0;
+				break;
+			case 4: // ปิดห้อง 4
+				set .wallStart, 13;  set .wallEnd, 16; set .isEnable, 1;
+				setcell "dice_event",307,261,307,258,cell_walkable,0;
+				break;
+			case 5: // ปิดห้อง 5
+				set .wallStart, 17;  set .wallEnd, 20; set .isEnable, 1;
+				setcell "dice_event",307,252,307,249,cell_walkable,0;
+				break;
+			case 6: // ปิดห้อง 6
+				set .wallStart, 21;  set .wallEnd, 24; set .isEnable, 1;
+				setcell "dice_event",307,243,307,240,cell_walkable,0;
+				break;
+			case 7:  // ปิดทุกห้อง
+				set .wallStart, 1;  set .wallEnd, 24; set .isEnable, 1;
+				setcell "dice_event",301,261,301,258,cell_walkable,0;
+				setcell "dice_event",301,252,301,249,cell_walkable,0;
+				setcell "dice_event",301,243,301,240,cell_walkable,0;
+				setcell "dice_event",307,261,307,258,cell_walkable,0;
+				setcell "dice_event",307,252,307,249,cell_walkable,0;
+				setcell "dice_event",307,243,307,240,cell_walkable,0;
+				break;
+		}
+		switch(.isEnable){
+			case 0:
+				for(set .@i, .wallStart; .@i <= .wallEnd; set .@i, .@i + 1)
+					disablenpc "Wall#D" + .@i; 
+				break;
+			case 1:
+				for(set .@i, .wallStart; .@i <= .wallEnd; set .@i, .@i + 1)
+					enablenpc "Wall#D" + .@i; 
+				break;
+		}
+		return;
+		
+	S_DICEKICK:	
+		switch(getarg(0)){
+			case 1: areawarp "dice_event",289,263,300,256,$@LKT_SENDMAP$,$@LKT_SENDAREA[0],$@LKT_SENDAREA[1],$@LKT_SENDAREA[2],$@LKT_SENDAREA[3]; break;
+			case 2: areawarp "dice_event",289,254,300,247,$@LKT_SENDMAP$,$@LKT_SENDAREA[0],$@LKT_SENDAREA[1],$@LKT_SENDAREA[2],$@LKT_SENDAREA[3]; break;
+			case 3: areawarp "dice_event",289,245,300,238,$@LKT_SENDMAP$,$@LKT_SENDAREA[0],$@LKT_SENDAREA[1],$@LKT_SENDAREA[2],$@LKT_SENDAREA[3]; break;
+			case 4: areawarp "dice_event",308,263,319,256,$@LKT_SENDMAP$,$@LKT_SENDAREA[0],$@LKT_SENDAREA[1],$@LKT_SENDAREA[2],$@LKT_SENDAREA[3]; break;
+			case 5: areawarp "dice_event",308,254,319,247,$@LKT_SENDMAP$,$@LKT_SENDAREA[0],$@LKT_SENDAREA[1],$@LKT_SENDAREA[2],$@LKT_SENDAREA[3]; break;
+			case 6: areawarp "dice_event",308,245,319,238,$@LKT_SENDMAP$,$@LKT_SENDAREA[0],$@LKT_SENDAREA[1],$@LKT_SENDAREA[2],$@LKT_SENDAREA[3]; break;
+		}
+		return;
+	
+	S_GETREWARD:
+		switch(getarg(0)){
+			case 0: copyarray .itemreward[0],$@LKT_REWARDSTART[0],getarraysize($@LKT_REWARDSTART); break;
+			case 1: copyarray .itemreward[0],$@LKT_REWARDPERROUND[0],getarraysize($@LKT_REWARDPERROUND); break;
+			case 2: copyarray .itemreward[0],$@LKT_REWARDPERROUND[0],getarraysize($@LKT_REWARDPERROUND); break;
+			case 3: copyarray .itemreward[0],$@LKT_REWARDPERROUND[0],getarraysize($@LKT_REWARDPERROUND); break;
+			case 4: copyarray .itemreward[0],$@LKT_REWARDPERROUND[0],getarraysize($@LKT_REWARDPERROUND); break;
+			case 5: copyarray .itemreward[0],$@LKT_REWARDEND[0],getarraysize($@LKT_REWARDEND); break;
+		}
+		set .@n, query_sql ("SELECT DISTINCT `account_id` FROM `char` WHERE `online` = '1'",.@aid);
+		freeloop(1);
+		for (set .@i, 0 ; .@i < .@n ; set .@i, .@i + 1) {
+			if(attachrid(.@aid[.@i])){
+				if (strcharinfo(3) != "dice_event") { deletearray .@aid[.@i],1; .@i-- ; .@n--; }
+				detachrid;
+			}
+		}
+		for (set .@i, 0 ; .@i < .@n ; set .@i, .@i + 1) {
+			if(attachrid(.@aid[.@i])){
+				for(set .@j, 0; .@j < getarraysize(.itemreward); set .@j, .@j + 2)
+					getitem .itemreward[.@j], .itemreward[.@j+1];
+				detachrid;
+			}
+		}
+		deletearray .itemreward[0],getarraysize(.itemreward);
+		return;
+}
+
+dice_event,304,250,3,	script	Dice Manager	864,{
+	end;
+	OnEmote1: emotion ET_DICE1; end;
+	OnEmote2: emotion ET_DICE2; end;
+	OnEmote3: emotion ET_DICE3; end;
+	OnEmote4: emotion ET_DICE4; end;
+	OnEmote5: emotion ET_DICE5; end;
+	OnEmote6: emotion ET_DICE6; end;
+}
+
+-	script	Wall#looktao	-1,{
+	end;
+}
+	
+-	script	Setcell#looktao	-1,{
+	OnInit:
+		setcell "dice_event",286,269,321,264,cell_walkable,0;
+		setcell "dice_event",286,237,321,232,cell_walkable,0;
+		setcell "dice_event",286,263,288,238,cell_walkable,0;
+		setcell "dice_event",302,264,306,237,cell_walkable,1;
+		setcell "dice_event",289,255,301,255,cell_walkable,0;
+		setcell "dice_event",307,255,320,255,cell_walkable,0;
+		setcell "dice_event",307,246,320,246,cell_walkable,0;
+		setcell "dice_event",289,246,301,246,cell_walkable,0;
+		setcell "dice_event",301,263,301,238,cell_walkable,0;
+		setcell "dice_event",307,263,307,238,cell_walkable,0;
+		setcell "dice_event",320,264,320,238,cell_walkable,0;
+		end;
+}
+
+-	script	DiceRoomNo	-1,{
+	end;
+	OnInit:
+		waitingroom "# หมายเลข " + strnpcinfo(2),0;
+		end;
+}
+
+-	script	DiceEffect	-1,{
+	end;
+	
+	OnEffect:
+		specialeffect EF_GROUND_EXPLOSION;
+		end;
+	
+	OnEffectCrash:
+		specialeffect EF_SUI_EXPLOSION;
+		end;
+	
+}
+
+// Room Board
+dice_event,295,264,0	duplicate(DiceRoomNo)	RoomNo#1	HIDDEN_NPC
+dice_event,295,255,0	duplicate(DiceRoomNo)	RoomNo#2	HIDDEN_NPC
+dice_event,295,246,0	duplicate(DiceRoomNo)	RoomNo#3	HIDDEN_NPC
+dice_event,314,264,0	duplicate(DiceRoomNo)	RoomNo#4	HIDDEN_NPC
+dice_event,314,255,0	duplicate(DiceRoomNo)	RoomNo#5	HIDDEN_NPC
+dice_event,314,246,0	duplicate(DiceRoomNo)	RoomNo#6	HIDDEN_NPC
+
+// Effect
+dice_event,295,259,0	duplicate(DiceEffect)	#EffectRoomNo1	HIDDEN_NPC
+dice_event,295,250,0	duplicate(DiceEffect)	#EffectRoomNo2	HIDDEN_NPC
+dice_event,295,241,0	duplicate(DiceEffect)	#EffectRoomNo3	HIDDEN_NPC
+dice_event,313,260,0	duplicate(DiceEffect)	#EffectRoomNo4	HIDDEN_NPC
+dice_event,313,251,0	duplicate(DiceEffect)	#EffectRoomNo5	HIDDEN_NPC
+dice_event,313,242,0	duplicate(DiceEffect)	#EffectRoomNo6	HIDDEN_NPC
+
+// Door
+dice_event,301,261,4	duplicate(Wall#looktao)	Wall#D1	4_BULLETIN_BOARD2
+dice_event,301,260,4	duplicate(Wall#looktao)	Wall#D2	4_BULLETIN_BOARD2
+dice_event,301,259,4	duplicate(Wall#looktao)	Wall#D3	4_BULLETIN_BOARD2
+dice_event,301,258,4	duplicate(Wall#looktao)	Wall#D4	4_BULLETIN_BOARD2
+dice_event,301,252,4	duplicate(Wall#looktao)	Wall#D5	4_BULLETIN_BOARD2
+dice_event,301,251,4	duplicate(Wall#looktao)	Wall#D6	4_BULLETIN_BOARD2
+dice_event,301,250,4	duplicate(Wall#looktao)	Wall#D7	4_BULLETIN_BOARD2
+dice_event,301,249,4	duplicate(Wall#looktao)	Wall#D8	4_BULLETIN_BOARD2
+dice_event,301,243,4	duplicate(Wall#looktao)	Wall#D9	4_BULLETIN_BOARD2
+dice_event,301,242,4	duplicate(Wall#looktao)	Wall#D10	4_BULLETIN_BOARD2
+dice_event,301,241,4	duplicate(Wall#looktao)	Wall#D11	4_BULLETIN_BOARD2
+dice_event,301,240,4	duplicate(Wall#looktao)	Wall#D12	4_BULLETIN_BOARD2
+dice_event,307,261,4	duplicate(Wall#looktao)	Wall#D13	4_BULLETIN_BOARD2
+dice_event,307,260,4	duplicate(Wall#looktao)	Wall#D14	4_BULLETIN_BOARD2
+dice_event,307,259,4	duplicate(Wall#looktao)	Wall#D15	4_BULLETIN_BOARD2
+dice_event,307,258,4	duplicate(Wall#looktao)	Wall#D16	4_BULLETIN_BOARD2
+dice_event,307,252,4	duplicate(Wall#looktao)	Wall#D17	4_BULLETIN_BOARD2
+dice_event,307,251,4	duplicate(Wall#looktao)	Wall#D18	4_BULLETIN_BOARD2
+dice_event,307,250,4	duplicate(Wall#looktao)	Wall#D19	4_BULLETIN_BOARD2
+dice_event,307,249,4	duplicate(Wall#looktao)	Wall#D20	4_BULLETIN_BOARD2
+dice_event,307,243,4	duplicate(Wall#looktao)	Wall#D21	4_BULLETIN_BOARD2
+dice_event,307,242,4	duplicate(Wall#looktao)	Wall#D22	4_BULLETIN_BOARD2
+dice_event,307,241,4	duplicate(Wall#looktao)	Wall#D23	4_BULLETIN_BOARD2
+dice_event,307,240,4	duplicate(Wall#looktao)	Wall#D24	4_BULLETIN_BOARD2
+
+// Left
+dice_event,288,264,4	duplicate(Wall#looktao)	Wall#1	4_BULLETIN_BOARD2
+dice_event,288,263,4	duplicate(Wall#looktao)	Wall#2	4_BULLETIN_BOARD2
+dice_event,288,262,4	duplicate(Wall#looktao)	Wall#3	4_BULLETIN_BOARD2
+dice_event,288,261,4	duplicate(Wall#looktao)	Wall#4	4_BULLETIN_BOARD2
+dice_event,288,260,4	duplicate(Wall#looktao)	Wall#5	4_BULLETIN_BOARD2
+dice_event,288,259,4	duplicate(Wall#looktao)	Wall#6	4_BULLETIN_BOARD2
+dice_event,288,258,4	duplicate(Wall#looktao)	Wall#7	4_BULLETIN_BOARD2
+dice_event,288,257,4	duplicate(Wall#looktao)	Wall#8	4_BULLETIN_BOARD2
+dice_event,288,256,4	duplicate(Wall#looktao)	Wall#9	4_BULLETIN_BOARD2
+dice_event,288,255,4	duplicate(Wall#looktao)	Wall#10	4_BULLETIN_BOARD2
+dice_event,288,254,4	duplicate(Wall#looktao)	Wall#11	4_BULLETIN_BOARD2
+dice_event,288,253,4	duplicate(Wall#looktao)	Wall#12	4_BULLETIN_BOARD2
+dice_event,288,252,4	duplicate(Wall#looktao)	Wall#13	4_BULLETIN_BOARD2
+dice_event,288,251,4	duplicate(Wall#looktao)	Wall#14	4_BULLETIN_BOARD2
+dice_event,288,250,4	duplicate(Wall#looktao)	Wall#15	4_BULLETIN_BOARD2
+dice_event,288,249,4	duplicate(Wall#looktao)	Wall#16	4_BULLETIN_BOARD2
+dice_event,288,248,4	duplicate(Wall#looktao)	Wall#17	4_BULLETIN_BOARD2
+dice_event,288,247,4	duplicate(Wall#looktao)	Wall#18	4_BULLETIN_BOARD2
+dice_event,288,246,4	duplicate(Wall#looktao)	Wall#19	4_BULLETIN_BOARD2
+dice_event,288,245,4	duplicate(Wall#looktao)	Wall#20	4_BULLETIN_BOARD2
+dice_event,288,244,4	duplicate(Wall#looktao)	Wall#21	4_BULLETIN_BOARD2
+dice_event,288,243,4	duplicate(Wall#looktao)	Wall#22	4_BULLETIN_BOARD2
+dice_event,288,242,4	duplicate(Wall#looktao)	Wall#23	4_BULLETIN_BOARD2
+dice_event,288,241,4	duplicate(Wall#looktao)	Wall#24	4_BULLETIN_BOARD2
+dice_event,288,240,4	duplicate(Wall#looktao)	Wall#25	4_BULLETIN_BOARD2
+dice_event,288,239,4	duplicate(Wall#looktao)	Wall#26	4_BULLETIN_BOARD2
+dice_event,288,238,4	duplicate(Wall#looktao)	Wall#27	4_BULLETIN_BOARD2
+dice_event,288,237,4	duplicate(Wall#looktao)	Wall#28	4_BULLETIN_BOARD2
+
+// Right
+dice_event,301,264,4	duplicate(Wall#looktao)	Wall#29	4_BULLETIN_BOARD2
+dice_event,301,263,4	duplicate(Wall#looktao)	Wall#30	4_BULLETIN_BOARD2
+dice_event,301,262,4	duplicate(Wall#looktao)	Wall#31	4_BULLETIN_BOARD2
+dice_event,301,257,4	duplicate(Wall#looktao)	Wall#32	4_BULLETIN_BOARD2
+dice_event,301,256,4	duplicate(Wall#looktao)	Wall#33	4_BULLETIN_BOARD2
+dice_event,301,254,4	duplicate(Wall#looktao)	Wall#34	4_BULLETIN_BOARD2
+dice_event,301,253,4	duplicate(Wall#looktao)	Wall#35	4_BULLETIN_BOARD2
+dice_event,301,248,4	duplicate(Wall#looktao)	Wall#36	4_BULLETIN_BOARD2
+dice_event,301,247,4	duplicate(Wall#looktao)	Wall#37	4_BULLETIN_BOARD2
+dice_event,301,245,4	duplicate(Wall#looktao)	Wall#38	4_BULLETIN_BOARD2
+dice_event,301,244,4	duplicate(Wall#looktao)	Wall#39	4_BULLETIN_BOARD2
+dice_event,301,239,4	duplicate(Wall#looktao)	Wall#40	4_BULLETIN_BOARD2
+dice_event,301,238,4	duplicate(Wall#looktao)	Wall#41	4_BULLETIN_BOARD2
+dice_event,301,237,4	duplicate(Wall#looktao)	Wall#42	4_BULLETIN_BOARD2
+
+// Top Mid Bottom
+dice_event,289,264,4	duplicate(Wall#looktao)	Wall#43	4_BULLETIN_BOARD2
+dice_event,290,264,4	duplicate(Wall#looktao)	Wall#44	4_BULLETIN_BOARD2
+dice_event,291,264,4	duplicate(Wall#looktao)	Wall#45	4_BULLETIN_BOARD2
+dice_event,292,264,4	duplicate(Wall#looktao)	Wall#46	4_BULLETIN_BOARD2
+dice_event,293,264,4	duplicate(Wall#looktao)	Wall#47	4_BULLETIN_BOARD2
+dice_event,294,264,4	duplicate(Wall#looktao)	Wall#48	4_BULLETIN_BOARD2
+dice_event,295,264,4	duplicate(Wall#looktao)	Wall#49	4_BULLETIN_BOARD2
+dice_event,296,264,4	duplicate(Wall#looktao)	Wall#50	4_BULLETIN_BOARD2
+dice_event,297,264,4	duplicate(Wall#looktao)	Wall#51	4_BULLETIN_BOARD2
+dice_event,298,264,4	duplicate(Wall#looktao)	Wall#52	4_BULLETIN_BOARD2
+dice_event,299,264,4	duplicate(Wall#looktao)	Wall#53	4_BULLETIN_BOARD2
+dice_event,300,264,4	duplicate(Wall#looktao)	Wall#54	4_BULLETIN_BOARD2
+dice_event,289,255,4	duplicate(Wall#looktao)	Wall#55	4_BULLETIN_BOARD2
+dice_event,290,255,4	duplicate(Wall#looktao)	Wall#56	4_BULLETIN_BOARD2
+dice_event,291,255,4	duplicate(Wall#looktao)	Wall#57	4_BULLETIN_BOARD2
+dice_event,292,255,4	duplicate(Wall#looktao)	Wall#58	4_BULLETIN_BOARD2
+dice_event,293,255,4	duplicate(Wall#looktao)	Wall#59	4_BULLETIN_BOARD2
+dice_event,294,255,4	duplicate(Wall#looktao)	Wall#60	4_BULLETIN_BOARD2
+dice_event,295,255,4	duplicate(Wall#looktao)	Wall#61	4_BULLETIN_BOARD2
+dice_event,296,255,4	duplicate(Wall#looktao)	Wall#62	4_BULLETIN_BOARD2
+dice_event,297,255,4	duplicate(Wall#looktao)	Wall#63	4_BULLETIN_BOARD2
+dice_event,298,255,4	duplicate(Wall#looktao)	Wall#64	4_BULLETIN_BOARD2
+dice_event,299,255,4	duplicate(Wall#looktao)	Wall#65	4_BULLETIN_BOARD2
+dice_event,300,255,4	duplicate(Wall#looktao)	Wall#66	4_BULLETIN_BOARD2
+dice_event,301,255,4	duplicate(Wall#looktao)	Wall#67	4_BULLETIN_BOARD2
+dice_event,289,246,4	duplicate(Wall#looktao)	Wall#68	4_BULLETIN_BOARD2
+dice_event,290,246,4	duplicate(Wall#looktao)	Wall#69	4_BULLETIN_BOARD2
+dice_event,291,246,4	duplicate(Wall#looktao)	Wall#70	4_BULLETIN_BOARD2
+dice_event,292,246,4	duplicate(Wall#looktao)	Wall#71	4_BULLETIN_BOARD2
+dice_event,293,246,4	duplicate(Wall#looktao)	Wall#72	4_BULLETIN_BOARD2
+dice_event,294,246,4	duplicate(Wall#looktao)	Wall#73	4_BULLETIN_BOARD2
+dice_event,295,246,4	duplicate(Wall#looktao)	Wall#74	4_BULLETIN_BOARD2
+dice_event,296,246,4	duplicate(Wall#looktao)	Wall#75	4_BULLETIN_BOARD2
+dice_event,297,246,4	duplicate(Wall#looktao)	Wall#76	4_BULLETIN_BOARD2
+dice_event,298,246,4	duplicate(Wall#looktao)	Wall#77	4_BULLETIN_BOARD2
+dice_event,299,246,4	duplicate(Wall#looktao)	Wall#78	4_BULLETIN_BOARD2
+dice_event,300,246,4	duplicate(Wall#looktao)	Wall#79	4_BULLETIN_BOARD2
+dice_event,301,246,4	duplicate(Wall#looktao)	Wall#80	4_BULLETIN_BOARD2
+dice_event,289,237,4	duplicate(Wall#looktao)	Wall#81	4_BULLETIN_BOARD2
+dice_event,290,237,4	duplicate(Wall#looktao)	Wall#82	4_BULLETIN_BOARD2
+dice_event,291,237,4	duplicate(Wall#looktao)	Wall#83	4_BULLETIN_BOARD2
+dice_event,292,237,4	duplicate(Wall#looktao)	Wall#84	4_BULLETIN_BOARD2
+dice_event,293,237,4	duplicate(Wall#looktao)	Wall#85	4_BULLETIN_BOARD2
+dice_event,294,237,4	duplicate(Wall#looktao)	Wall#86	4_BULLETIN_BOARD2
+dice_event,295,237,4	duplicate(Wall#looktao)	Wall#87	4_BULLETIN_BOARD2
+dice_event,296,237,4	duplicate(Wall#looktao)	Wall#88	4_BULLETIN_BOARD2
+dice_event,297,237,4	duplicate(Wall#looktao)	Wall#89	4_BULLETIN_BOARD2
+dice_event,298,237,4	duplicate(Wall#looktao)	Wall#90	4_BULLETIN_BOARD2
+dice_event,299,237,4	duplicate(Wall#looktao)	Wall#91	4_BULLETIN_BOARD2
+dice_event,300,237,4	duplicate(Wall#looktao)	Wall#92	4_BULLETIN_BOARD2
+
+// Left
+dice_event,307,263,4	duplicate(Wall#looktao)	Wall#93	4_BULLETIN_BOARD2
+dice_event,307,262,4	duplicate(Wall#looktao)	Wall#94	4_BULLETIN_BOARD2
+dice_event,307,257,4	duplicate(Wall#looktao)	Wall#95	4_BULLETIN_BOARD2
+dice_event,307,256,4	duplicate(Wall#looktao)	Wall#96	4_BULLETIN_BOARD2
+dice_event,307,254,4	duplicate(Wall#looktao)	Wall#97	4_BULLETIN_BOARD2
+dice_event,307,253,4	duplicate(Wall#looktao)	Wall#98	4_BULLETIN_BOARD2
+dice_event,307,248,4	duplicate(Wall#looktao)	Wall#99	4_BULLETIN_BOARD2
+dice_event,307,247,4	duplicate(Wall#looktao)	Wall#100	4_BULLETIN_BOARD2
+dice_event,307,245,4	duplicate(Wall#looktao)	Wall#101	4_BULLETIN_BOARD2
+dice_event,307,244,4	duplicate(Wall#looktao)	Wall#102	4_BULLETIN_BOARD2
+dice_event,307,239,4	duplicate(Wall#looktao)	Wall#103	4_BULLETIN_BOARD2
+dice_event,307,238,4	duplicate(Wall#looktao)	Wall#104	4_BULLETIN_BOARD2
+
+// Right
+dice_event,320,264,4	duplicate(Wall#looktao)	Wall#105	4_BULLETIN_BOARD2
+dice_event,320,263,4	duplicate(Wall#looktao)	Wall#106	4_BULLETIN_BOARD2
+dice_event,320,262,4	duplicate(Wall#looktao)	Wall#107	4_BULLETIN_BOARD2
+dice_event,320,261,4	duplicate(Wall#looktao)	Wall#108	4_BULLETIN_BOARD2
+dice_event,320,260,4	duplicate(Wall#looktao)	Wall#109	4_BULLETIN_BOARD2
+dice_event,320,259,4	duplicate(Wall#looktao)	Wall#110	4_BULLETIN_BOARD2
+dice_event,320,258,4	duplicate(Wall#looktao)	Wall#111	4_BULLETIN_BOARD2
+dice_event,320,257,4	duplicate(Wall#looktao)	Wall#112	4_BULLETIN_BOARD2
+dice_event,320,256,4	duplicate(Wall#looktao)	Wall#113	4_BULLETIN_BOARD2
+dice_event,320,255,4	duplicate(Wall#looktao)	Wall#114	4_BULLETIN_BOARD2
+dice_event,320,254,4	duplicate(Wall#looktao)	Wall#115	4_BULLETIN_BOARD2
+dice_event,320,253,4	duplicate(Wall#looktao)	Wall#116	4_BULLETIN_BOARD2
+dice_event,320,252,4	duplicate(Wall#looktao)	Wall#117	4_BULLETIN_BOARD2
+dice_event,320,251,4	duplicate(Wall#looktao)	Wall#118	4_BULLETIN_BOARD2
+dice_event,320,250,4	duplicate(Wall#looktao)	Wall#119	4_BULLETIN_BOARD2
+dice_event,320,249,4	duplicate(Wall#looktao)	Wall#120	4_BULLETIN_BOARD2
+dice_event,320,248,4	duplicate(Wall#looktao)	Wall#121	4_BULLETIN_BOARD2
+dice_event,320,247,4	duplicate(Wall#looktao)	Wall#122	4_BULLETIN_BOARD2
+dice_event,320,246,4	duplicate(Wall#looktao)	Wall#123	4_BULLETIN_BOARD2
+dice_event,320,245,4	duplicate(Wall#looktao)	Wall#124	4_BULLETIN_BOARD2
+dice_event,320,244,4	duplicate(Wall#looktao)	Wall#125	4_BULLETIN_BOARD2
+dice_event,320,243,4	duplicate(Wall#looktao)	Wall#126	4_BULLETIN_BOARD2
+dice_event,320,242,4	duplicate(Wall#looktao)	Wall#127	4_BULLETIN_BOARD2
+dice_event,320,241,4	duplicate(Wall#looktao)	Wall#128	4_BULLETIN_BOARD2
+dice_event,320,240,4	duplicate(Wall#looktao)	Wall#129	4_BULLETIN_BOARD2
+dice_event,320,239,4	duplicate(Wall#looktao)	Wall#130	4_BULLETIN_BOARD2
+dice_event,320,238,4	duplicate(Wall#looktao)	Wall#131	4_BULLETIN_BOARD2
+dice_event,320,237,4	duplicate(Wall#looktao)	Wall#132	4_BULLETIN_BOARD2
+
+// Top Mid Bottom
+dice_event,307,264,4	duplicate(Wall#looktao)	Wall#133	4_BULLETIN_BOARD2
+dice_event,308,264,4	duplicate(Wall#looktao)	Wall#134	4_BULLETIN_BOARD2
+dice_event,309,264,4	duplicate(Wall#looktao)	Wall#135	4_BULLETIN_BOARD2
+dice_event,310,264,4	duplicate(Wall#looktao)	Wall#136	4_BULLETIN_BOARD2
+dice_event,311,264,4	duplicate(Wall#looktao)	Wall#137	4_BULLETIN_BOARD2
+dice_event,312,264,4	duplicate(Wall#looktao)	Wall#138	4_BULLETIN_BOARD2
+dice_event,313,264,4	duplicate(Wall#looktao)	Wall#139	4_BULLETIN_BOARD2
+dice_event,314,264,4	duplicate(Wall#looktao)	Wall#140	4_BULLETIN_BOARD2
+dice_event,315,264,4	duplicate(Wall#looktao)	Wall#141	4_BULLETIN_BOARD2
+dice_event,316,264,4	duplicate(Wall#looktao)	Wall#142	4_BULLETIN_BOARD2
+dice_event,317,264,4	duplicate(Wall#looktao)	Wall#143	4_BULLETIN_BOARD2
+dice_event,318,264,4	duplicate(Wall#looktao)	Wall#144	4_BULLETIN_BOARD2
+dice_event,319,264,4	duplicate(Wall#looktao)	Wall#145	4_BULLETIN_BOARD2
+dice_event,307,255,4	duplicate(Wall#looktao)	Wall#146	4_BULLETIN_BOARD2
+dice_event,308,255,4	duplicate(Wall#looktao)	Wall#147	4_BULLETIN_BOARD2
+dice_event,309,255,4	duplicate(Wall#looktao)	Wall#148	4_BULLETIN_BOARD2
+dice_event,310,255,4	duplicate(Wall#looktao)	Wall#149	4_BULLETIN_BOARD2
+dice_event,311,255,4	duplicate(Wall#looktao)	Wall#150	4_BULLETIN_BOARD2
+dice_event,312,255,4	duplicate(Wall#looktao)	Wall#151	4_BULLETIN_BOARD2
+dice_event,313,255,4	duplicate(Wall#looktao)	Wall#152	4_BULLETIN_BOARD2
+dice_event,314,255,4	duplicate(Wall#looktao)	Wall#153	4_BULLETIN_BOARD2
+dice_event,315,255,4	duplicate(Wall#looktao)	Wall#154	4_BULLETIN_BOARD2
+dice_event,316,255,4	duplicate(Wall#looktao)	Wall#155	4_BULLETIN_BOARD2
+dice_event,317,255,4	duplicate(Wall#looktao)	Wall#156	4_BULLETIN_BOARD2
+dice_event,318,255,4	duplicate(Wall#looktao)	Wall#157	4_BULLETIN_BOARD2
+dice_event,319,255,4	duplicate(Wall#looktao)	Wall#158	4_BULLETIN_BOARD2
+dice_event,307,246,4	duplicate(Wall#looktao)	Wall#159	4_BULLETIN_BOARD2
+dice_event,308,246,4	duplicate(Wall#looktao)	Wall#160	4_BULLETIN_BOARD2
+dice_event,309,246,4	duplicate(Wall#looktao)	Wall#161	4_BULLETIN_BOARD2
+dice_event,310,246,4	duplicate(Wall#looktao)	Wall#162	4_BULLETIN_BOARD2
+dice_event,311,246,4	duplicate(Wall#looktao)	Wall#163	4_BULLETIN_BOARD2
+dice_event,312,246,4	duplicate(Wall#looktao)	Wall#164	4_BULLETIN_BOARD2
+dice_event,313,246,4	duplicate(Wall#looktao)	Wall#165	4_BULLETIN_BOARD2
+dice_event,314,246,4	duplicate(Wall#looktao)	Wall#166	4_BULLETIN_BOARD2
+dice_event,315,246,4	duplicate(Wall#looktao)	Wall#167	4_BULLETIN_BOARD2
+dice_event,316,246,4	duplicate(Wall#looktao)	Wall#168	4_BULLETIN_BOARD2
+dice_event,317,246,4	duplicate(Wall#looktao)	Wall#169	4_BULLETIN_BOARD2
+dice_event,318,246,4	duplicate(Wall#looktao)	Wall#170	4_BULLETIN_BOARD2
+dice_event,319,246,4	duplicate(Wall#looktao)	Wall#171	4_BULLETIN_BOARD2
+dice_event,307,237,4	duplicate(Wall#looktao)	Wall#172	4_BULLETIN_BOARD2
+dice_event,308,237,4	duplicate(Wall#looktao)	Wall#173	4_BULLETIN_BOARD2
+dice_event,309,237,4	duplicate(Wall#looktao)	Wall#174	4_BULLETIN_BOARD2
+dice_event,310,237,4	duplicate(Wall#looktao)	Wall#175	4_BULLETIN_BOARD2
+dice_event,311,237,4	duplicate(Wall#looktao)	Wall#176	4_BULLETIN_BOARD2
+dice_event,312,237,4	duplicate(Wall#looktao)	Wall#177	4_BULLETIN_BOARD2
+dice_event,313,237,4	duplicate(Wall#looktao)	Wall#178	4_BULLETIN_BOARD2
+dice_event,314,237,4	duplicate(Wall#looktao)	Wall#179	4_BULLETIN_BOARD2
+dice_event,315,237,4	duplicate(Wall#looktao)	Wall#180	4_BULLETIN_BOARD2
+dice_event,316,237,4	duplicate(Wall#looktao)	Wall#181	4_BULLETIN_BOARD2
+dice_event,317,237,4	duplicate(Wall#looktao)	Wall#182	4_BULLETIN_BOARD2
+dice_event,318,237,4	duplicate(Wall#looktao)	Wall#183	4_BULLETIN_BOARD2
+dice_event,319,237,4	duplicate(Wall#looktao)	Wall#184	4_BULLETIN_BOARD2
+
+
+-	script	Looktao_	-1,{
+OnPCLoadMapEvent:
+	set .@charmap$, strcharinfo(3);
+	for(set(.@q,0);.@q<.lens;set(.@q,.@q+1))
+		if(.@charmap$==.maps$[.@q]) break;
+		else end;
+	if(.@charmap$!=.maps$[.@q]) end;
+	set .@len, query_sql("SELECT DISTINCT `account_id` FROM `char` WHERE `account_id` IN (SELECT `account_id` FROM `login` WHERE `last_ip` = (SELECT `last_ip` FROM `login` WHERE `account_id`="+getcharid(3)+")) AND `online` <> 0;",.@a);
+	if(.@len-1) {
+		for(set(.@d,0);.@d<.@len;set(.@d,.@d+2)) {
+			getmapxy(.@map$,.@x,.@y,BL_PC,rid2name(.@a[.@d]));
+			if(.maps$[.@q]==.@map$&&rid2name(.@a[.@d])!=strcharinfo(0)) {
+				dispbottom "กิจกรรมมีการจำกัดการเข้าเล่นไม่เกิน 2 จอ ต่อ 1 ip เท่านั้น",0xFF0000;
+				warp "SavePoint",0,0;
+			}
+		}
+	}
+	end;
+	
+OnInit:
+	setarray   .maps$  ,	"dice_event";
+	set        .lens   ,	getarraysize(.maps$)                                   ;
+	for(set(.a,0);.a<.lens;set(.a,.a+1))
+		setmapflag .maps$[.a],	mf_loadevent ;
+}
+
+
+
+dice_event	mapflag	noreturn
+dice_event	mapflag	nomemo
+dice_event	mapflag	nosave	SavePoint
+dice_event	mapflag	noteleport
+dice_event	mapflag	nobranch	

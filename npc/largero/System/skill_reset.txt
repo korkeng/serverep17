@@ -1,0 +1,32 @@
+moroccz,171,118,4	script	รีเซ็ตสกิล	860,{
+
+	.@ResetStat  = 200000;	// Zeny for stat reset
+	.@ResetSkill = 20000000;	// Zeny for skill reset
+	.@ResetBoth  = 350000;	// Zeny for resetting both together
+
+	mes "[บริการรีเซ็ตสกิล]";
+	mes "สวัสดีค่ะ คุณต้องการทำอะไรหรอค่ะ";
+	//mes "ค่าบริการ รีเซ็ตค่าสเตตัส: "  + callfunc("F_InsertComma", .@ResetStat)  + "Zeny";
+	mes "ค่าบริการ รีเซ็ตค่าสกิล: " + callfunc("F_InsertComma", .@ResetSkill) + "Zeny";
+	//mes "ค่าบริการ รีเซ็ตทั้งหมด: "   + callfunc("F_InsertComma", .@ResetBoth)  + "Zeny";
+	mes "กรุณาเลือกบริการ ที่คุณต้องการค่ะ:";
+	next;
+	switch(select("^FF3355รีเซ็ตค่าสกิล:ยกเลิก")) {
+	case 1:
+		mes "[บริการรีเซ็ตสเตตัสและสกิล]";
+		if (Zeny < .@ResetSkill) {
+			mes "ขออภัยคุณ ไม่ได้มี Zeny เพียงพอสำหรับการใช้บริการคะ .";
+			close;
+		}
+		Zeny -= .@ResetSkill;
+		sc_end SC_ALL;
+		resetskill;
+		mes "ขอบคุณที่ใช้บริการค่ะ";
+		close;
+	case 2:
+		close;
+OnInit:
+waitingroom "[ บริการรีเซ็ตสกิล ]",0;
+end;
+	}
+}

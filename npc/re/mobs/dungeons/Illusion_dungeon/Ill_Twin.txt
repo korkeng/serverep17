@@ -1,0 +1,295 @@
+anthell02,177,190,4	script	Illusion of Twin	754,{ 
+	mes "[ Illusion of Twin ]";
+	menu
+	"^FF0000•^000000 Illusion of Twin [ Lv 160+ ]",go1,
+	"^FF0000•^000000 Cancle",cancle;
+	go1:
+	if(baselevel > 159){
+	warp "ant_d02_i",144,234;
+	end;
+	}
+	mes "Base Lv ของเจ้าน้อยเกินไป";
+	end;
+	cancle:
+	end;
+}
+/*
+gef_dun01,139,228,4	script	Great Merchant#ill_Vam	900,{
+	mes "[ Great Merchant ]";
+	mes "ต้องการอะไร?";
+	next;
+	switch(select("Great Merchant:Upgrade Weapon.:Upgrade Armor.")){
+		case 1:
+			mes "[ Great Merchant ]";
+			mes "ข้าจะถลุงแร่ Illusion Gemstone","โดยอยู่ที่อัตรา 5:1";
+			next;
+			mes "[ Great Merchant ]";
+			mes "เจ้าจะทำไหม";
+			next;
+			if (select ("ทำ:ไม่ทำ") == 2 ) end;
+			if (countitem(25272) < 5 ) {
+				mes "[ Great Merchant ]";
+				mes "รบกวยนำ Illusion Gemstone มาด้วย";
+				end;
+			}
+			.@stone_trade = countitem(25272)/5;
+			delitem 25272,.@stone_trade*5;
+			getitem 25271,.@stone_trade;
+			mes "[ Great Merchant ]";
+			mes "เรียบร้อย นี้ Illusion stome ของเจ้า";
+			close;
+			
+		case 2:
+			disable_items;
+			if(checkweight(25271,1) == 0 || (MaxWeight - Weight) < 1000){
+				mes "- คุณถือของมากเกินไป. -";
+				close;
+			}
+			mes "[ Great Merchant ]";
+			mes "ข้าทำของได้ตามนี้.";
+			for(.@i = 0; .@i < getarraysize(.weapons$); .@i++){
+				explode(.@T$,.weapons$[.@i],"|");
+				.@item_id = atoi(.@T$[0]);
+				mes "<ITEM>"+getitemname(.@item_id)+"<INFO>"+.@item_id+"</INFO></ITEM>";
+			}
+			next;
+			mes "[ Great Merchant ]";
+			mes "ให้แน่ใจว่า ^0000FFอุปกรณ์ของท่านต้องมีระดับตีบวกมากกว่า 9^000000 ก่อนจะนำมาให้ข้า.";
+			next;
+			mes "[ Great Merchant ]";
+			mes "ที่สำคัฐ, ^0000FFการ์ด และตีบวกจะหายไปทั้งหมด.^000000";
+			next;
+			mes "[ Great Merchant ]";
+			mes "วัตถุดิบที่ต้องการจะมี ^0000FFIllusion Stones และของบางอย่าง^000000 สำหรับการพัฒนาอุปกรณ์.";
+			next;
+			for(.@i = 0; .@i < getarraysize(.weapons$); .@i++){
+				explode(.@T$,.weapons$[.@i],"|");
+				.@item_id = atoi(.@T$[0]);
+				.@menu$ += getitemname(.@item_id) +":";
+			}
+			.@s = select(.@menu$) - 1;
+			explode(.@T$,.weapons$[.@s],"|");
+			explode(.@TT$,.@T$[2],",");
+			mes "[ Great Merchant ]";
+			mes "นี้คือของที่ต้องการ.";
+			mes "^0000FF+9 " + getitemname(atoi(.@T$[1])) + " []^000000";
+			for(.@i = 0; .@i < getarraysize(.@TT$); .@i++){
+				explode(.@data$,.@TT$[.@i],":");
+				.@item_id[.@i] = atoi(.@data$[0]);
+				.@amount[.@i] = atoi(.@data$[1]);
+				mes "^0000FF" + .@amount[.@i] +" "+ getitemname(.@item_id[.@i]) + "^000000";
+			}
+			mes "พัฒนาอุปกรณ์นี้เลยไหม";
+			next;
+			if(select("เอาเลย.:ยังต้องการวัตถุดิบเพิ่มเติม") == 2){
+				mes "[ Great Merchant ]";
+				mes "มาหาข้า เมื่อเจ้าพร้อม.";
+				close;
+			}
+			if(getequipid(EQI_HAND_R) != atoi(.@T$[1])){
+				mes "[ Great Merchant ]";
+				mes "กรุณาสวมใส่ " + getitemname(atoi(.@T$[1])) + " ก่อน.";
+				close;
+			}
+			for(.@i = 0; .@i < getarraysize(.@item_id); .@i++){
+				if(countitem(.@item_id[.@i]) < .@amount[.@i])
+					.@miss++;
+			}
+			if(getequiprefinerycnt(EQI_HAND_R) < 9 || .@miss > 0){
+				mes "[ Great Merchant ]";
+				mes "วัตถุดิบไม่เพียงพอ หรือ อุปกรณ์ของเจ้าตีบวกไม่ถึงเกณฑ์";
+				end;
+			}
+			mes "[Illusion Researcher]";
+			mes "กำลังจัดทำ.";
+			delequip(EQI_HAND_R);
+			for(.@i = 0; .@i < getarraysize(.@item_id); .@i++)
+				delitem .@item_id[.@i],.@amount[.@i];
+			getitem atoi(.@T$[0]),1;			
+			break;
+			
+			
+		case 3:
+			disable_items;
+			if(checkweight(25271,1) == 0 || (MaxWeight - Weight) < 1000){
+				mes "- คุณถือของมากเกินไป. -";
+				close;
+			}
+			mes "[ Great Merchant ]";
+			mes "ข้าทำของได้ตามนี้.";
+			for(.@i = 0; .@i < getarraysize(.armors$); .@i++){
+				explode(.@T$,.armors$[.@i],"|");
+				.@item_id = atoi(.@T$[0]);
+				mes "<ITEM>"+getitemname(.@item_id)+"<INFO>"+.@item_id+"</INFO></ITEM>";
+			}
+			next;
+			mes "[ Great Merchant ]";
+			mes "ให้แน่ใจว่า ^0000FFอุปกรณ์ของท่านต้องมีระดับตีบวกมากกว่า 9^000000 ก่อนจะนำมาให้ข้า.";
+			next;
+			mes "[ Great Merchant ]";
+			mes "ที่สำคัฐ, ^0000FFการ์ด และตีบวกจะหายไปทั้งหมด.^000000";
+			next;
+			mes "[ Great Merchant ]";
+			mes "วัตถุดิบที่ต้องการจะมี ^0000FFIllusion Stones และของบางอย่าง^000000 สำหรับการพัฒนาอุปกรณ์.";
+			next;
+			for(.@i = 0; .@i < getarraysize(.armors$); .@i++){
+				explode(.@T$,.armors$[.@i],"|");
+				.@item_id = atoi(.@T$[0]);
+				.@menu$ += getitemname(.@item_id) +":";
+			}
+			.@s = select(.@menu$) - 1;
+			explode(.@T$,.armors$[.@s],"|");
+			explode(.@TT$,.@T$[2],",");
+			.@slot = atoi(.@T$[3]);
+			mes "[ Great Merchant ]";
+			mes "นี้คือของที่ต้องการ.";
+			if(.@slot > 1) mes "^0000FF+9 " + getitemname(atoi(.@T$[1])) + "^000000";
+			else mes "^0000FF" + getitemname(atoi(.@T$[1])) + "^000000";
+			mes "^0000FF+9 " + getitemname(atoi(.@T$[1])) + "^000000";
+			for(.@i = 0; .@i < getarraysize(.@TT$); .@i++){
+				explode(.@data$,.@TT$[.@i],":");
+				.@item_id[.@i] = atoi(.@data$[0]);
+				.@amount[.@i] = atoi(.@data$[1]);
+				mes "^0000FF" + .@amount[.@i] +" "+ getitemname(.@item_id[.@i]) + "^000000";
+			}
+			mes "พัฒนาอุปกรณ์นี้เลยไหม";
+			next;
+			if(select("เอาเลย.:ยังต้องการวัตถุดิบเพิ่มเติม") == 2){
+				mes "[ Great Merchant ]";
+				mes "มาหาข้า เมื่อเจ้าพร้อม.";
+				close;
+			}
+			if(getequipid(.@slot) != atoi(.@T$[1])){
+				mes "[ Great Merchant ]";
+				mes "กรุณาสวมใส่ " + getitemname(atoi(.@T$[1])) + " ก่อน.";
+				close;
+			}
+			for(.@i = 0; .@i < getarraysize(.@item_id); .@i++){
+				if(countitem(.@item_id[.@i]) < .@amount[.@i])
+					.@miss += 1;
+			}
+			if(.@slot > 1) {
+				if(getequiprefinerycnt(.@slot) < 9 || .@miss > 0){
+					mes "[ Great Merchant ]";
+					mes "วัตถุดิบไม่เพียงพอ หรือ อุปกรณ์ของเจ้าตีบวกไม่ถึงเกณฑ์";
+					end;
+				}
+			}
+			mes "[Illusion Researcher]";
+			mes "กำลังจัดทำ.";
+			delequip(.@slot);
+			for(.@i = 0; .@i < getarraysize(.@item_id); .@i++)
+				delitem .@item_id[.@i],.@amount[.@i];
+			getitem atoi(.@T$[0]),1;			
+			break;
+	}
+	next;
+	mes "[ Great Merchant ]";
+	mes "เสร็จแล้ว.";
+	end;
+	
+OnInit:
+	setarray .weapons$,
+		"2039|1473|25271:40,25267:100",
+		"18149|1727|25271:50,25265:100",
+		"28022|1266|25271:80,25261:20",
+		"28023|1260|25271:80,25264:100",
+		"28612|1557|25271:50,25262:10";
+	setarray .armors$,
+		"20840|2525|25271:50,25257:200|3",
+		"28508|2715|25271:50,25266:400|0",
+		"28509|2621|25271:50,25267:400|0";
+
+end;
+}
+*/
+// Monster Spawn
+
+ant_d02_i	monster	Diligent Andre Larva  	21388,20,5000,5000,"#Ill_twin::OnIllMobDead"
+ant_d02_i	monster	Mushy Ant Egg  	21391,20,5000,5000,"#Ill_twin::OnIllMobDead"
+ant_d02_i	monster	Gutsy Familiar  	21393,25,5000,5000,"#Ill_twin::OnIllMobDead"
+ant_d02_i	monster	Diligent Andre  	21386,30,5000,5000,"#Ill_twin::OnIllMobDead"
+ant_d02_i	monster	Diligent Deniro  	21389,30,5000,5000,"#Ill_twin::OnIllMobDead"
+ant_d02_i	monster	Diligent Piere 	21390,30,5000,5000,"#Ill_twin::OnIllMobDead"
+ant_d02_i	monster	Gutsy Giearth 	21392,15,5000,5000,"#Ill_twin::OnIllMobDead"
+ant_d02_i	monster	Diligent Soldier Andre 	21387,15,5000,5000,"#Ill_twin::OnIllMobDead"
+ant_d02_i	monster	Diligent Vitata 	21394,15,5000,5000,"#Ill_twin::OnIllMobDead"
+
+
+
+ant_d02_i,0,0,0	script	#Ill_twin	-1,{
+
+OnInit:
+$Ill_twin = 0;
+$Ill_twin_delay = 0;
+$Ill_twinBOSS = 0;
+end;
+
+OnIllMobDead:
+if($Ill_twin_delay == 0 && $Ill_twinBOSS == 0){
+if($Ill_twin == 2950){											
+mapannounce "ant_d02_i","Illusion of Twin : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(3000-($Ill_twin)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_twin == 2900){											
+mapannounce "ant_d02_i","Illusion of Twin : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(3000-($Ill_twin)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_twin == 2750){											
+mapannounce "ant_d02_i","Illusion of Twin : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(3000-($Ill_twin)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_twin == 2500){											
+mapannounce "ant_d02_i","Illusion of Twin : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(3000-($Ill_twin)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_twin == 2000){
+mapannounce "ant_d02_i","Illusion of Twin : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(3000-($Ill_twin)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_twin == 1500){
+mapannounce "ant_d02_i","Illusion of Twin : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(3000-($Ill_twin)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_twin == 1000){
+mapannounce "ant_d02_i","Illusion of Twin : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(3000-($Ill_twin)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_twin == 500){
+mapannounce "ant_d02_i","Illusion of Twin : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(3000-($Ill_twin)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_twin == 0){
+mapannounce "ant_d02_i","Illusion of Twin : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(3000-($Ill_twin)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+$Ill_twin += 1;
+if($Ill_twin >= 3000){
+monster "ant_d02_i",0,0,"Silent Maya",21395,1,strnpcinfo(0)+"::OnEnd";
+$Ill_twinBOSS += 1;
+announce "Illusion of Twin : ขณะนี้บอสได้ปรากฏตัวออกมาแล้ว นักผจญภัยทุกท่านโปรดระวังตัวให้ดี !!",bc_all,0xFFFF00;
+sleep 2000;
+mapannounce "ant_d02_i","Silent Maya : ใครบังอาจมาบุกรังของข้า จงนำมันมาเป็นอาหารแก่ข้า เดี๋ยวนี้ !!",bc_map,0xFFFF00,FW_NORMAL,16;
+end;
+}
+}
+end;
+
+
+
+OnEnd:
+initnpctimer;
+$Ill_twin_delay = 1;
+mapannounce "ant_d02_i","Silent Maya : ข้าคือราชินีของมด สมุนของข้าต้องจัดการกับเจ้าแน่ๆ !! เฮื้ออออ..",bc_map,0xFFFF00,FW_NORMAL,16;
+sleep 2000;
+announce "Illusion of Twin : เหลือเวลาอีก "+ (120-($Ill_twin_delay)) +" นาที บอสจะฟื้นคืนชีพอีกครั้ง !!",bc_all,0xFFFF00;
+$Ill_twin = 0;											
+$Ill_twinBOSS = 0;
+end;
+
+
+OnTimer60000:
+	$Ill_twin_delay += 1;
+
+	if ($Ill_twin_delay < 120) { // unknown delay (currently 100 mins)
+		initnpctimer;
+	}
+	else {
+		stopnpctimer;		
+		$Ill_twin_delay = 0;
+		//mapannounce "ant_d02_i","Illusion of Twin : Silent Maya พร้อมแล้ว",bc_map,0xFFFF00,FW_NORMAL,16;
+	}
+	end;
+
+}

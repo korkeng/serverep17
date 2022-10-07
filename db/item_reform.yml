@@ -1,0 +1,50 @@
+Header: 
+    Type: ITEM_REFORM_DB
+    Version: 1
+
+Body:
+  - Initiator: Thanos_W_Reform_1
+    Reforms:
+      - BaseItem: Thanos_Sword
+        ResultItem: Thanos_Sword_AD
+        NeedRefineMin: 9 # could be optional, default: 0
+        NeedRefineMax: 20 # could be optional, default: 0
+        NeedOptionNumMin: 0 # could be optional, default: 0
+        IsEmptySocket: false # could be optional, default: false
+        ChangeRefineValue: -5
+        RandomOptionGroup: null # Random option group ID [optional]
+        PreserveSocketItem: true
+        PreserveGrade: true
+        Materials:
+          - AegisName: Weapon_Stone_1
+            Amount: 100
+          - AegisName: Shard_of_Gray
+            Amount: 100
+      - BaseItem: Thanos_Rod
+        ResultItem: Thanos_Rod_AD
+        NeedRefineMin: 9 # could be optional, default: 0
+        NeedRefineMax: 20 # could be optional, default: 0
+        NeedOptionNumMin: 0 # could be optional, default: 0
+        IsEmptySocket: false # could be optional, default: false
+        ChangeRefineValue: -5
+        RandomOptionGroup: null # Random option group ID [optional]
+        PreserveSocketItem: true
+        PreserveGrade: true
+        Materials:
+          - AegisName: Weapon_Stone_1
+            Amount: 100
+          - AegisName: Shard_of_Gray
+            Amount: 100
+      # - BaseItem: so on and so forth for Thanos weapon reforms
+#  - Initiator: Thanos_Refine_Hammer
+#    Reforms:
+#      - BaseItemGroup: "IG_Thanos_Weapons" # rAthena custom, to avoid having to implement duplicate entries (ID 38-50 in ItemReformSystem.lub for reference)
+#        PreserveItem: true # rAthena custom, outputs the same item as base item
+#        PreserveSocketItem: true
+#        PreserveGrade: true
+#        NeedRefineMin: 9
+#        NeedRefineMax: 11
+#        ChangeRefineValue: 1
+#        Materials:
+#          - AegisName: Blacksmith_Blessing
+#            Amount: 14

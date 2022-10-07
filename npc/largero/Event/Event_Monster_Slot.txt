@@ -1,0 +1,614 @@
+-	script	MonsterSlotsCh	-1,{
+	end;
+	OnEffect:
+		for(set .@i, 0; .@i < 3; set .@i, .@i + 1){
+			specialeffect EF_MVP;
+			sleep 200;
+		}
+		end;
+}
+
+moroccz,178,69,0	script	MonsterSlotsPoint	45,{
+	end;
+}
+
+moroccz,178,69,3	duplicate(MonsterSlotsCh)	[1] MonsterSlot	1002
+moroccz,180,69,3	duplicate(MonsterSlotsCh)	[2] MonsterSlot	1031
+moroccz,182,69,3	duplicate(MonsterSlotsCh)	[3] MonsterSlot	1113
+moroccz,184,69,3	duplicate(MonsterSlotsCh)	[4] MonsterSlot	1096
+moroccz,186,69,3	duplicate(MonsterSlotsCh)	[5] MonsterSlot	1242
+moroccz,188,69,3	duplicate(MonsterSlotsCh)	[6] MonsterSlot	1002
+moroccz,190,69,3	duplicate(MonsterSlotsCh)	[7] MonsterSlot	1031
+
+moroccz,178,67,3	duplicate(MonsterSlotsCh)	[8] MonsterSlot	1582
+moroccz,180,67,3	duplicate(MonsterSlotsCh)	[9] MonsterSlot	1113
+moroccz,182,67,3	duplicate(MonsterSlotsCh)	[10] MonsterSlot	1096
+moroccz,184,67,3	duplicate(MonsterSlotsCh)	[11] MonsterSlot	1242
+moroccz,186,67,3	duplicate(MonsterSlotsCh)	[12] MonsterSlot	1002
+moroccz,188,67,3	duplicate(MonsterSlotsCh)	[13] MonsterSlot	1031
+moroccz,190,67,3	duplicate(MonsterSlotsCh)	[14] MonsterSlot	1113
+
+moroccz,178,65,3	duplicate(MonsterSlotsCh)	[15] MonsterSlot	1904
+moroccz,180,65,3	duplicate(MonsterSlotsCh)	[16] MonsterSlot	1096
+moroccz,182,65,3	duplicate(MonsterSlotsCh)	[17] MonsterSlot	1242
+moroccz,184,65,3	duplicate(MonsterSlotsCh)	[18] MonsterSlot	1002
+moroccz,186,65,3	duplicate(MonsterSlotsCh)	[19] MonsterSlot	1031
+moroccz,188,65,3	duplicate(MonsterSlotsCh)	[20] MonsterSlot	1113
+moroccz,190,65,3	duplicate(MonsterSlotsCh)	[21] MonsterSlot	1096
+
+moroccz,178,63,3	duplicate(MonsterSlotsCh)	[22] MonsterSlot	1582
+moroccz,180,63,3	duplicate(MonsterSlotsCh)	[23] MonsterSlot	1242
+moroccz,182,63,3	duplicate(MonsterSlotsCh)	[24] MonsterSlot	1002
+moroccz,184,63,3	duplicate(MonsterSlotsCh)	[25] MonsterSlot	1031
+moroccz,186,63,3	duplicate(MonsterSlotsCh)	[26] MonsterSlot	1113
+moroccz,188,63,3	duplicate(MonsterSlotsCh)	[27] MonsterSlot	1096
+moroccz,190,63,3	duplicate(MonsterSlotsCh)	[28] MonsterSlot	1242
+
+-	script	config	-1,{
+	OnInit:
+		// =============== CONFIGURE ===============
+		set $@MTS_HEADER$, "[ Monster Slot ]";
+		set $@MTS_WAITINGROOM, 0;
+		set $@MTS_WAITINGROOM$, "# Monster Slot";
+		set $@MTS_MONSTERCOUNT, 28;					// จำนวนตัวแทงทั้งหมด
+		set $@MTS_ITEMID, 7227;					// ไอเทมที่ใช้ในการเล่น
+		set $@MTS_SPINAMOUNT, 10;					// จำนวนไอเทมที่ใช้ในการหมุน 1 รอบถ้าหมุนแบบไวจะใช้ *2
+		set $@MTS_MULTIPLERATE, 4;					// เรทรางวัลในการแทงตัวธรรมดา
+		set $@MTS_SPECIALRATE, 2;					// เรทรางวัลในการแทงสูง-ต่ำ และ เลขคู่-เลขคี่
+		set $@MTS_SPECIFICRATE, 25;					// เรทรางวัลในการแทงตัวธรรมดา
+		set $@MTS_DUPLICATEBET, 0;					// พนันปกติได้แค่ 1 ตัว ( 0 = ปิด / 1 = เปิด )
+		// =========================================
+		query_sql("CREATE TABLE IF NOT EXISTS `monster_casino` (" +
+		  "`id` int(11) NOT NULL AUTO_INCREMENT," +
+		  "`monster_choose` int(1) NOT NULL," +
+		  "`amount` int(5) NOT NULL," +
+		  "`account_id` int(10) NOT NULL," +
+		  "`event_name` varchar(20) NOT NULL," +
+		  "PRIMARY KEY (`id`)" +
+		")");
+		query_sql("CREATE TABLE IF NOT EXISTS `monster_statistic` (" +
+		  "`id` int(11) NOT NULL AUTO_INCREMENT," +
+		  "`event_name` varchar(20) NOT NULL," +
+		  "`char_name` varchar(50) NOT NULL," +
+		  "`value` int(15) NOT NULL," +
+		  "PRIMARY KEY (`id`)" +
+		")");
+		query_sql("CREATE TABLE IF NOT EXISTS `monster_reward` (" +
+		  "`id` int(11) NOT NULL AUTO_INCREMENT," +
+		  "`event_name` varchar(20) NOT NULL," +
+		  "`account_id` int(10) NOT NULL," +
+		  "`reward_amount` int(5) NOT NULL," +
+		  "`time` TIMESTAMP NOT NULL," +
+		  "PRIMARY KEY (`id`)" +
+		")");
+		sleep 1000;
+		if($@MTS_WAITINGROOM) waitingroom "" + $@MTS_WAITINGROOM$,0;
+		end;
+	
+}
+
+// ตัวเปิดพนันและรับรางวัลย้อนหลัง
+moroccz,173,74,5	script	Monster SlotPlay	2_DROP_MACHINE,{
+	callfunc "Monster_SlotPlay";
+	end;
+}
+
+// ตัวแทง
+-	script	MonsterChoose	-1,{
+	callfunc "MonsterChoose_";
+	end;
+	
+	OnEffect:
+		for(set .@i, 0; .@i < 3; set .@i, .@i + 1){
+			specialeffect EF_MVP;
+			sleep 500;
+		}
+		end;
+	
+	OnReset:
+		delwaitingroom;
+	OnInit:
+		query_sql ("SELECT COUNT(`id`),SUM(`amount`) FROM `monster_casino` WHERE `event_name` = 'Monster Slot' AND `monster_choose` = '" + strnpcinfo(2) + "'",.@id,.@amount);
+		waitingroom "คนแทง [ " + .@id + " ] รวม [ " + .@amount + " ]",0;
+		end;
+}
+
+// ตัวแทง
+moroccz,178,74,3	duplicate(MonsterChoose)	MonsterChoose#1	1002
+moroccz,184,74,3	duplicate(MonsterChoose)	MonsterChoose#2	1031
+moroccz,190,74,3	duplicate(MonsterChoose)	MonsterChoose#3	1113
+moroccz,173,70,3	duplicate(MonsterChoose)	MonsterChoose#4	1096
+moroccz,173,66,3	duplicate(MonsterChoose)	MonsterChoose#5	1242
+// ตัวแทงพิเศษ
+moroccz,173,62,3	script	MonsterChooseSpecial	1582,{
+	callfunc "MonsterChooseSpecial_";
+	end;
+	
+	OnEffect:
+		for(set .@i, 0; .@i < 3; set .@i, .@i + 1){
+			specialeffect EF_MVP;
+			sleep 500;
+		}
+		end;
+	OnReset:
+		delwaitingroom;
+	OnInit:
+		query_sql ("SELECT COUNT(`id`),SUM(`amount`) FROM `monster_casino` WHERE `event_name` = 'Monster Slot' AND (`monster_choose` IN('21','22','31','32') OR (`monster_choose` BETWEEN '41' AND '68'))",.@id,.@amount);
+		waitingroom "พิเศษ [ " + .@id + " ] รวม [ " + .@amount + " ]",0;
+		end;
+}
+
+
+function	script	Monster_SlotPlay	{
+	mes "" + $@MTS_HEADER$;
+	mes "ยินดีต้อนรับเข้าสู่ ^0000FFMonster Slot^000000";
+	if($@MTS_DUPLICATEBET){
+		mes "ท่านจะสามารถแทงพนันได้เพียงแค่ ";
+		mes "1 ตัวและตัวนพนันพิเศษได้อีก 1 ตัว";
+	}
+	mes "ใช้ ^19A2C3" + getitemname($@MTS_ITEMID) + "^000000 ในการพนัน";
+	//mes "^FF0000ท่านจะต้องระวังไม่ให้ไอเทม ในตัวไม่เกิน " + int_comma(30000) + " ชิ้น^000000";
+	next;
+	query_sql ("SELECT `id` FROM `monster_reward` WHERE `account_id` = '" + getcharid(3) + "' AND `event_name` = 'Monster Slot'",.@idr);
+	switch(select("~ เปิดพนันปกติ (1 นาที)","~ เปิดพนันแบบไว (20 วินาที)",(.@idr > 0 ? "~ ^21920Dรับรางวัลย้อนหลัง^000000" : ""),(getgmlevel() >= 99 ? "~ ^FF0000ล็อกตัว ( สำหรับGM ) [ " + ($@MTS_NUMBERLOCK > 0 ? $@MTS_NUMBERLOCK : "ยังไม่ได้เลือก") + " ]^000000" : ""),"~ ไม่มีอะไร")){
+		case 1:
+			mes "" + $@MTS_HEADER$;
+			mes "ท่านต้องใช้ ^0000FF" + getitemname($@MTS_ITEMID) + "^000000 จำนวน";
+			mes "^0000FF" + $@MTS_SPINAMOUNT + "^000000 ea. ในการเปิดพนันแบบ^0000FFปกติ^000000";
+			mes "ท่านตกลงที่จะเป็นผู้เปิดพนันหรือไม่";
+			next;
+			if(select("~ เปิดเลย","~ ยังไม่เปิด") == 2) end;
+			if($@MTS_COUNTINGDOWN){
+				mes "" + $@MTS_HEADER$;
+				mes "มีผู้อื่นได้ทำการเปิดพนันไปแล้ว";
+				mes "ท่านไม่จำเป็นจะต้องเปิดอีก";
+				end;
+			}
+			if(countitem($@MTS_ITEMID) < $@MTS_SPINAMOUNT){
+				mes "" + $@MTS_HEADER$;
+				mes "ท่านมีไอเทม " + getitemname($@MTS_ITEMID);
+				mes "ไม่เพียงพอ ( ขาดอีก ^FF0000" + ($@MTS_SPINAMOUNT-countitem($@MTS_ITEMID)) + "^000000 )";
+				mes "มาหาข้าใหม่ เมื่อเจ้ามีไอเทมนะ";
+				end;
+			}
+			mes "" + $@MTS_HEADER$;
+			mes "ท่านได้ทำการเปิดพนันเรียบร้อยแล้ว";
+			mes "ขอบคุณที่ใช้บริการครับ";
+			set $@MTS_COUNTINGDOWN, 1;
+			mapannounce strnpcinfo(4),$@MTS_HEADER$ + " : ท่าน ` " + strcharinfo(0) + " ` ได้ทำการเปิดพนันแล้วอีก 1 นาทีกิจกรรมจะเริ่ม" ,0,0x8998E3;
+			delitem $@MTS_ITEMID, $@MTS_SPINAMOUNT;
+			donpcevent "MonsterNormalCountdown::OnEventCountdown";
+			break;
+		case 2:
+			mes "" + $@MTS_HEADER$;
+			mes "ท่านต้องใช้ ^0000FF" + getitemname($@MTS_ITEMID) + "^000000 จำนวน";
+			mes "^0000FF" + $@MTS_SPINAMOUNT*2 + "^000000 ea. ในการเปิดพนันแบบ^0000FFเร็ว^000000";
+			mes "ท่านตกลงที่จะเป็นผู้เปิดพนันหรือไม่";
+			next;
+			if(select("~ เปิดเลย","~ ยังไม่เปิด") == 2) end;
+			if($@MTS_COUNTINGDOWN){
+				mes "" + $@MTS_HEADER$;
+				mes "มีผู้อื่นได้ทำการเปิดพนันไปแล้ว";
+				mes "ท่านไม่จำเป็นจะต้องเปิดอีก";
+				end;
+			}
+			if(countitem($@MTS_ITEMID) < $@MTS_SPINAMOUNT*2){
+				mes "" + $@MTS_HEADER$;
+				mes "ท่านมีไอเทม " + getitemname($@MTS_ITEMID);
+				mes "ไม่เพียงพอ ( ขาดอีก ^FF0000" + (($@MTS_SPINAMOUNT*2)-countitem($@MTS_ITEMID)) + "^000000 )";
+				mes "มาหาข้าใหม่ เมื่อเจ้ามีไอเทมนะ";
+				end;
+			}
+			mes "" + $@MTS_HEADER$;
+			mes "ท่านได้ทำการเปิดพนันเรียบร้อยแล้ว";
+			mes "ขอบคุณที่ใช้บริการครับ";
+			set $@MTS_COUNTINGDOWN, 1;
+			mapannounce strnpcinfo(4),$@MTS_HEADER$ + " : ท่าน ` " + strcharinfo(0) + " ` ได้ทำการเปิดพนันแบบไวอีก 20 วินาทีกิจกรรมจะเริ่ม" ,0,0x8998E3;
+			delitem $@MTS_ITEMID, $@MTS_SPINAMOUNT*2;
+			donpcevent "MonsterFastCountdown::OnEventCountdown";
+			break;
+		
+		case 3:
+			mes "" + $@MTS_HEADER$;
+			mes "เลือกรางวัลที่ท่านจะรับ";
+			mes "ท่านจะได้รับแต้มอันดับเมื่อรับ";
+			mes "รางวัลย้อนหลังเสร็จแล้ว";
+			mes "^FF0000ตรวจสอบไอเทมในตัวละคร^000000";
+			mes "^FF0000ก่อนแลก หากไอเทมเกิน^000000";
+			mes "^FF0000ทางเราขอไม่รับผิดชอบทุกกรณี^000000";
+			query_sql ("SELECT `id`,`reward_amount`,`time` FROM `monster_reward` WHERE `event_name` ='Monster Slot' AND `account_id` = '" + getcharid(3) + "'",.@rid,.@ramount,.@time$);
+			for(set .@i, 1; .@i <= getarraysize(.@ramount); set .@i, .@i + 1){
+				for(set .@j, 0; .@j < getstrlen(.@time$[.@i-1]); set .@j, .@j + 1){
+					if(charat(.@time$[.@i-1],.@j) == ":"){
+						set .@timesplit1$, substr(.@time$[.@i-1],0,.@j-1) + ".";
+						set .@timesplit2$, substr(.@time$[.@i-1],.@j+1,.@j+2)+ ".";
+						set .@timesplit3$, substr(.@time$[.@i-1],.@j+4,.@j+5);
+						set .@timeshow$, .@timesplit1$ + .@timesplit2$ + .@timesplit3$;
+						break;
+					}
+				}
+				set .@menu$, .@menu$ + " [ " + .@i + " ] รางวัล ^FF6699" + .@ramount[.@i-1] + "^000000 เวลา ^0DAFCA" + .@timeshow$ + "^000000" + ":";
+			}
+			next;
+			set .@select, select(.@menu$)-1;
+			getitem $@MTS_ITEMID,.@ramount[.@select];
+			dispbottom $@MTS_HEADER$ + " : รับรางวัลย้อนหลังเมื่อ " + .@time$[.@select] + " เรียบร้อยแล้ว";
+			query_sql ("DELETE FROM `monster_reward` WHERE `event_name` = 'Monster Slot' AND `id` ='" + .@rid[.@select] + "'");
+			query_sql ("SELECT `value` FROM `monster_statistic` WHERE `event_name` = 'Monster Slot' AND `char_name` ='" + strcharinfo(0) + "' LIMIT 1",.@rvalue);
+			if(.@rvalue > 0)
+				query_sql ("UPDATE `monster_statistic` SET `value` = '" + (.@rvalue + .@ramount[.@select]) + "' WHERE `char_name` = '" + strcharinfo(0) + "' AND `event_name` = 'Monster Slot'");
+			else 
+				query_sql ("INSERT INTO `monster_statistic`(`event_name`,`char_name`,`value`) VALUES('Monster Slot','" + strcharinfo(0) + "','" + .@ramount[.@select] + "')");
+			break;
+		
+		case 4:
+			if(getgmlevel() < 90) end;
+			mes "" + $@MTS_HEADER$;
+			mes ($@MTS_NUMBERLOCK > 0 ? "ท่านได้ล็อกตัวได้แล้วตัว ^FF6699" + $@MTS_NUMBERLOCK + "^000000" : "");
+			mes "กรุณากรอกตัวเลขที่จะล็อก";
+			mes "เลข ^0000FF1^000000 - ^0000FF" + $@MTS_MONSTERCOUNT + "^000000";
+			mes "( ^FF6699ใส่ 0 = ออกจากหน้านี้^000000 )";
+			next;
+			do{
+				input .@numb;
+				if(.@numb == 0) end;
+				if($@MTS_EVENTPLAYING){
+					mes "" + $@MTS_HEADER$;
+					mes "ไม่สามารถเปลี่ยนการล็อกตัว";
+					mes "ได้เมื่อกิจกรรมได้เริ่มไปแล้ว";
+					end;
+				}
+			} while (.@numb > $@MTS_MONSTERCOUNT);
+			set $@MTS_NUMBERLOCK, .@numb;
+			break;
+		default:
+			break;
+	}
+	end;
+}
+
+
+function	script	MonsterChoose_	{
+	mes "" + $@MTS_HEADER$;
+	mes "สวัสดีมนุษย์ท่านต้องการพนันไหม";
+	mes "ใช้ ^0000FF" + getitemname($@MTS_ITEMID) + "^000000 ในการพนัน";
+	//mes "^FF0000ท่านจะต้องระวังไม่ให้ไอเทม ในตัวไม่เกิน " + int_comma(30000) + " ชิ้น^000000";
+	mes "ท่านจะลงพนันเลยหรือไม่";
+	next;
+	if(select("~ ใช่ลงเลย","~ ไม่ลงดีกว่า") == 2) end;
+	mes "" + $@MTS_HEADER$;
+	mes "ท่านต้องการจะลงพนันเป็น";
+	mes "จำนวนเท่าไหร่ดีหล่ะ";
+	mes "ถ้าท่านพนันถูกจะได้รับรางวัล";
+	mes "^0000FF" + $@MTS_MULTIPLERATE + "x^000000 เท่าจากที่ท่านแทง";
+	next;
+	switch(select("~ ใส่จำนวนเอง","~ 100","~ 200","~ 500","~ 1000")){
+		case 1:
+			do{
+				input .@betamount;
+			}
+			while(.@betamount*$@MTS_MULTIPLERATE > 30000 || .@betamount == 0);
+			break;
+		case 2: set .@betamount, 100; break;
+		case 3: set .@betamount, 200; break;
+		case 4: set .@betamount, 500; break;
+		case 5: set .@betamount, 1000; break;
+	}
+	mes "" + $@MTS_HEADER$;
+	mes "ท่านยืนยันที่จะลงพนัน";
+	mes "เป็นจำนวน ^0000FF" + .@betamount + "^000000";
+	mes "ถูกต้องหรือไม่ ?";
+	next;
+	if(select("~ ใช่แล้ว","~ ไม่ใช่") == 2) end;
+	query_sql ("SELECT `id` FROM `monster_casino` WHERE `account_id` = '" + getcharid(3) + "' AND `event_name` = 'Monster Slot' AND (`monster_choose` NOT BETWEEN '21' AND '68') ",.@id);
+	query_sql ("SELECT `id` FROM `monster_casino` WHERE `account_id` = '" + getcharid(3) + "' AND `event_name` = 'Monster Slot' AND `monster_choose` = '" + strnpcinfo(2) + "'",.@dup);
+	if(.@dup > 0){
+		mes "" + $@MTS_HEADER$;
+		mes "ท่านได้ลงพนันตัวนี้ไว้แล้ว";
+		mes "ไม่สามารถลงเพิ่มได้";
+		mes "จำเป็นต้องรอรอบหน้า . . .";
+		end;
+	}
+	if(.@id > 0 && $@MTS_DUPLICATEBET){
+		mes "" + $@MTS_HEADER$;
+		mes "ท่านได้ลงพนันตัวอื่นไว้ก่อนหน้า";
+		mes "นี้แล้วไม่สามารถลงพนันตัวอื่นๆ";
+		mes "เพิ่มได้ กรุณารอรอบถัดไป";
+		end;
+	}
+	if(countitem($@MTS_ITEMID) < .@betamount){
+		mes "" + $@MTS_HEADER$;
+		mes "ท่านมี " + getitemname($@MTS_ITEMID) + " ไม่เพียงพอ";
+		mes "( ขาดอีก ^FF0000 " + (.@betamount - countitem($@MTS_ITEMID)) + "^000000 ea. )";
+		end;
+	}
+	if($@MTS_EVENTPLAYING){
+		mes "" + $@MTS_HEADER$;
+		mes "ขณะนี้กิจกรรมได้เริ่มต้นไปแล้ว";
+		mes "กรุณารอรอบถัดไป";
+		end;
+	}
+	delitem $@MTS_ITEMID,.@betamount;
+	query_sql ("INSERT INTO `monster_casino`(`monster_choose`,`amount`,`account_id`,`event_name`) VALUES ('" + strnpcinfo(2) + "','" + .@betamount + "','" + getcharid(3) + "','Monster Slot')");
+	donpcevent "MonsterChoose#" + strnpcinfo(2) + "::OnReset";
+	end;
+}
+
+function	script	MonsterChooseSpecial_	{
+	mes "" + $@MTS_HEADER$;
+	mes "สวัสดีมนุษย์ท่านต้องการลงพนัน";
+	mes "แบบไม่เหมือนเดิมหรือไม่หล่ะ";
+	mes "เรามีการแทงแบบพิเศษให้คุณ";
+	mes "เลือกตามเมนูต่อไปนี้เลย";
+	next;
+	query_sql ("SELECT `monster_choose`,`amount` FROM `monster_casino` WHERE `event_name` = 'Monster Slot' AND (`monster_choose` IN('21','22','31','32') OR (`monster_choose` BETWEEN '41' AND '68'))",.@moninfo,.@amountinfo);
+	if(getarraysize(.@moninfo) > 0 && getgmlevel() >= 99){
+		mes "" + $@MTS_HEADER$;
+		for(set .@i, 0; .@i < getarraysize(.@moninfo); set .@i, .@i + 1){
+			switch(.@moninfo[.@i]){
+				case 21: set .@betinfo$, "ต่ำ"; break;
+				case 22: set .@betinfo$, "สูง"; break;
+				case 31: set .@betinfo$, "เลขคู่"; break;
+				case 32: set .@betinfo$, "เลขคี่"; break;
+				default: set .@betinfo$, "เจาะจงเลข " + (.@moninfo[.@i] - 40); break;
+			}
+			mes "[ ^0000FF" + .@betinfo$ + "^000000 ] จำนวน ^FF0000" + .@amountinfo[.@i] + "^000000";
+		}
+		next;
+	}
+	switch(select("~ แทงแบบ ^2684E7สูง / ต่ำ^000000 [ ^0000FFx" + $@MTS_SPECIALRATE + "^000000 ]","~ แทงแบบ ^2684E7เลขคู่ / เลขคี่^000000  [ ^0000FFx" + $@MTS_SPECIALRATE + "^000000 ]","~ แทงแบบ ^2684E7เจาะจงตัว^000000 [ ^0000FFx" + $@MTS_SPECIFICRATE + "^000000 ]","~ ไม่เอาดีกว่า")){
+		case 1:
+			set .@menu$, "~ แทงต่ำ [ เลข 1-" + ($@MTS_MONSTERCOUNT/2) + " ]" + ":" + "~ แทงสูง [ เลข " + (($@MTS_MONSTERCOUNT/2)+1) + "-" + $@MTS_MONSTERCOUNT + " ]";
+			set .@type, 20; break;
+		case 2:
+			set .@menu$, "~ แทงเลขคู่ [ เลข 2,4,6,... ]" + ":" + "~ แทงเลขคี่ [ เลข 1,3,5,... ]";
+			set .@type, 30; break;
+		case 3:
+			for(set .@i, 1; .@i <= $@MTS_MONSTERCOUNT; set .@i, .@i + 1)
+				set .@menu$, .@menu$ + "~ แทงเลข " + .@i + ":";
+			set .@type, 40; break;
+		default:
+			end;
+	}
+	mes "" + $@MTS_HEADER$;
+	mes "เลือกเมนูที่ท่านต้องการ";
+	next;
+	set .@selected, .@type + (select(.@menu$));
+	mes "" + $@MTS_HEADER$;
+	mes "ท่านต้องการจะลงพนันเป็น";
+	mes "จำนวนเท่าไหร่ดีหล่ะ";
+	mes "หากท่านได้ลงพนันไปแล้ว จะไม่สามารถ";
+	mes "ลงเพิ่มได้ จะต้องรอรอบถัดไป";
+	next;
+	switch(select("~ ใส่จำนวนเอง","~ 100","~ 200","~ 500","~ 1000")){
+		case 1:
+			input .@betamount;
+			switch(.@selected){
+				case 21: case 22: case 31: case 32: 
+					while(.@betamount * $@MTS_SPECIALRATE > 30000 || .@betamount == 0)
+						input .@betamount;
+					break;
+				case 41: case 42: case 43: case 44: case 45: case 46: case 47: case 48: case 49: case 50:
+				case 51: case 52: case 53: case 54: case 55: case 56: case 57: case 58: case 59: case 60:
+				case 61: case 62: case 63: case 64: case 65: case 66: case 67: case 68:
+					while(.@betamount * $@MTS_SPECIFICRATE > 30000 || .@betamount == 0)
+						input .@betamount;
+					break;
+			}
+			break;
+		case 2: set .@betamount, 100; break;
+		case 3: set .@betamount, 200; break;
+		case 4: set .@betamount, 500; break;
+		case 5: set .@betamount, 1000; break;
+	}
+	switch(.@selected){
+		case 21: set .@type$, "ต่ำ"; break;
+		case 22: set .@type$, "สูง"; break;
+		case 31: set .@type$, "เลขคู่"; break;
+		case 32: set .@type$, "เลขคี่"; break;
+		default: set .@type$, "เจาะจงเลข " + (.@selected - .@type); break;
+	}
+	mes "" + $@MTS_HEADER$;
+	mes "ท่านได้เลือกพนันแบบ ^0000FF" + .@type$ + "^000000";
+	mes "เป็นจำนวน " + .@betamount + " " + getitemname($@MTS_ITEMID);
+	mes "ยืนยันการลงพนันหรือไม่ ?";
+	next;
+	if(select("~ ยืนยัน","~ ไม่") == 2) end;
+	query_sql ("SELECT `id` FROM `monster_casino` WHERE `event_name` = 'Monster Slot' AND `account_id` = '" + getcharid(3) + "' AND (`monster_choose` IN('21','22','31','32') OR (`monster_choose` BETWEEN '41' AND '68'))",.@ids);
+	if(.@ids > 0){
+		mes "" + $@MTS_HEADER$;
+		mes "ท่านได้ลงพนันแบบพิเศษไปแล้ว";
+		mes "ไม่สามารถลงพนันแบบพิเศษเพิ่มได้อีก";
+		end;
+	}
+	if(countitem($@MTS_ITEMID) < .@betamount){
+		mes "" + $@MTS_HEADER$;
+		mes "ท่านมี " + getitemname($@MTS_ITEMID) + " ไม่เพียงพอ";
+		mes "( ขาดอีก ^FF0000 " + (.@betamount - countitem($@MTS_ITEMID)) + "^000000 ea. )";
+		end;
+	}
+	if($@MTS_EVENTPLAYING){
+		mes "" + $@MTS_HEADER$;
+		mes "ขณะนี้กิจกรรมได้เริ่มต้นไปแล้ว";
+		mes "กรุณารอรอบถัดไป";
+		end;
+	}
+	delitem $@MTS_ITEMID,.@betamount;
+	query_sql ("INSERT INTO `monster_casino`(`monster_choose`,`amount`,`account_id`,`event_name`) VALUES ('" + .@selected + "','" + .@betamount + "','" + getcharid(3) + "','Monster Slot')");
+	donpcevent "MonsterChooseSpecial::OnReset";
+	end;
+}
+
+-	script	MonsterNormalCountdown	-1,{
+	OnEventCountdown:
+		initnpctimer;
+		end;
+	
+	OnTimer30000:
+		npctalk $@MTS_HEADER$ + " : เหลือเวลาอีก 30 วินาทีก่อนที่กิจกรรมจะเริ่มเล่น","Monster SlotPlay";
+		end;
+	
+	OnTimer55000:
+		for(set .@i, 5; .@i > 0; set .@i, .@i - 1){
+			npctalk $@MTS_HEADER$ + " : เหลือเวลาอีกเพียง " + .@i + " วินาทีก่อนที่กิจกรรมจะเริ่มเล่น","Monster SlotPlay";
+			sleep 1000;
+		}
+		npctalk $@MTS_HEADER$ + " : กิจกรรมได้เริ่มต้น ณ บัดนี้","Monster SlotPlay";
+		donpcevent "MonsterSlotPlayCore::OnPlaying";
+		stopnpctimer;
+		end;
+}
+
+-	script	MonsterFastCountdown	-1,{
+	OnEventCountdown:
+		initnpctimer;
+		end;
+		
+	OnTimer15000:
+		for(set .@i, 5; .@i > 0; set .@i, .@i - 1){
+			npctalk $@MTS_HEADER$ + " : เหลือเวลาอีกเพียง " + .@i + " วินาทีก่อนที่กิจกรรมจะเริ่มเล่น","Monster SlotPlay";
+			sleep 1000;
+		}
+		npctalk $@MTS_HEADER$ + " : กิจกรรมได้เริ่มต้น ณ บัดนี้","Monster SlotPlay";
+		donpcevent "MonsterSlotPlayCore::OnPlaying";
+		stopnpctimer;
+		end;
+}
+
+-	script	MonsterSlotPlayCore	-1,{
+
+	OnPlaying:
+		set $@MTS_EVENTPLAYING, 1;
+		getmapxy(.@cmap$,.@cx,.@cy,BL_NPC,"MonsterSlotsPoint");
+		for(set .@i, 1; .@i <= $@MTS_MONSTERCOUNT; set .@i, .@i + 1 ){
+			getmapxy(.@cmap2$,.@cx2,.@cy2,BL_NPC,"[" + .@i + "] MonsterSlot");
+			if(.@cx == .@cx2 && .@cy == .@cy2){
+				set .@lastindex, .@i;
+				break;
+			}
+		}
+		set .@ext, $@MTS_MONSTERCOUNT - .@lastindex + 1;
+		if($@MTS_NUMBERLOCK > 0)
+			set .@rand, $@MTS_NUMBERLOCK;
+		else
+			set .@rand, rand(1,$@MTS_MONSTERCOUNT);
+		set .@rand2, rand(10,20);
+		set .@round, ($@MTS_MONSTERCOUNT*4) + .@rand + .@ext;
+		
+		set .@move, .@lastindex-1;
+		for(set .@i, 1; .@i <= .@round; set .@i, .@i + 1){
+			if(.@move == $@MTS_MONSTERCOUNT) set .@move, 1;
+			else set .@move, .@move + 1;
+			getmapxy(.@map$,.@x,.@y,BL_NPC,"[" + .@move + "] MonsterSlot");
+			movenpc "MonsterSlotsPoint",.@x,.@y;
+			if(.@i >= (.@round - .@rand2)) set .@sleep, .@sleep + 100;
+			else set .@sleep, .@sleep + 2;
+			sleep .@sleep;
+		}
+
+		// color
+		switch(.@rand){
+			case 1: case 6: case 12: case 18: case 24:
+				set .@winner, 1; set .@color$, "แพนด้า"; break;
+			case 2: case 7: case 13: case 19: case 25:
+				set .@winner, 2; set .@color$, "แอปเปิ้ลเขียว"; break;
+			case 3: case 9: case 14: case 20: case 26:
+				set .@winner, 3; set .@color$, "พุดดิ้ง"; break;
+			case 4: case 10: case 16: case 21: case 27:
+				set .@winner, 4; set .@color$, "น้ำ"; break;
+			case 5: case 11: case 17: case 23: case 28:
+				set .@winner, 5; set .@color$, "แอปเปิ้ลแดง"; break;
+			case 15: 
+				set .@winner, 99; break;
+			case 8: case 22:
+				set .@winner, 0; break;
+		}
+		// odd-event
+		switch(.@rand){
+			case 2: case 4: case 6: case 8: case 10: case 12: case 14:
+			case 16: case 18: case 20: case 22: case 24: case 26: case 28:
+				set .@winner2, 31; set .@number$, "เลขคู่"; break;
+			case 1: case 3: case 5: case 7: case 9: case 11: case 13:
+			case 15: case 17: case 19: case 21: case 23: case 25: case 27:
+				set .@winner2, 32; set .@number$, "เลขคี่"; break;
+		}
+		// high - low
+		switch(.@rand){
+			case 1: case 2: case 3: case 4: case 5: case 6: case 7: 
+			case 8: case 9: case 10: case 11: case 12: case 13: case 14:
+				set .@winner3, 21; set .@position$, "เลขต่ำ"; break;
+			case 15: case 16: case 17: case 18: case 19: case 20: case 21: 
+			case 22: case 23: case 24: case 25: case 26: case 27: case 28:
+				set .@winner3, 22; set .@position$, "เลขสูง"; break;
+		}
+		donpcevent "[" + .@rand + "] MonsterSlot::OnEffect";
+		switch(.@winner){
+			case 0: case 99:
+				break;
+			case 1: case 2: case 3: case 4: case 5:
+				donpcevent "MonsterChoose#" + .@winner + "::OnEffect"; break;
+		}
+		donpcevent "MonsterChooseSpecial::OnEffect";
+		if(.@winner != 99){
+			set .@message$, $@MTS_HEADER$ + " : ยินดีกับผู้ที่แทง " + .@color$ + " / " + .@number$ + " / " + .@position$ + " / เลข [ " + .@rand + " ]";
+			if(.@rand == 8 || .@rand == 22)
+				set .@message$, $@MTS_HEADER$ + " : ออกบอด ยินดีกับผู้ที่แทง " + .@number$ + " / " + .@position$ + " / เลข [ " + .@rand + " ]";
+				query_sql ("DELETE FROM `monster_casino` WHERE `monster_choose` NOT IN ('" + .@winner + "','" + (.@rand+40) + "','" + .@winner2 + "','" + .@winner3 + "') AND `event_name` = 'Monster Slot'");
+		} else 
+			set .@message$, $@MTS_HEADER$ + " : ออกแอง(แทงปกติได้ไอเทมคืน) ยินดีกับผู้ที่แทง " + .@number$ + " / " + .@position$ + " / เลข [ " + .@rand + " ]";
+		npctalk .@message$, "Monster SlotPlay";
+		set $@MTS_NUMBERLOCK, 0;
+		set $@MTS_EVENTPLAYING, 0;
+		set $@MTS_COUNTINGDOWN, 0;	
+		query_sql("SELECT `account_id`,`amount`,`monster_choose` FROM `monster_casino` WHERE `event_name` = 'Monster Slot'",.@accid,.@amount,.@monchoose);
+		for(set .@i, 0; .@i < getarraysize(.@accid); set .@i, .@i + 1){
+			if(attachrid(.@accid[.@i])){
+				dispbottom $@MTS_HEADER$ + " : ยินดีด้วยท่านได้รับรางวัลจากกิจกรรม Monster Slot",0x8998E3;
+				switch(.@monchoose[.@i]){
+					case 1: case 2: case 3: case 4: case 5:
+						if(.@winner == 99) set .@getitemamount, .@amount[.@i];
+						else set .@getitemamount, .@amount[.@i]*$@MTS_MULTIPLERATE;
+						break;
+					case 21: case 22: case 31: case 32:
+						set .@getitemamount, .@amount[.@i]*$@MTS_SPECIALRATE;
+						break;
+					case 41: case 42: case 43: case 44: case 45: case 46: case 47: 
+					case 48: case 49: case 50: case 51: case 52: case 53: case 54: 
+					case 55: case 56: case 57: case 58: case 59: case 60: case 61:
+					case 62: case 63: case 64: case 65: case 66: case 67: case 68:
+						set .@getitemamount, .@amount[.@i]*$@MTS_SPECIFICRATE;
+						break;
+				}
+				getitem $@MTS_ITEMID, .@getitemamount;
+				query_sql ("SELECT `value` FROM `monster_statistic` WHERE `event_name` = 'Monster Slot' AND `char_name` ='" + strcharinfo(0) + "' LIMIT 1",.@value);
+				if(.@value > 0)
+					query_sql ("UPDATE `monster_statistic` SET `value` = '" + (.@value + .@getitemamount) + "' WHERE `char_name` = '" + strcharinfo(0) + "' AND `event_name` = 'Monster Slot'");
+				else 
+					query_sql ("INSERT INTO `monster_statistic`(`event_name`,`char_name`,`value`) VALUES('Monster Slot','" + strcharinfo(0) + "','" + (.@value + .@getitemamount) + "')");
+				detachrid;
+			} else {
+				switch(.@monchoose[.@i]){
+					case 1: case 2: case 3: case 4: case 5:
+						if(.@winner == 99) set .@getitemamount, .@amount[.@i];
+						else set .@getitemamount, .@amount[.@i]*$@MTS_MULTIPLERATE;
+						break;
+					case 21: case 22: case 31: case 32:
+						set .@getitemamount, .@amount[.@i]*$@MTS_SPECIALRATE;
+						break;
+					case 41: case 42: case 43: case 44: case 45: case 46: case 47: 
+					case 48: case 49: case 50: case 51: case 52: case 53: case 54: 
+					case 55: case 56: case 57: case 58: case 59: case 60: case 61:
+					case 62: case 63: case 64: case 65: case 66: case 67: case 68:
+						set .@getitemamount, .@amount[.@i]*$@MTS_SPECIFICRATE;
+						break;
+				}
+				query_sql ("INSERT INTO `monster_reward`(`event_name`,`account_id`,`reward_amount`,`time`) VALUES('Monster Slot','" + .@accid[.@i] + "','" + .@getitemamount + "',FROM_UNIXTIME('" + gettimetick(2) + "'))");
+			}
+			query_sql ("DELETE FROM `monster_casino` WHERE `account_id` = '" + .@accid[.@i] + "' AND `event_name` = 'Monster Slot' AND `monster_choose` = '" + .@monchoose[.@i] + "'");
+		}
+		for(set .@i, 1; .@i <= 5; set .@i, .@i + 1)
+			donpcevent "MonsterChoose#" + .@i + "::OnReset";
+		donpcevent "MonsterChooseSpecial::OnReset";
+		end;
+}
+

@@ -1,0 +1,212 @@
+moroccz,146,103,6	script	Job Master	811,{
+function Job_Menu; function A_An;
+
+	mes "[เปลื่ยนอาชีพ]";
+	if (Class > 4049) {
+		mes " ข้าต้องขออภัยด้วย... !!? คุณไม่สามารถทำรายการใดๆ ได้อีก";
+		mes " คุณอยู่ในอาชีพขั้นสูงสุดแล้ว..";
+		close;
+	}
+	if (checkfalcon() || checkcart() || checkriding() || ismounting()) {
+		mes "กรุณาถอดการติดตั้ง "+((checkfalcon())?"Falcon":"")+((checkcart())?"Cart":"")+((checkriding())?"Peco":"")+((ismounting())?"mount":"")+" ก่อนใช้บริการ";
+		close;
+	}
+	if (.SkillPointCheck && SkillPoint) {
+		mes " กรุณาใช้สกิลพ้อยที่เหลืออยู่ของคุณ";
+		mes " ก่อนใช้บริการ...";
+		close;
+	}
+
+	set .@eac, eaclass();
+	set .@i, ((.ThirdClass)?roclass(.@eac&EAJ_UPPERMASK):Class);
+	if (.@i > 6 && .@i < 22) {
+		if (BaseLevel < .Rebirth[0] || JobLevel < .Rebirth[1]) {
+			set .@blvl, .Rebirth[0]-BaseLevel; set .@jlvl, .Rebirth[1]-JobLevel;
+			mes " คุณจำเป็นต้องมีเลเวลไม่ต่ำกว่า "+((.@blvl>0)?.@blvl+" และมีเลเวลจ๊อบมากกว่า "+((.@jlvl>0)?"":""):"")+((.@jlvl>0)?.@jlvl+" ขึ้นไป":"")+"";
+			mes " จึงจะสามารถเปลี่ยนเป็นอาชีพขั้นต่อไปได้... ขอบคุณที่ใช้บริการ";
+			close;
+		}
+		if (Class > 21) {
+			mes " ยินดีต้อนรับ สู่ขั้นตอน";
+			mes " การเปลี่ยนอาชีพ";
+			mes " โปรดเลือก...";
+			mes " อาชีพที่คุณต้องการ";
+			next;
+			Job_Menu(roclass(.@eac|EAJL_THIRD));
+			close;
+		}
+		while(1) {
+			cutin "morocc_kid",2;
+			mes " ยินดีต้อนรับ สู่ขั้นตอน";
+			mes " การเปลี่ยนอาชีพ";
+			mes " โปรดเลือก...";
+			mes " อาชีพที่คุณต้องการ";
+			next;
+			set .@i, select(" ~ เปลี่ยนอาชีพ ^0055FFHi-class^000000:"+((.ThirdClass)?" ~ ^FF0000Third Class^000000":"")+": ~ ^777777ยกเลิก^000000");
+			if (.@i==3) close;
+			mes "[เปลื่ยนอาชีพ]";
+			mes " คุณแน่ใจแล้วใช่ไหม";
+			mes " ที่ต้องการจะเปลี่ยน";
+			mes " เป็นอาชีพนี้ ว่าไงล่ะ..?";
+			next;
+			Job_Menu(((.@i==1)?4001:roclass(.@eac|EAJL_THIRD)));
+			mes "[เปลื่ยนอาชีพ]";
+		}
+	}
+	set .@j1, roclass(.@eac|EAJL_2_1); set .@j2,roclass(.@eac|EAJL_2_2);
+	if ((.@eac&EAJ_UPPERMASK) == EAJ_SUPER_NOVICE) setarray .@exp[0],roclass(.@eac|EAJL_THIRD),99;
+	//if (Class == Job_Ninja) setarray .@exp[0],.@j1,70;
+	if (.@exp[0] && .ThirdClass) {
+		if (BaseLevel < .Rebirth[0] || JobLevel < .@exp[1]) {
+			set .@blvl, .Rebirth[0]-BaseLevel; set .@jlvl, .@exp[1]-JobLevel;
+			mes " คุณจำเป็นต้องมีเลเวลไม่ต่ำกว่า "+((.@blvl>0)?.@blvl+" และมีเลเวลจ๊อบมากกว่า "+((.@jlvl>0)?"":""):"")+((.@jlvl>0)?.@jlvl+" ขึ้นไป":"")+"";
+			mes " จึงจะสามารถเปลี่ยนเป็นอาชีพขั้นต่อไปได้... ขอบคุณที่ใช้บริการ";
+			close;
+		}
+		mes " คุณต้องการเปลี่ยนอาชีพ";
+		mes " เป็น "+jobname(.@exp[0])+" ใช่ไหม?";
+		next;
+		Job_Menu(.@exp[0]);
+		close;
+	}
+	if (.@eac&EAJL_2)
+		if (.@eac&(EAJL_UPPER|EAJL_BABY) || roclass(.@eac|EAJL_UPPER) == -1) {
+			mes " ข้าต้องขออภัยด้วย... !!? คุณไม่สามารถทำรายการใดๆ ได้อีก";
+			mes " คุณอยู่ในอาชีพขั้นสูงสุดแล้ว..";
+			close;
+		}
+	if ((.@eac&EAJ_BASEMASK) == EAJ_NOVICE) {
+		if (JobLevel < .JobReq[0])
+			mes " คุณจำเป็นต้องมีเลเวลจ๊อบมากกว่า "+.JobReq[0]+" สำหรับการเปลี่ยนอาชีพสู่ Class 1st";
+		else if (Class == 4001 && .LastJob && lastJob) {
+			cutin "morocc_kid",2;
+			mes " ยินดีต้อนรับ สู่ขั้นตอน";
+			mes " การเปลี่ยนอาชีพ";
+			mes " โปรดเลือก...";
+			mes " อาชีพที่คุณต้องการ";
+			next;
+			Job_Menu(roclass((eaclass(lastJob)&EAJ_BASEMASK)|EAJL_UPPER));
+		} else switch(Class) {
+			case 0: Job_Menu(1,2,3,4,5,6,23,4046,24,25,4023);
+			case 4001: Job_Menu(4002,4003,4004,4005,4006,4007);
+			case 4023: Job_Menu(4024,4025,4026,4027,4028,4029,4045);
+			default: mes " เกิดข้อผิดพลาด โปรดติดต่อผู้ดูแล"; break;
+		}
+		close;
+	}
+	if (roclass(.@eac|EAJL_2_1) == -1 || roclass(.@eac|EAJL_2_2) == -1)
+		mes " ข้าต้องขออภัยด้วย... !!? คุณไม่สามารถทำรายการใดๆ ได้อีก";
+	else if (!(.@eac&EAJL_2) && JobLevel < .JobReq[1])
+		mes " คุณจำเป็นต้องมีเลเวลจ๊อบมากกว่า "+.JobReq[1]+" สำหรับการเปลี่ยนอาชีพสู่ Class 2nd";
+	else if (.LastJob && lastJob && (.@eac&EAJL_UPPER)) {
+		cutin "morocc_kid",2;
+		mes " ยินดีต้อนรับ สู่ขั้นตอน";
+		mes " การเปลี่ยนอาชีพ";
+		mes " โปรดเลือก...";
+		mes " อาชีพที่คุณต้องการ";
+		next;
+		Job_Menu(lastJob+4001);
+	} else
+		Job_Menu(.@j1,.@j2);
+	close;
+
+function Job_Menu {
+	while(1) {
+		if (getargcount() > 1) {
+			mes " ยินดีต้อนรับ สู่ขั้นตอน";
+			mes " การเปลี่ยนอาชีพ";
+			mes " โปรดเลือก...";
+			mes " อาชีพที่คุณต้องการ";
+			set .@menu$,"";
+			for(set .@i,0; .@i<getargcount(); set .@i,.@i+1)
+				set .@menu$, .@menu$+" ~ "+jobname(getarg(.@i))+":";
+			set .@menu$, .@menu$+" ~ ^777777ยกเลิก^000000";
+			next;
+			set .@i, getarg(select(.@menu$)-1,0);
+			if (!.@i) close;
+			if ((.@i == 23 || .@i == 4045) && BaseLevel < .SNovice) {
+				mes "[เปลื่ยนอาชีพ]";
+				mes " สำหรับขั้นตอนการเปลี่ยนอาชีพเป็น "+jobname(.@i)+" ";
+				mes " คุณจำเป็นต้องเลเวลขั้นต่ำคือ "+.SNovice+"";
+				close;
+			}
+			mes "[เปลื่ยนอาชีพ]";
+			mes " คุณแน่ใจแล้วใช่ไหม";
+			mes " ที่ต้องการจะเปลี่ยน";
+			mes " เป็นอาชีพนี้ ว่าไงล่ะ..?";
+			next;
+		} else
+			set .@i, getarg(0);
+		if (select(" ~ แน่นอน! ข้าจะเปลี่ยนเป็น ^0055FF"+jobname(.@i)+"^000000: ~ ^777777"+((getargcount() > 1)?"เมนูก่อนหน้า":"ยกเลิก")+"^000000") == 1) {
+			mes "[เปลื่ยนอาชีพ]";
+			mes " ขอแสดงความยินดีด้วย";
+			mes " ตอนนี้คุณได้เลื่อนขั้น";
+			mes " สู่สายอาชีพ "+A_An(jobname(.@i))+" แล้ว!";
+			if (.@i==4001 && .LastJob) set lastJob, Class;
+			jobchange .@i;
+			if (.@i==4001 || .@i==4023) resetlvl(1);
+			specialeffect2 338; specialeffect2 432;
+			if (.Platinum) callsub Get_Platinum;
+			close;
+		}
+		if (getargcount() == 1) return;
+		mes "[เปลื่ยนอาชีพ]";
+	}
+	end;
+
+}
+
+function A_An {
+	setarray .@A$[0],"a","e","i","o","u";
+	set .@B$, "_"+getarg(0);
+	for(set .@i,0; .@i<5; set .@i,.@i+1)
+		if (compare(.@B$,"_"+.@A$[.@i])) return ""+getarg(0);
+	return ""+getarg(0);
+}
+
+Get_Platinum:
+	skill 142,1,0;
+	switch(BaseClass) {
+		case 0: if (Class !=23) skill 143,1,0; break;
+		case 1: skill 144,1,0; skill 145,1,0; skill 146,1,0; break;
+		case 2: skill 157,1,0; break;
+		case 3: skill 147,1,0; skill 148,1,0; break;
+		case 4: skill 156,1,0; break;
+		case 5: skill 153,1,0; skill 154,1,0; skill 155,1,0; break;
+		case 6: skill 149,1,0; skill 150,1,0; skill 151,1,0; skill 152,1,0; break;
+		default: break;
+	}
+	switch(BaseJob) {
+		case 7: skill 1001,1,0; break;
+		case 8: skill 1014,1,0; break;
+		case 9: skill 1006,1,0; break;
+		case 10: skill 1012,1,0; skill 1013,1,0; break;
+		case 11: skill 1009,1,0; break;
+		case 12: skill 1003,1,0; skill 1004,1,0; break;
+		case 14: skill 1002,1,0; break;
+		case 15: skill 1015,1,0; skill 1016,1,0; break;
+		case 16: skill 1007,1,0; skill 1008,1,0; skill 1017,1,0; skill 1018,1,0; skill 1019,1,0; break;
+		case 17: skill 1005,1,0; break;
+		case 18: skill 238,1,0; break;
+		case 19: skill 1010,1,0; break;
+		case 20: skill 1011,1,0; break;
+		default: break;
+	}
+	return;
+
+
+OnInit:
+	setarray .Rebirth[0],99,50;	//  กำหนดเลเวลและจ๊อบขั้นต่ำในการเปลี่ยนอาชีพ Hiclass
+	setarray .JobReq[0],10,40;	// กำหนดจ๊อบขั้นต่ำในการเปลี่ยนอาชีพ Classs 2
+	set .ThirdClass,1;		// ต้องการเปิดใช้งานอาชีพ Class 3 หรือไม่
+	set .SNovice,45;		// กำหนดเลเวลต่ำสุดในการเปลี่ยนอาชีพ Super Novice
+	set .LastJob,1;			// ตรวจสายอาชีพก่อนการเปลี่ยนอาชีพหรือไม่?
+	set .SkillPointCheck,0;		// ตรวจสกิลพ้อยท์ที่หลงเหลืออยู่ของตัวละครหรือไม่? (1: yes / 0: no)
+	set .Platinum,1;		// ได้รับสกิลเสริมโดยอัตโนมัติหรือไม่? (1: yes / 0: no)
+while (1) {
+			showscript "[ เปลื่ยนอาชีพ ]";
+			sleep 500;
+		}
+		end;
+}
+

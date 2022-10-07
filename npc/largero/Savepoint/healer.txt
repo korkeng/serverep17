@@ -1,0 +1,145 @@
+-	script	Healer	-1,{
+
+	if ( @heal_cooldown + .cooldown > gettimetick(2) && getgmlevel() == 99) {
+		dispbottom .header$ + " : คุณต้องรออีก " + ( @heal_cooldown + .cooldown - gettimetick(2) ) + " วินาทีถึงจะใช้งานบัฟได้";
+		end;
+	}
+	
+	if ( vip_status(1) ) {
+		set .@Timer, gettimetick(2);
+		sc_start SC_CLUBVIP,.@Timer,30;
+		sc_start SC_INCALLSTATUS,.@Timer,20;
+		sc_start SC_CP_HELM,60*60*1000,5;
+		sc_start SC_CP_SHIELD,60*60*1000,5;
+		sc_start SC_CP_ARMOR,60*60*1000,5;
+		sc_start SC_CP_WEAPON,60*60*1000,5;
+	}
+
+	if(.cast) progressbar "ffffff",.cast_time/1000;
+	
+	// End debuff
+	sc_end SC_STONE; sc_end SC_FREEZE; sc_end SC_STUN; sc_end SC_SLEEP; sc_end SC_POISON;
+	sc_end SC_CURSE; sc_end SC_SILENCE; sc_end SC_CONFUSION; sc_end SC_BLIND; sc_end SC_BLEEDING;
+	sc_end SC_DPOISON; sc_end SC_FEAR; sc_end SC_FREEZING; sc_end SC_BURNING; sc_end SC_DEEPSLEEP;
+	sc_end SC_DECREASEAGI; sc_end SC_BROKENARMOR; sc_end SC_BROKENWEAPON; sc_end SC_STRIPWEAPON;
+	sc_end SC_STRIPSHIELD; sc_end SC_STRIPARMOR; sc_end SC_STRIPHELM; sc_end SC__STRIPACCESSORY;
+	sc_end SC_ORCISH; sc_end SC_BERSERK; sc_end SC_SKE; sc_end SC_SWOO; sc_end SC_SKA;
+	//sc_end SC_INCREASEAGI; sc_end SC_BLESSING; sc_end SC_FOOD_STR_CASH; sc_end SC_FOOD_AGI_CASH;
+	//sc_end SC_FOOD_VIT_CASH; sc_end SC_FOOD_INT_CASH; sc_end SC_FOOD_DEX_CASH; sc_end SC_FOOD_LUK_CASH; sc_end SC_POEMBRAGI;
+	
+	// Given buff
+	sc_start SC_INCREASEAGI, .duration*1000, 10;
+	sc_start SC_BLESSING, .duration*1000, 10;
+	//sc_start SC_FOOD_STR_CASH, .duration*1000,7;
+	//sc_start SC_FOOD_AGI_CASH, .duration*1000,7;
+	//sc_start SC_FOOD_VIT_CASH, .duration*1000,7;
+	//sc_start SC_FOOD_INT_CASH, .duration*1000,7;
+	//sc_start SC_FOOD_DEX_CASH, .duration*1000,7;
+	//sc_start SC_FOOD_LUK_CASH, .duration*1000,7;
+	sc_start SC_IMPOSITIO, .duration*1000, 5;
+	sc_start SC_MAGNIFICAT, .duration*1000, 5;
+	sc_start SC_GLORIA, .duration*1000, 5;
+	
+	if(.special_buff){
+		sc_start4 SC_POEMBRAGI,.special_buff_duration*1000,10,200,200,10;
+		dispbottom .header$ + " : คุณอยู่ในสถานะ A Poem of Bragi เป็นเวลา [ "+((.special_buff_duration)/60) + " ] นาที ." ;
+	}
+	
+	if(agitcheck() && .chemical_during_woe){
+		set .@chem_time, .chemical_time;
+		dispbottom .header$ + " : คุณได้รับบัฟเคือบเนื่องจากเวลากิลด์วอเป็นเวลา [ " + (.chemical_time/60) + " ] นาที" ;
+		sc_start SC_CP_HELM,.@chem_time*1000,5;
+		sc_start SC_CP_SHIELD,.@chem_time*1000,5;
+		sc_start SC_CP_ARMOR,.@chem_time*1000,5;
+		sc_start SC_CP_WEAPON,.@chem_time*1000,5;
+		specialeffect2 300;
+	}
+	
+	if(.auto_make_ore){
+		.@ori = countitem(756);
+		if ( .@ori >= 5 ) {
+			delitem 756, .@ori / 5 * 5;
+			getitem 984, .@ori / 5;
+			dispbottom .header$ + " : ผสมแร่ "+ ( .@ori / 5 * 5 ) +" Oridecon Stones, คุณได้รับ "+ ( .@ori / 5 ) +" Oridecons.";
+		}
+		.@elu = countitem(757);
+		if ( .@elu >= 5 ) {
+			delitem 757, .@elu / 5 * 5;
+			getitem 985, .@elu / 5;
+			dispbottom .header$ + " : ผสมแร่ "+ ( .@elu / 5 * 5 ) +" Elunium Stones, คุณได้รับ "+ ( .@elu / 5 ) +" Eluniums.";
+		}
+	}
+	
+	if(.repair_equipment) repairall;
+
+//	and last, give players heal
+	percentheal 100,100;
+	skilleffect "AL_HEAL", MaxHp;
+	skilleffect "MG_SRECOVERY", MaxSp;
+	specialeffect2 223;
+	specialeffect2 456;
+	specialeffect2 543;
+	specialeffect2 325;
+	specialeffect2 37;
+	specialeffect2 42;
+	emotion ET_THROB;
+	@heal_cooldown = gettimetick(2);
+
+	
+//	Check Inventory And item for identify	
+	if(.identify_equipment){
+		set .identify_equipment_cost, .@Price;
+		getinventorylist;
+		for(set .@i,0; .@i<@inventorylist_count; set .@i,.@i+1) {
+			if (@inventorylist_identify[.@i]) continue;
+			if (Zeny < .@Price) {
+				dispbottom "It costs "+.@Price+" to identify an item."; break; 
+			}
+			set Zeny, Zeny-.@Price;
+			delitem2 @inventorylist_id[.@i],1,0,0,0,0,0,0,0;
+			getitem @inventorylist_id[.@i],1;
+			setarray .@Total[0], .@Total[0]+1, .@Total[1]+.@Price; 
+		}
+		if (.@Total[0]) {
+			message strcharinfo(0),"[ System ] : ไอเทมที่ทำการตรวจสอบ : "+.@Total[0]+" รายการ"+((.@Total[1])?" เป็นเงิน "+.@Total[1]+" Zeny":"");
+		}
+		
+	}
+	
+	
+	end;
+	
+	OnInit:
+		set .header$, "[ Healer ]";				// ชื่อข้อความตรง Npc
+		set .cast, 1;							// มีหลอดร่ายก่อนบัฟ ( 0 = ไม่มี / 1 = มี )
+		set .cast_time, 100;					// เวลาในการร่ายบัฟ ( 1000 = 1 วินาที )
+		set	.cooldown, 5;						// คูลดาวน์หลังจากขอบัฟไปแล้ว ( วินาที )
+		set .special_buff, 1;					// แจกบัฟพิเศษ -> บากิ/เซอวิซ ( 0 = ไม่แจก / 1 = แจก )
+		set .auto_make_ore, 1;					// หลังขอบัฟรวมแร่อีรูและโอริอัตโนมัติ ( 0 = ไม่รวม / 1 = รวม )
+		set .repair_equipment, 1;				// หลังขอบัฟซ่อมไอเทมที่เสียหายให้ ( 0 = ไม่ซ่อม / 1 = ซ่อม )
+		set .identify_equipment, 1;				// หลังขอบัฟส่องไอเทมที่ยังไม่ส่อง  ( 0 = ไม่ส่อง / 1 = ส่อง )
+		set .identify_equipment_cost, 5000;		// ค่าใช้จ่ายในการส่องไอเทมต่อครั้ง
+		set .duration, 1800; 					// เวลาของบัฟทั่วไป ( วินาที )
+		set .special_buff_duration, 180; 		// เวลาของบัฟพิเศษ -> บากิ/เซอวิซ ( วินาที )
+		set .chemical_during_woe, 1;			// เปิดการแจกเคือบเมื่อถึงเวลากิลด์วอร์ ( 0 = ปิด / 1 = เปิด )
+		set .chemical_time, 180;				// เวลาในการแจกบัฟเคือบสำหรับผู้เล่นที่ไม่เปิดระบบบุฟเฟ่ต์ ( วินาที )
+		set .chemical_vip_time, 600;			// เวลาในการแจกบัฟเคือบสำหรับผู้เล่นที่เปิดระบบบุฟเฟ่ต์ ( วินาที )
+
+		
+while (1) {
+			showscript "[ Healer ]";
+			sleep 500;
+		}
+		end;
+}
+// ==================== Duplicate Here ====================
+moroccz,157,99,4	duplicate(Healer)	Healer#1	640
+moroccz,101,113,4	duplicate(Healer)	Healer#2	640
+moroccz,220,108,4	duplicate(Healer)	Healer#3	640
+moroccz,170,37,4	duplicate(Healer)	Healer#4	640
+moroccz,90,39,4	duplicate(Healer)	Healer#5	640
+moroccz,170,256,4	duplicate(Healer)	Healer#6	640
+moroccz,281,211,4	duplicate(Healer)	Healer#7	640
+moroccz,36,172,4	duplicate(Healer)	Healer#8	640
+moroccz,32,290,4	duplicate(Healer)	Healer#9	640
+moroccz,242,43,4	duplicate(Healer)	Healer#10	640

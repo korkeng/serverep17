@@ -1,0 +1,462 @@
+-	script	FishingHole	-1,{
+
+//Fishing rod
+set .@Rod,2764;
+//Fishing Lure
+set .@Lure,2775;
+//Auto-Fish
+set .@Auto,1;
+//Auto-Fish on Fail
+set .@AutoFail,1;
+Fish:
+	if (isequipped(.@Rod)) && (isequipped(.@Lure)){
+		specialeffect EF_BUBBLE,"Fishing Hole";
+		//soundeffect "fishing_wait.wav",0;
+		dispbottom "[ระบบ] กำลังเริ่มตกปลา";
+		set .@fcast,15;
+			if (isequipped(2550)) { //Fisher's Muffler
+				set .@fcast,.@fcast - 2;
+			}
+			if (isequipped(2443)) { //Fisher's Boots
+				set .@fcast,.@fcast - 2;
+			}
+			if (isequipped(2764)) { //Fishing Pole
+				set .@fcast,.@fcast - 3;
+			}
+			if (isequipped(2775)) { //Fishing Lure
+				set .@fcast,.@fcast - 1;
+			}
+        //progressbar "ffffff",.@fcast;
+        //progressbar "FF0000",15;
+		progressbar "FF0000",15;
+		if (rand(1,400) == 2){ //โอกาศ 1ใน 400
+		getitem 61713,1;
+		//getitem 61019,1;
+		specialeffect2 EF_TEMP_OK;
+		specialeffect2 410;
+		//soundeffectall "fishing_m_success.wav",0,strcharinfo(3);
+		//soundeffect "fishing_m_success.wav",0;
+		//mapannounce strcharinfo(3),"ว้าว...ยินดีด้วย คุณ  [ "+strcharinfo(0)+" ] ได้รับ Cash Coin 1 ea. และ Random Farm Box 1 ea. จากการตกปลา",bc_map,"0x66FF99";
+		if(.@Auto==1){
+		goto Fish;}else{
+		end;}
+		}
+			if (rand(1,6) == 1) ||(rand(1,6) == 3) || (rand(1,6) == 6){
+			setarray .@Catch[0],579,908,909,963,956,6049,918,960,910,938,624;// List of Junk/Other
+			set .@CatchRand,.@Catch[rand(getarraysize(.@Catch))];
+			getitem .@CatchRand,1;
+			}
+			else {
+			soundeffect "fishing_m_failure.wav",0;
+			dispbottom "[Fishing] ว้าแย่จังเลย...คุณดูเหมือนคุณตกไม่ได้อะไรเลย";
+			if(.@AutoFail == 1){
+			goto Fish;} else{
+			end;}
+			}
+		if (rand(1,1000) == 3){ //โอกาศ 1ใน 1000
+		setarray .@Rare[0],61001;
+		set .@RareCatch, .@Rare[rand(getarraysize(.@Rare))];
+		getitem .@RareCatch,1; //Reward
+		specialeffect2 410;
+		//soundeffect "fishing_m_success.wav",0;
+		//mapannounce strcharinfo(3),"ว้าวว้าวว้าว...ยินดีด้วย คุณ [ "+strcharinfo(0)+" ] ได้รับ "+getitemname(.@RareCatch)+" จากการตกปลา",bc_map,"0x66FF99";
+		}
+		if(.@Auto == 1){
+		goto Fish;} else{
+		end;}
+		}
+	else {
+	dispbottom "[ระบบ] คุณจำเป็นต้องมีเบ็ดตกปลาและเหยื่อตกปลาก่อน...";
+	end;
+	}
+}
+
+moroccz,143,129,0	duplicate(FishingHole)	จุดตกปลา#01	844
+moroccz,142,136,0	duplicate(FishingHole)	จุดตกปลา#02	844
+moroccz,137,142,0	duplicate(FishingHole)	จุดตกปลา#03	844
+moroccz,134,127,0	duplicate(FishingHole)	จุดตกปลา#04	844
+moroccz,127,127,0	duplicate(FishingHole)	จุดตกปลา#05	844
+moroccz,120,128,0	duplicate(FishingHole)	จุดตกปลา#06	844
+moroccz,114,132,0	duplicate(FishingHole)	จุดตกปลา#07	844
+moroccz,112,139,0	duplicate(FishingHole)	จุดตกปลา#08	844
+moroccz,111,145,0	duplicate(FishingHole)	จุดตกปลา#09	844
+moroccz,111,152,0	duplicate(FishingHole)	จุดตกปลา#10	844
+moroccz,111,159,0	duplicate(FishingHole)	จุดตกปลา#11	844
+moroccz,111,166,0	duplicate(FishingHole)	จุดตกปลา#12	844
+moroccz,111,174,0	duplicate(FishingHole)	จุดตกปลา#13	844
+moroccz,111,179,0	duplicate(FishingHole)	จุดตกปลา#14	844
+moroccz,111,184,0	duplicate(FishingHole)	จุดตกปลา#15	844
+moroccz,111,192,0	duplicate(FishingHole)	จุดตกปลา#16	844
+moroccz,111,199,0	duplicate(FishingHole)	จุดตกปลา#17	844
+moroccz,112,207,0	duplicate(FishingHole)	จุดตกปลา#18	844
+moroccz,116,212,0	duplicate(FishingHole)	จุดตกปลา#19	844
+moroccz,123,215,0	duplicate(FishingHole)	จุดตกปลา#20	844
+moroccz,130,216,0	duplicate(FishingHole)	จุดตกปลา#21	844
+moroccz,136,216,0	duplicate(FishingHole)	จุดตกปลา#22	844
+moroccz,141,215,0	duplicate(FishingHole)	จุดตกปลา#23	844
+moroccz,143,210,0	duplicate(FishingHole)	จุดตกปลา#24	844
+moroccz,144,206,0	duplicate(FishingHole)	จุดตกปลา#25	844
+moroccz,143,201,0	duplicate(FishingHole)	จุดตกปลา#26	844
+moroccz,138,196,0	duplicate(FishingHole)	จุดตกปลา#27	844
+moroccz,133,192,0	duplicate(FishingHole)	จุดตกปลา#28	844
+moroccz,129,186,0	duplicate(FishingHole)	จุดตกปลา#29	844
+moroccz,126,180,0	duplicate(FishingHole)	จุดตกปลา#30	844
+moroccz,125,174,0	duplicate(FishingHole)	จุดตกปลา#31	844
+moroccz,125,167,0	duplicate(FishingHole)	จุดตกปลา#32	844
+moroccz,128,161,0	duplicate(FishingHole)	จุดตกปลา#33	844
+moroccz,131,154,0	duplicate(FishingHole)	จุดตกปลา#34	844
+moroccz,133,150,0	duplicate(FishingHole)	จุดตกปลา#35	844
+
+moroccz,178,130,0	duplicate(FishingHole)	จุดตกปลา#36	844
+moroccz,181,136,0	duplicate(FishingHole)	จุดตกปลา#37	844
+moroccz,186,142,0	duplicate(FishingHole)	จุดตกปลา#38	844
+moroccz,189,148,0	duplicate(FishingHole)	จุดตกปลา#39	844
+moroccz,191,154,0	duplicate(FishingHole)	จุดตกปลา#40	844
+moroccz,194,159,0	duplicate(FishingHole)	จุดตกปลา#41	844
+moroccz,196,165,0	duplicate(FishingHole)	จุดตกปลา#42	844
+moroccz,197,171,0	duplicate(FishingHole)	จุดตกปลา#43	844
+moroccz,196,176,0	duplicate(FishingHole)	จุดตกปลา#44	844
+moroccz,194,179,0	duplicate(FishingHole)	จุดตกปลา#45	844
+moroccz,192,185,0	duplicate(FishingHole)	จุดตกปลา#46	844
+moroccz,189,190,0	duplicate(FishingHole)	จุดตกปลา#47	844
+moroccz,184,196,0	duplicate(FishingHole)	จุดตกปลา#48	844
+moroccz,179,200,0	duplicate(FishingHole)	จุดตกปลา#49	844
+moroccz,177,207,0	duplicate(FishingHole)	จุดตกปลา#50	844
+moroccz,182,211,0	duplicate(FishingHole)	จุดตกปลา#51	844
+moroccz,190,211,0	duplicate(FishingHole)	จุดตกปลา#52	844
+moroccz,196,211,0	duplicate(FishingHole)	จุดตกปลา#53	844
+moroccz,203,211,0	duplicate(FishingHole)	จุดตกปลา#54	844
+moroccz,205,205,0	duplicate(FishingHole)	จุดตกปลา#55	844
+moroccz,205,198,0	duplicate(FishingHole)	จุดตกปลา#56	844
+moroccz,205,193,0	duplicate(FishingHole)	จุดตกปลา#57	844
+moroccz,207,187,0	duplicate(FishingHole)	จุดตกปลา#58	844
+moroccz,208,180,0	duplicate(FishingHole)	จุดตกปลา#59	844
+moroccz,208,172,0	duplicate(FishingHole)	จุดตกปลา#60	844
+moroccz,208,164,0	duplicate(FishingHole)	จุดตกปลา#61	844
+moroccz,208,158,0	duplicate(FishingHole)	จุดตกปลา#62	844
+moroccz,207,153,0	duplicate(FishingHole)	จุดตกปลา#63	844
+moroccz,206,146,0	duplicate(FishingHole)	จุดตกปลา#64	844
+moroccz,205,141,0	duplicate(FishingHole)	จุดตกปลา#65	844
+moroccz,203,135,0	duplicate(FishingHole)	จุดตกปลา#66	844
+moroccz,199,131,0	duplicate(FishingHole)	จุดตกปลา#67	844
+moroccz,192,129,0	duplicate(FishingHole)	จุดตกปลา#68	844
+moroccz,185,128,0	duplicate(FishingHole)	จุดตกปลา#69	844
+
+
+moroccz,131,132,2	duplicate(FishingHole)	ปลา#01	1158
+moroccz,137,133,2	duplicate(FishingHole)	ปลา#02	1158
+moroccz,135,138,2	duplicate(FishingHole)	ปลา#03	1158
+moroccz,131,145,2	duplicate(FishingHole)	ปลา#04	1158
+moroccz,126,156,2	duplicate(FishingHole)	ปลา#05	1158
+moroccz,124,133,2	duplicate(FishingHole)	ปลา#06	1158
+moroccz,120,137,2	duplicate(FishingHole)	ปลา#07	1158
+moroccz,118,143,2	duplicate(FishingHole)	ปลา#08	1158
+moroccz,117,149,2	duplicate(FishingHole)	ปลา#09	1158
+moroccz,116,156,2	duplicate(FishingHole)	ปลา#10	1158
+moroccz,116,163,2	duplicate(FishingHole)	ปลา#11	1158
+moroccz,122,163,2	duplicate(FishingHole)	ปลา#12	1158
+moroccz,128,151,2	duplicate(FishingHole)	ปลา#13	1158
+moroccz,115,170,2	duplicate(FishingHole)	ปลา#14	1158
+moroccz,121,171,2	duplicate(FishingHole)	ปลา#15	1158
+moroccz,115,178,2	duplicate(FishingHole)	ปลา#16	1158
+moroccz,122,179,2	duplicate(FishingHole)	ปลา#17	1158
+moroccz,114,188,2	duplicate(FishingHole)	ปลา#18	1158
+moroccz,124,184,2	duplicate(FishingHole)	ปลา#19	1158
+moroccz,127,191,2	duplicate(FishingHole)	ปลา#20	1158
+moroccz,115,196,2	duplicate(FishingHole)	ปลา#21	1158
+moroccz,133,197,2	duplicate(FishingHole)	ปลา#22	1158
+moroccz,137,201,2	duplicate(FishingHole)	ปลา#23	1158
+moroccz,138,208,2	duplicate(FishingHole)	ปลา#24	1158
+moroccz,133,211,2	duplicate(FishingHole)	ปลา#25	1158
+moroccz,127,211,2	duplicate(FishingHole)	ปลา#26	1158
+moroccz,122,209,2	duplicate(FishingHole)	ปลา#27	1158
+moroccz,118,205,2	duplicate(FishingHole)	ปลา#28	1158
+
+
+moroccz,183,132,2	duplicate(FishingHole)	ปลา#29	10065
+moroccz,188,137,2	duplicate(FishingHole)	ปลา#30	10065
+moroccz,194,134,2	duplicate(FishingHole)	ปลา#31	10065
+moroccz,189,133,2	duplicate(FishingHole)	ปลา#32	10065
+moroccz,191,142,2	duplicate(FishingHole)	ปลา#33	10065
+moroccz,199,140,2	duplicate(FishingHole)	ปลา#34	10065
+moroccz,193,147,2	duplicate(FishingHole)	ปลา#35	10065
+moroccz,200,146,2	duplicate(FishingHole)	ปลา#36	10065
+moroccz,195,153,2	duplicate(FishingHole)	ปลา#37	10065
+moroccz,203,155,2	duplicate(FishingHole)	ปลา#38	10065
+moroccz,201,151,2	duplicate(FishingHole)	ปลา#39	10065
+moroccz,198,162,2	duplicate(FishingHole)	ปลา#40	10065
+moroccz,204,162,2	duplicate(FishingHole)	ปลา#41	10065
+moroccz,200,168,2	duplicate(FishingHole)	ปลา#42	10065
+moroccz,204,168,2	duplicate(FishingHole)	ปลา#43	10065
+moroccz,204,174,2	duplicate(FishingHole)	ปลา#44	10065
+moroccz,200,174,2	duplicate(FishingHole)	ปลา#45	10065
+moroccz,199,179,2	duplicate(FishingHole)	ปลา#46	10065
+moroccz,204,182,2	duplicate(FishingHole)	ปลา#47	10065
+moroccz,197,184,2	duplicate(FishingHole)	ปลา#48	10065
+moroccz,202,188,2	duplicate(FishingHole)	ปลา#49	10065
+moroccz,194,189,2	duplicate(FishingHole)	ปลา#50	10065
+moroccz,190,195,2	duplicate(FishingHole)	ปลา#51	10065
+moroccz,200,194,2	duplicate(FishingHole)	ปลา#52	10065
+moroccz,200,201,2	duplicate(FishingHole)	ปลา#53	10065
+moroccz,186,201,2	duplicate(FishingHole)	ปลา#54	10065
+moroccz,194,201,2	duplicate(FishingHole)	ปลา#55	10065
+moroccz,182,205,2	duplicate(FishingHole)	ปลา#56	10065
+moroccz,188,207,2	duplicate(FishingHole)	ปลา#57	10065
+moroccz,195,206,2	duplicate(FishingHole)	ปลา#58	10065
+moroccz,199,206,2	duplicate(FishingHole)	ปลา#59	10065
+
+
+
+
+moroccz,153,132,6	script	ขายอุปกรณ์ตกปลา#01	10078,{ 
+
+callfunc "QuestShopFishing"; 
+
+OnInit:
+	waitingroom	" [ เควสตกปลา ] ",0;
+	end;
+}
+
+//============================================================
+// Script Core
+//============================================================
+
+-	script	QuestShopFishingMenu	-1,{ 
+
+function Add; 
+function Chk; 
+function Slot; 
+function A_An;
+
+OnInit:
+
+	freeloop(1);
+
+//============================================================
+// Configulator Shop
+//============================================================
+																														   																							  
+	set .Announce,0;	// ประกาศเมื่อได้เสร็จสินเควส ? (1: ใช่ / 0: ไม่)
+	set .ShowSlot,1;	// แสดง สล๊อต ไอเท็ม ? (2: แสดงทั้งหมด / 1: ถ้า สล๊อตน้อยกว่า > 0 / 0: never)
+	set .ShowID,0;  	// แสดง รหัสไอเท็ม ? (1: ใช่ / 0: ไม่)
+	set .ShowZeny,1;	// แสดงผล Zeny ถ้ามีค่าใช้จ่าย, ? (1: ใช่ / 0: ไม่)
+	set .MaxStack,100;	// จำนวนสูงสุดของรายการเควส
+
+//============================================================
+// Points 
+// setarray .Points$[0],"<ชื่อตัวแปร>","<การแสดงผล>";
+//============================================================
+
+	setarray .Points$[0],"#CASHPOINTS","Cash Points";
+
+//============================================================
+// รหัสร้านค้า -- การเพิ่มร้านค้า, คัดลอกข้อมูลที่ด้านล่างของไฟล์.
+// setarray .Shops$[1],"<เมนูร้านค้า 1>","<เมนูร้านค้า 2>"{,...};
+//============================================================
+
+	setarray .Shops$[1],"^FF0000•^000000 เควสตกปลา";
+						
+//===========================================================
+// ร้านการ Item ที่ใช้ในการทำเควส
+// Add(<รหัสร้านค้า>,<รหัสรางวัล>,<จำนวนรางวัล>,<ค่าใช้จ่าย Zeny>,<ค่าใช้จ่าย Cash Points>,<รหัสไอดี รายการที่ต้องหา>,<จำนวนของรายการที่ต้องหา>{,...});
+//===========================================================
+//===========================================================
+//===========================================================
+
+
+	Add(1,501,1,20000000,0,501,10);
+
+//===========================================================
+//===========================================================
+//===========================================================
+
+	freeloop(0);
+	set .menu$,"";
+	for(set .@i,1; .@i<=getarraysize(.Shops$); set .@i,.@i+1) {
+		set .menu$, .menu$+.Shops$[.@i]+":";
+		npcshopdelitem "QuestShopFishing"+.@i,909;
+	}
+	end;
+
+OnMenu:
+
+	set .@size, getarraysize(@i);
+	if (!.@size) set .@i, select(.menu$);
+	else if (.@size == 1) set .@i, @i[0];
+	else {
+		for(set .@j,0; .@j<.@size; set .@j,.@j+1)
+			set .@menu$, .@menu$+.Shops$[@i[.@j]]+":";
+		set .@i, @i[select(.@menu$)-1];
+	}
+	deletearray @i[0],getarraysize(@i);
+	if (.Shops$[.@i] == "") {
+		message strcharinfo(0),"มีข้อผิดพลาดที่เกิดขึ้น.";
+		end;
+	}
+	dispbottom "กรุณาเลือก รายการ ที่ท่านต้องการ.";
+	callshop "QuestShopFishing"+.@i,1;
+	npcshopattach "QuestShopFishing"+.@i;
+	end;
+
+OnBuyItem:
+
+	// .@q[] : RewardID, BoughtAmt, RewardAmt, BaseAmt, ReqZeny, ReqPts, { ReqItem, ReqAmt, ... }
+	setarray .@q[0],@bought_nameid[0],((@bought_quantity[0] > .MaxStack)?.MaxStack:@bought_quantity[0]);
+	copyarray .@q[3],getd(".q_"+.@q[0]+"[0]"),getarraysize(getd(".q_"+.@q[0]));
+	set .@q[2],.@q[1]*.@q[3];
+	if (!.@q[2] || .@q[2] > 30000) {
+		message strcharinfo(0),"คุณไม่สามารถซื้อ "+getitemname(.@q[0])+"ครั้งละ หลายรายการ.";
+		end;
+	}
+	mes "[^FF0000เควสตกปลา^000000]";
+	mes "รายการ ที่ี่เลือกคุณได้เลือก: ^0055FF"+((.@q[2] > 1)?.@q[2]+"x ":"")+Slot(.@q[0])+"^000000";
+	mes "รายการที่ คุณต้องมีเพื่อแลกเปลี่ยน:";
+	disable_items;
+	if (.@q[4]) mes " ^FF0000•^000000 "+Chk(Zeny,.@q[4]*.@q[1])+(.@q[4]*.@q[1])+" Zeny^000000";
+	if (.@q[5]) mes " ^FF0000•^000000 "+Chk(getd(.Points$[0]),.@q[5]*.@q[1])+(.@q[5]*.@q[1])+" "+.Points$[1]+" ("+getd(.Points$[0])+"/"+(.@q[5]*.@q[1])+")^000000";
+	if (.@q[6]) for(set .@i,6; .@i<getarraysize(.@q); set .@i,.@i+2)
+		mes " ^FF0000•^000000 "+Chk(countitem(.@q[.@i]),.@q[.@i+1]*.@q[1])+((.ShowID)?"{"+.@q[.@i]+"} ":"")+Slot(.@q[.@i])+" ("+countitem(.@q[.@i])+"/"+(.@q[.@i+1]*.@q[1])+")^000000";
+	next;
+	setarray @qe[1], getiteminfo(.@q[0],5), getiteminfo(.@q[0],11);
+	if (@qe[2] > 0 && ((@qe[1] & 1) || (@qe[1] & 256) || (@qe[1] & 512) || (@qe[1] & 1024) || (@qe[1] & 2048) || (@qe[1] & 4096) || (@qe[1] & 4) || (@qe[1] & 8192)))
+		set .@preview,1;
+	addtimer 1000, strnpcinfo(0)+"::OnEnd";
+	while(1) {
+		switch(select("^FF0000•^000000 แลกเปลี่ยน  ^0055FF"+getitemname(.@q[0])+"^000000:"+((.@preview && !@qe[7])?"^FF0000•^000000 ทดลองใส่":"")+":^FF0000•^000000 ^FF0000ยกเลิก^000000")) {
+		case 1:
+			if (@qe[0]) { 
+				mes "[^FF0000เควสตกปลา^000000]";
+				mes "คุณไม่มี รายการจำเป็นที่ต้องใช้ในการแลกเปลี่ยน";
+				close;
+			}
+			if (!checkweight(.@q[0],.@q[2])) {
+				mes "[^FF0000เควสตกปลา^000000]";
+				mes "^FF0000น้ำหนักคุณเต็ม คุณจำเป็นต้องลดน้ำหนักลง "+(((.@q[2]*getiteminfo(.@q[0],6))+Weight-MaxWeight)/10)+" หน่วย เพื่อสำเร็จรายการนี้.^000000";
+				close;
+			}
+			if (.@q[4]) set Zeny, Zeny-(.@q[4]*.@q[1]);
+			if (.@q[5]) setd .Points$[0], getd(.Points$[0])-(.@q[5]*.@q[1]);
+			if (.@q[6]) for(set .@i,6; .@i<getarraysize(.@q); set .@i,.@i+2)
+				delitem .@q[.@i],.@q[.@i+1]*.@q[1];
+			getitem .@q[0],.@q[2];
+			if (.Announce) announce strcharinfo(0)+" ได้แลกเปลี่ยน "+((.@q[2] > 1)?.@q[2]+"x "+getitemname(.@q[0]):A_An(getitemname(.@q[0])))+" สำเร็จ!",0;
+			specialeffect2 EF_FLOWERLEAF;
+			close;
+		case 2:
+			setarray @qe[3], getlook(LOOK_HEAD_BOTTOM), getlook(LOOK_HEAD_TOP), getlook(LOOK_HEAD_MID), getlook(LOOK_ROBE), 1;
+			if ((@qe[1] & 1) || (@qe[1] & 4096)) changelook LOOK_HEAD_BOTTOM, @qe[2];
+			else if ((@qe[1] & 256) || (@qe[1] & 1024)) changelook LOOK_HEAD_TOP, @qe[2];
+			else if ((@qe[1] & 512) || (@qe[1] & 2048)) changelook LOOK_HEAD_MID, @qe[2];
+			else if ((@qe[1] & 4) || (@qe[1] & 8192)) changelook LOOK_ROBE, @qe[2];
+			break;
+		case 3:
+			close;
+		}
+	}
+
+OnEnd:
+
+	if (@qe[7]) {
+		changelook LOOK_HEAD_BOTTOM, @qe[3];
+		changelook LOOK_HEAD_TOP, @qe[4];
+		changelook LOOK_HEAD_MID, @qe[5];
+		changelook LOOK_ROBE, @qe[6];
+	}
+	deletearray @qe[0],8;
+	end;
+
+function Add {
+
+	if (getitemname(getarg(1)) == "null") {
+		debugmes "Quest reward #"+getarg(1)+" invalid (skipped).";
+		return;
+	}
+	setarray .@j[0],getarg(2),getarg(3),getarg(4);
+	for(set .@i,5; .@i<getargcount(); set .@i,.@i+2) {
+		if (getitemname(getarg(.@i)) == "null") {
+			debugmes "Quest requirement #"+getarg(.@i)+" invalid (skipped).";
+			return;
+		} else
+			setarray .@j[.@i-2],getarg(.@i),getarg(.@i+1);
+	}
+	copyarray getd(".q_"+getarg(1)+"[0]"),.@j[0],getarraysize(.@j);
+	npcshopadditem "QuestShopFishing"+getarg(0),getarg(1),((.ShowZeny)?getarg(3):0); // หากต้องการให้แสดงราคาแบบ เซนี่ ให้ใช้อันนี้
+//	npcshopadditem "QuestShopFishing"+getarg(0),getarg(1),getarg(4); // หากต้องการให้แสดงราคาแบบ แคช ให้ใช้อันนี้
+
+	return;
+}
+
+function Chk {
+
+	if (getarg(0) < getarg(1)) {
+		set @qe[0],1;
+		return "^FF0000";
+	} else
+		return "^00FF00";
+}
+
+function Slot {
+
+	set .@s$,getitemname(getarg(0));
+	switch(.ShowSlot) {
+		case 1: if (!getitemslots(getarg(0))) return .@s$;
+		case 2: if (getiteminfo(getarg(0),2) == 4 || getiteminfo(getarg(0),2) == 5) return .@s$+" ["+getitemslots(getarg(0))+"]";
+		default: return .@s$;
+	}
+}
+
+function A_An {
+
+	setarray .@A$[0],"a","e","i","o","u";
+	set .@B$, "_"+getarg(0);
+	for(set .@i,0; .@i<5; set .@i,.@i+1)
+		if (compare(.@B$,"_"+.@A$[.@i])) return "-> "+getarg(0);
+	return "a "+getarg(0);
+}
+}
+
+function	script	QuestShopFishing	{
+
+	deletearray @i[0],getarraysize(@i);
+	for(set .@i,0; .@i<getargcount(); set .@i,.@i+1)
+		set @i[.@i],getarg(.@i);
+	doevent "QuestShopFishingMenu::OnMenu";
+	end;
+}
+
+
+// ข้อมูลร้านจำลอง - คัดลอกตามต้องการ
+//============================================================
+-	shop	QuestShopFishing1	-1,909:-1
+-	shop	QuestShopFishing2	-1,909:-1
+-	shop	QuestShopFishing3	-1,909:-1
+-	shop	QuestShopFishing4	-1,909:-1
+-	shop	QuestShopFishing5	-1,909:-1
+-	shop	QuestShopFishing6	-1,909:-1
+-	shop	QuestShopFishing7	-1,909:-1
+-	shop	QuestShopFishing8	-1,909:-1
+-	shop	QuestShopFishing9	-1,909:-1
+-	shop	QuestShopFishing10	-1,909:-1
+-	shop	QuestShopFishing11	-1,909:-1
+-	shop	QuestShopFishing12	-1,909:-1
+-	shop	QuestShopFishing13	-1,909:-1
+-	shop	QuestShopFishing14	-1,909:-1
+-	shop	QuestShopFishing15	-1,909:-1
+-	shop	QuestShopFishing16	-1,909:-1
+-	shop	QuestShopFishing17	-1,909:-1
+-	shop	QuestShopFishing18	-1,909:-1
+-	shop	QuestShopFishing19	-1,909:-1
+-	shop	QuestShopFishing20	-1,909:-1
+-	shop	QuestShopFishing21	-1,909:-1
+-	shop	QuestShopFishing22	-1,909:-1
+-	shop	QuestShopFishing23	-1,909:-1
+-	shop	QuestShopFishing24	-1,909:-1
+-	shop	QuestShopFishing25	-1,909:-1
+-	shop	QuestShopFishing26	-1,909:-1
+-	shop	QuestShopFishing27	-1,909:-1
+-	shop	QuestShopFishing28	-1,909:-1
+-	shop	QuestShopFishing29	-1,909:-1
+-	shop	QuestShopFishing30	-1,909:-1
+
+//============================================================
+

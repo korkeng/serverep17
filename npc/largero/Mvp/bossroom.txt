@@ -1,0 +1,61 @@
+moroccz,157,82,5	script	MVP Warper	621,{
+
+	// ============== Script ============== 
+	set .bossMenus$, .bossZones$[0] + " [" + getmapusers(.bossMaps$[0]) + "] คน";
+	for(set .@i, 1; .@i < getarraysize(.bossZones$); .@i++){
+		set .bossMenus$, .bossMenus$ + ":" + .bossZones$[.@i] + " [" + getmapusers(.bossMaps$[.@i]) + "] คน";
+	}
+
+	set .@targetMVPResp$, "";
+	for(set .@i, 0; .@i < .sequenceLength; .@i++){
+		set .@targetMVPResp$, .@targetMVPResp$ + .charPool$[rand(.charLimit)];
+	}
+	
+	mes "[ MVP Warper ]";
+	mes " ";
+	mes "^FF0000" + .@targetMVPResp$ + "^000000";
+	mes "กรุณาใส่รหัส " + .sequenceLength + " ตัวที่ปรากฏ";
+	input @userMVPResp$;
+
+	if (.@targetMVPResp$ != @userMVPResp$){
+		mes "รหัสไม่ถูกต้อง";
+		close;
+		end;
+        }
+
+	mes "เลือกห้องล่าบอสที่อยากไปได้เลย";
+	select(.bossMenus$);
+	warp .bossMaps$[@menu-1], 0, 0;
+
+	OnInit:
+	// ============== CONFIGURE ============== 
+		setarray .charPool$[0],
+		"0", "1", "2", "3", "4", "5", "6", "7", "8", "9";
+		set .charLimit, getarraysize(.charPool$);
+		set .sequenceLength, 4;
+		setarray .bossMaps$[0], "bossnia_01","bossnia_02","bossnia_03","bossnia_04";
+		setarray .bossZones$[0], "ห้องง่าย (ห้ามบอท - มาโคร พบเห็นถูกแบน)","ห้องยาก( ห้ามบอท - มาโคร พบเห็นถูกแบน)","ห้องระดับง่าย PvP","ห้องระดับยาก PvP";
+
+		// ============== NPC Setup ==============
+		//waitingroom "# ล่า Boss", 0;
+		//end;
+
+	close;
+}
+
+// ============== Mapflags ==============
+
+// ============== ห้องระดับง่าย ==============
+
+// ============== ห้องระดับยาก ==============
+
+// ============== ห้องระดับง่าย PvP ==============
+bossnia_03	mapflag	pvp
+bossnia_03	mapflag	pvp_noparty
+bossnia_03	mapflag	pvp_noguild
+
+// ============== ห้องระดับยาก PvP ==============
+bossnia_04	mapflag	pvp
+bossnia_04	mapflag	pvp_noparty
+bossnia_04	mapflag	pvp_noguild
+

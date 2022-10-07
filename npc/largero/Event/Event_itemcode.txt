@@ -1,0 +1,133 @@
+moroccz,185,79,6	script	Code Redeemer	4_M_RACHMAN2,{
+	callfunc "Code_Redeemer";
+	end;
+	OnMinute00:
+		callfunc "Code_Generate";
+		end;
+	OnInit:
+		// =============== Configure ==============================
+		set $@ITC_WAITINGROOM, 0;							// เปิดแสดงชื่อห้องบนหัว ( 0 = ปิด / 1 = เปิด )
+		set $@ITC_WAITINGROOM$, "# เติมไอเทมโค้ด";					// ชื่อห้องบนหัว
+		set $@ITC_HEADER$, "[ Code Redeemer ]";				// ชื่อข้อความที่ห้อง
+		set $@ITC_CREATEPERTIME, 10;							// จำนวน code ที่สร้างต่อครั้ง
+		set $@ITC_CODECLEAR, 1;								// ระบบเคลียร์ไอเทม code ที่ไม่ได้ใช้ ( 0 = ปิด / 1 = เปิด )
+		set $@ITC_IPMODE, 2;								// ระบบเชคไอพี ( 0 = ปิด / 1 = เชคไอพี net / 2 = เชคไอพีเครื่อง ( gepard only ) )
+		setarray $@ITC_ITEMGIVEN, 501,502,503,504;	// รหัสไอเทมที่สุ่มมาทำ item code
+		setarray $@ITC_ITEMAMOUNT, 200,1,5,100;				// จำนวนไอเทม *เรียงตามรหัสไอเทม*
+		// ========================================================
+		// ตัวอักษรสำหรับสร้างไอเทมโค้ดหากไม่ต้องการตัวใดลบออกได้เลยแต่ตัวสุดท้าย ต้องเป็น - ไม่ควรเปลี่ยน
+		setarray $@ITC_CHARFORGEN$ ,"0","1","2","3","4","5","6","7","8","9","-";
+		query_sql("CREATE TABLE IF NOT EXISTS `itemcode` (" +
+		  "`id` int(11) NOT NULL AUTO_INCREMENT," +
+		  "`code` varchar(100) NOT NULL," +
+		  "`item_id` int(10) NOT NULL," +
+		  "`amount` int(3) NOT NULL," +
+		  "`status` int(1) NOT NULL," +
+		  "`char_id` int(10) NOT NULL," +
+		  "PRIMARY KEY (`id`)" +
+		")");
+		sleep 1000;
+		if($@ITC_WAITINGROOM)waitingroom "" + $@ITC_WAITINGROOM$,0;
+}
+
+// =================================
+// ITEMCODE BY KORKENG 
+// SCRIPT FOR RATHENA
+// =================================
+function	script	Code_Redeemer	{
+	mes "" + $@ITC_HEADER$;
+	mes "สวัสดีครับคุณ " + strcharinfo(0);
+	mes "คุณต้องการทำอะไรหรือครับ ?";
+	next;
+	switch(select("~ ฟังรายละเอียดกิจกรรม","~ เติมไอเทมโค้ด","~ แค่เดินผ่านมาเฉยๆ")){
+		case 1:
+			mes "" + $@ITC_HEADER$;
+			mes "ทุกๆ 1 ชั่วโมงเราจะแจก Item Code";
+			mes "ท่านสามารถนำมาใส่เพื่อรับไอเทม";
+			mes "ชั่วโมงละ [ ^FF6699" + $@ITC_CREATEPERTIME + "^000000 ] โค้ดเท่านั้น" ;
+			mes "โดยจะประกาศทางเซิฟเวอร์" ;
+			mes "^7B12F9ex. 0AD8-RD12-YPG9K-4TDK^000000";
+			mes "^FF0000* ผู้เล่นต้องพิมพ์โค้ดทุกตัวอักษร^000000";
+			next;
+			mes "" + $@ITC_HEADER$;
+			mes "==================";
+			mes "ท่านมี Item Code ไหมหล่ะ";
+			mes "==================";
+			next;
+			if(select("~ มีเติมเลย","~ ไม่มี") == 2) end;
+		case 2:
+			if($@ITC_IPMODE == 1) query_sql ("SELECT `last_ip` FROM `login` WHERE `account_id` = '" + getcharid(3) + "'"),.@last_ip$;
+			if($@ITC_IPMODE == 2) query_sql ("SELECT `last_unique_id` FROM `login` WHERE `account_id` = '" + getcharid(3) + "'"),.@last_unique_id$;
+			mes "" + $@ITC_HEADER$;
+			if($@ITC_IPMODE == 1 || $@ITC_IPMODE == 2){
+				for(set .@i, 0; .@i < getarraysize($@ITC_CHECKIPARRAY$); set .@i, .@i +1){
+					if(.@last_ip$ == $@ITC_CHECKIPARRAY$[.@i] || .@last_unique_id$ == $@ITC_CHECKIPARRAY$[.@i]){
+						mes "ท่านได้รับไอเทมไปแล้ว";
+						mes "กรุณารอกิจกรรมรอบถัดไป";
+						end;
+					}
+				}
+			}
+			mes "กรุณากรอกไอเทมโค้ดของท่าน";
+			next;
+			input .@itemcode$;
+			query_sql ("SELECT `item_id`,`amount`,`status` FROM `itemcode` WHERE `code` = '" + .@itemcode$ + "'"),.@item_id,.@amount,.@status;
+			next;
+			mes "" + $@ITC_HEADER$;
+			if(.@item_id == 0){
+				mes "ท่านใส่ไอเทมโค้ดผิด";
+				end;
+			}
+			if(.@status == 2 || .@status == 3){ 
+				mes "มีผู้ใช้ไอเทมโค้ดนี้ไปแล้ว";  
+				mes "หรือไอเทมโค้ดนี้หมดเวลาแล้ว"; 
+				end; 
+			} 
+			mes "ยินดีด้วยคุณได้รับ";
+			mes "" + getitemname(.@item_id) + " x " + .@amount + " ea";
+			getitem .@item_id, .@amount;
+			query_sql ("UPDATE `itemcode` SET `status` = '2',`char_id` = '" + getcharid(0) + "' WHERE `code` = '" + .@itemcode$ + "'");
+			if($@ITC_IPMODE == 1){
+				set $@ITC_CHECKIPARRAY$[$ITEMCODE_INDEX], .@last_ip$;
+				set $ITEMCODE_INDEX, $ITEMCODE_INDEX +1;
+			} else if($@ITC_IPMODE == 2) {
+				set $@ITC_CHECKIPARRAY$[$ITEMCODE_INDEX], .@last_unique_id$;
+				set $ITEMCODE_INDEX, $ITEMCODE_INDEX +1;
+			}
+			end;
+		case 3:
+			mes "" + $@ITC_HEADER$;
+			mes "ลาก่อนนน ~~~~~~";
+			end;
+	}
+	end;
+}
+
+function	script	Code_Generate	{
+	set $ITEMCODE, 1;
+	deletearray $@ITC_CHECKIPARRAY$[0], getarraysize($@ITC_CHECKIPARRAY$);
+	set $ITEMCODE_INDEX, 0;
+	if($@ITC_CODECLEAR){
+		query_sql ("UPDATE `itemcode` SET `status` = '3',`char_id` = '99' WHERE `status` = '1'");
+	}
+	announce "[ Code Redeemmer ] : ขณะนี้ได้เวลากิจกรรมไอเทมโค้ดแล้วนะครับ !!",0,0xE80808;
+	sleep 3000;
+	for(set .@i,5; .@i > 0; set .@i, .@i-1){
+		announce "[ Code Redeemmer ] : กิจกรรมจะเริ่มใน " + .@i + " ...",0,0xE80808;
+		sleep 1000;
+	}
+	for(set .@i,0; .@i < $@ITC_CREATEPERTIME; set .@i, .@i +1){
+		for(set .@j,0; .@j < 20; set .@j, .@j +1){
+			set .@inarray, rand(0,getarraysize($@ITC_CHARFORGEN$)-2);
+			if(.@j == 4 || .@j == 9 || .@j == 15) set .@inarray, getarraysize($@ITC_CHARFORGEN$)-1;
+			set .@codegenerate$, .@codegenerate$ + $@ITC_CHARFORGEN$[.@inarray];
+		}
+		announce "[ Code Redeemmer ] : โค้ดที่ " + (.@i+1)+ " >> " + .@codegenerate$,0,0xE80808;
+		set .@randnumber, rand(0,getarraysize($@ITC_ITEMGIVEN)-1);
+		query_sql ("INSERT INTO `itemcode` (`code`,`item_id`,`amount`,`status`,`char_id`) VALUES ('" + .@codegenerate$ + "'," + $@ITC_ITEMGIVEN[.@randnumber] + "," + $@ITC_ITEMAMOUNT[.@randnumber] + ",'1','0')");
+		set $ITEMCODE_ID, $ITEMCODE_ID +1;
+		set .@codegenerate$, "";
+		sleep 2000;
+	}
+	end;
+}

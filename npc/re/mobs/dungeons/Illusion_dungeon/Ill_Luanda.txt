@@ -1,0 +1,424 @@
+beach_dun2,248,255,4	script	#ill_luanda	4_energy_blue,{  
+	mes "[ Illusion of Luanda ]";
+	menu
+	"^FF0000•^000000 Illusion of Luanda [ Lv 160+ ]",go1,
+	"^FF0000•^000000 Cancle",cancle;
+	go1:
+	if(baselevel > 159){
+	warp "com_d02_i",248,247;
+	end;
+	}
+	mes "Base Lv ของเจ้าน้อยเกินไป";
+	end;
+	cancle:
+	end;
+}
+/*
+com_d02_i,234,266,6	script	Village Soap Artisan#ill_luanda	88,{
+	mes "[ Village Soap Artisan ]";
+	mes "ต้องการอะไร?";
+	next;
+	switch(select("Village Soap Artisan:Upgrade Weapon.:Upgrade Armor.")){
+		case 1:
+			mes "[ Village Soap Artisan ]";
+			mes "ข้าจะถลุงแร่ Illusion Gemstone","โดยอยู่ที่อัตรา 5:1";
+			next;
+			mes "[ Village Soap Artisan ]";
+			mes "เจ้าจะทำไหม";
+			next;
+			if (select ("ทำ:ไม่ทำ") == 2 ) end;
+			if (countitem(25272) < 5 ) {
+				mes "[ Village Soap Artisan ]";
+				mes "รบกวยนำ Illusion Gemstone มาด้วย";
+				end;
+			}
+			.@stone_trade = countitem(25272)/5;
+			delitem 25272,.@stone_trade*5;
+			getitem 25271,.@stone_trade;
+			mes "[ Village Soap Artisan ]";
+			mes "เรียบร้อย นี้ Illusion stome ของเจ้า";
+			close;
+			
+		case 2:
+			disable_items;
+			if(checkweight(25271,1) == 0 || (MaxWeight - Weight) < 1000){
+				mes "- คุณถือของมากเกินไป. -";
+				close;
+			}
+			mes "[ Village Soap Artisan ]";
+			mes "ข้าทำของได้ตามนี้.";
+			for(.@i = 0; .@i < getarraysize(.weapons$); .@i++){
+				explode(.@T$,.weapons$[.@i],"|");
+				.@item_id = atoi(.@T$[0]);
+				mes "<ITEM>"+getitemname(.@item_id)+"<INFO>"+.@item_id+"</INFO></ITEM>";
+			}
+			next;
+			mes "[ Village Soap Artisan ]";
+			mes "ให้แน่ใจว่า ^0000FFอุปกรณ์ของท่านต้องมีระดับตีบวกมากกว่า 9^000000 ก่อนจะนำมาให้ข้า.";
+			next;
+			mes "[ Village Soap Artisan ]";
+			mes "ที่สำคัญ, ^0000FFการ์ด และตีบวกจะหายไปทั้งหมด.^000000";
+			next;
+			mes "[ Village Soap Artisan ]";
+			mes "วัตถุดิบที่ต้องการจะมี ^0000FFIllusion Stones และของบางอย่าง^000000 สำหรับการพัฒนาอุปกรณ์.";
+			next;
+			for(.@i = 0; .@i < getarraysize(.weapons$); .@i++){
+				explode(.@T$,.weapons$[.@i],"|");
+				.@item_id = atoi(.@T$[0]);
+				.@menu$ += getitemname(.@item_id) +":";
+			}
+			.@s = select(.@menu$) - 1;
+			explode(.@T$,.weapons$[.@s],"|");
+			explode(.@TT$,.@T$[2],",");
+			mes "[ Village Soap Artisan ]";
+			mes "นี้คือของที่ต้องการ.";
+			mes "^0000FF+9 " + getitemname(atoi(.@T$[1])) + " []^000000";
+			for(.@i = 0; .@i < getarraysize(.@TT$); .@i++){
+				explode(.@data$,.@TT$[.@i],":");
+				.@item_id[.@i] = atoi(.@data$[0]);
+				.@amount[.@i] = atoi(.@data$[1]);
+				mes "^0000FF" + .@amount[.@i] +" "+ getitemname(.@item_id[.@i]) + "^000000";
+			}
+			mes "พัฒนาอุปกรณ์นี้เลยไหม";
+			next;
+			if(select("เอาเลย.:ยังต้องการวัตถุดิบเพิ่มเติม") == 2){
+				mes "[ Village Soap Artisan ]";
+				mes "มาหาข้า เมื่อเจ้าพร้อม.";
+				close;
+			}
+			if(getequipid(EQI_HAND_R) != atoi(.@T$[1])){
+				mes "[ Village Soap Artisan ]";
+				mes "กรุณาสวมใส่ " + getitemname(atoi(.@T$[1])) + " ก่อน.";
+				close;
+			}
+			for(.@i = 0; .@i < getarraysize(.@item_id); .@i++){
+				if(countitem(.@item_id[.@i]) < .@amount[.@i])
+					.@miss++;
+			}
+			if(getequiprefinerycnt(EQI_HAND_R) < 9 || .@miss > 0){
+				mes "[ Village Soap Artisan ]";
+				mes "วัตถุดิบไม่เพียงพอ หรือ อุปกรณ์ของเจ้าตีบวกไม่ถึงเกณฑ์";
+				end;
+			}
+			mes "[Illusion Researcher]";
+			mes "กำลังจัดทำ.";
+			delequip(EQI_HAND_R);
+			for(.@i = 0; .@i < getarraysize(.@item_id); .@i++)
+				delitem .@item_id[.@i],.@amount[.@i];
+			getitem atoi(.@T$[0]),1;			
+			break;
+			
+			
+		case 3:
+			disable_items;
+			if(checkweight(25271,1) == 0 || (MaxWeight - Weight) < 1000){
+				mes "- คุณถือของมากเกินไป. -";
+				close;
+			}
+			mes "[ Village Soap Artisan ]";
+			mes "ข้าทำของได้ตามนี้.";
+			for(.@i = 0; .@i < getarraysize(.armors$); .@i++){
+				explode(.@T$,.armors$[.@i],"|");
+				.@item_id = atoi(.@T$[0]);
+				mes "<ITEM>"+getitemname(.@item_id)+"<INFO>"+.@item_id+"</INFO></ITEM>";
+			}
+			next;
+			mes "[ Village Soap Artisan ]";
+			mes "ให้แน่ใจว่า ^0000FFอุปกรณ์ของท่านต้องมีระดับตีบวกมากกว่า 9^000000 ก่อนจะนำมาให้ข้า.";
+			next;
+			mes "[ Village Soap Artisan ]";
+			mes "ที่สำคัญ, ^0000FFการ์ด และตีบวกจะหายไปทั้งหมด.^000000";
+			next;
+			mes "[ Village Soap Artisan ]";
+			mes "วัตถุดิบที่ต้องการจะมี ^0000FFIllusion Stones และของบางอย่าง^000000 สำหรับการพัฒนาอุปกรณ์.";
+			next;
+			for(.@i = 0; .@i < getarraysize(.armors$); .@i++){
+				explode(.@T$,.armors$[.@i],"|");
+				.@item_id = atoi(.@T$[0]);
+				.@menu$ += getitemname(.@item_id) +":";
+			}
+			.@s = select(.@menu$) - 1;
+			explode(.@T$,.armors$[.@s],"|");
+			explode(.@TT$,.@T$[2],",");
+			.@slot = atoi(.@T$[3]);
+			mes "[ Village Soap Artisan ]";
+			mes "นี้คือของที่ต้องการ.";
+			mes "^0000FF+9 " + getitemname(atoi(.@T$[1])) + "^000000";
+			for(.@i = 0; .@i < getarraysize(.@TT$); .@i++){
+				explode(.@data$,.@TT$[.@i],":");
+				.@item_id[.@i] = atoi(.@data$[0]);
+				.@amount[.@i] = atoi(.@data$[1]);
+				mes "^0000FF" + .@amount[.@i] +" "+ getitemname(.@item_id[.@i]) + "^000000";
+			}
+			mes "พัฒนาอุปกรณ์นี้เลยไหม";
+			next;
+			if(select("เอาเลย.:ยังต้องการวัตถุดิบเพิ่มเติม") == 2){
+				mes "[ Village Soap Artisan ]";
+				mes "มาหาข้า เมื่อเจ้าพร้อม.";
+				close;
+			}
+			if(getequipid(.@slot) != atoi(.@T$[1])){
+				mes "[ Village Soap Artisan ]";
+				mes "กรุณาสวมใส่ " + getitemname(atoi(.@T$[1])) + " ก่อน.";
+				close;
+			}
+			for(.@i = 0; .@i < getarraysize(.@item_id); .@i++){
+				if(countitem(.@item_id[.@i]) < .@amount[.@i])
+					.@miss += 1;
+			}
+			if(getequiprefinerycnt(.@slot) < 9 || .@miss > 0){
+				mes "[ Village Soap Artisan ]";
+				mes "วัตถุดิบไม่เพียงพอ หรือ อุปกรณ์ของเจ้าตีบวกไม่ถึงเกณฑ์";
+				end;
+			}
+			mes "[Illusion Researcher]";
+			mes "กำลังจัดทำ.";
+			delequip(.@slot);
+			for(.@i = 0; .@i < getarraysize(.@item_id); .@i++)
+				delitem .@item_id[.@i],.@amount[.@i];
+			getitem atoi(.@T$[0]),1;			
+			break;
+	}
+	next;
+	mes "[ Village Soap Artisan ]";
+	mes "เสร็จแล้ว.";
+	end;
+	
+OnInit:
+	setarray .weapons$,
+		"28626|1552|25271:50,25642:100",
+		"18174|1726|25271:80,25636:50,25640:50,25637:50";
+	setarray .armors$,
+		"15348|2534|25271:80,25641:100,25638:150|7",
+		"19366|5128|25271:120,25634:7,25633:150|6",
+		"22192|2419|25271:80,25635:100,25633:150|2",
+		"20923|2520|25271:120,25639:7,25638:150|3";
+
+end;
+}
+*/
+/*
+//==================================================
+// illusion_Dun - Luanda P.1
+//==================================================
+
+com_d02_i	monster	Ancient Tri Joint 	20270,50,5000
+com_d02_i	monster	Ancient Stalactic Golem	20271,50,5000
+com_d02_i	monster	Ancient Megalith	20272,50,5000
+com_d02_i	boss_monster	Ancient Tao Gunka	20273,1,5000
+
+
+
+//==================================================
+// illusion_Dun - Luanda P.2
+//==================================================
+com_d02_i2	monster	Ancient Stone Shooter 	20274,50,5000
+com_d02_i2	monster	Ancient Wootan Shooter	20275,50,5000
+com_d02_i2	monster	Ancient Wootan Fighter	20276,50,5000
+com_d02_i2	boss_monster	Ancient Wootan Defender	20277,1,5000
+
+*/
+
+
+
+com_d02_i,0,0,0	script	#Ill_luanda	-1,{
+
+
+
+OnInit:
+monster "com_d02_i",0,0,"Ancient Tri Joint",20270,50,"#Ill_luanda::OnIllMobDead1";
+monster "com_d02_i",0,0,"Ancient Stalactic Golem",20271,50,"#Ill_luanda::OnIllMobDead2";
+monster "com_d02_i",0,0,"Ancient Megalith",20272,50,"#Ill_luanda::OnIllMobDead3";
+$Ill_luandamob = 1;
+$Ill_luanda = 0;
+$Ill_luanda_delay = 0;
+$Ill_luandaBOSS = 0;
+end;
+
+OnBoss:
+if($Ill_luanda >= 1500){
+$Ill_luandaBOSS += 1;
+if($Ill_luandamob == 1){
+monster "com_d02_i",0,0,"Ancient Tao Gunka",20273,1,strnpcinfo(0)+"::OnEnd";
+announce "Illusion of Luanda : ขณะนี้บอสได้ปรากฏตัวออกมาแล้ว นักผจญภัยทุกท่านโปรดระวังตัวให้ดี !!",bc_all,0xFFFF00;
+sleep 2000;
+mapannounce "com_d02_i","Ancient Tao Gunka : ข้าได้กลิ่นสาบของมนุษย์ในถิ่นของข้า จงนำมันมาเป็นอาหารแก่ข้า เดี๋ยวนี้ !!",bc_map,0xFFFF00,FW_NORMAL,16;
+end;
+}
+if($Ill_luandamob == 2){
+monster "com_d02_i",0,0,"Ancient Wootan Defender",20277,1,strnpcinfo(0)+"::OnEnd";
+announce "Illusion of Luanda : ขณะนี้บอสได้ปรากฏตัวออกมาแล้ว นักผจญภัยทุกท่านโปรดระวังตัวให้ดี !!",bc_all,0xFFFF00;
+sleep 2000;
+mapannounce "com_d02_i","Ancient Wootan Defender : ข้าได้กลิ่นสาบของมนุษย์ในถิ่นของข้า จงนำมันมาเป็นอาหารแก่ข้า เดี๋ยวนี้ !!",bc_map,0xFFFF00,FW_NORMAL,16;
+end;
+}
+end;
+}
+end;
+
+OnIllMobDead1:
+if($Ill_luanda_delay == 0 && $Ill_luandaBOSS == 0){
+donpcevent strnpcinfo(0)+"::OnBoss";
+if($Ill_luanda == 1450){											
+mapannounce "com_d02_i","Illusion of Luanda : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(1500-($Ill_luanda)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_luanda == 1400){
+mapannounce "com_d02_i","Illusion of Luanda : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(1500-($Ill_luanda)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_luanda == 1250){
+mapannounce "com_d02_i","Illusion of Luanda : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(1500-($Ill_luanda)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_luanda == 1000){
+mapannounce "com_d02_i","Illusion of Luanda : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(1500-($Ill_luanda)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_luanda == 500){
+mapannounce "com_d02_i","Illusion of Luanda : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(1500-($Ill_luanda)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_luanda == 0){
+mapannounce "com_d02_i","Illusion of Luanda : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(1500-($Ill_luanda)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+$Ill_luanda += 1;
+}
+if($Ill_luandamob == 1){
+sleep 5000;
+monster "com_d02_i",0,0,"Ancient Tri Joint",20270,1,"#Ill_luanda::OnIllMobDead1";
+}
+if($Ill_luandamob == 2){
+sleep 5000;
+monster "com_d02_i",0,0,"Ancient Stone Shooter",20274,1,"#Ill_luanda::OnIllMobDead1";
+}
+end;
+
+
+OnIllMobDead2:
+if($Ill_luanda_delay == 0 && $Ill_luandaBOSS == 0){
+donpcevent strnpcinfo(0)+"::OnBoss";
+if($Ill_luanda == 1450){											
+mapannounce "com_d02_i","Illusion of Luanda : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(1500-($Ill_luanda)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_luanda == 1400){
+mapannounce "com_d02_i","Illusion of Luanda : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(1500-($Ill_luanda)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_luanda == 1250){
+mapannounce "com_d02_i","Illusion of Luanda : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(1500-($Ill_luanda)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_luanda == 1000){
+mapannounce "com_d02_i","Illusion of Luanda : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(1500-($Ill_luanda)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_luanda == 500){
+mapannounce "com_d02_i","Illusion of Luanda : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(1500-($Ill_luanda)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_luanda == 0){
+mapannounce "com_d02_i","Illusion of Luanda : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(1500-($Ill_luanda)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+$Ill_luanda += 1;
+}
+if($Ill_luandamob == 1){
+sleep 5000;
+monster "com_d02_i",0,0,"Ancient Stalactic Golem",20271,1,"#Ill_luanda::OnIllMobDead2";
+}
+if($Ill_luandamob == 2){
+sleep 5000;
+monster "com_d02_i",0,0,"Ancient Wootan Shooter",20275,1,"#Ill_luanda::OnIllMobDead2";
+}
+end;
+
+
+OnIllMobDead3:
+if($Ill_luanda_delay == 0 && $Ill_luandaBOSS == 0){
+donpcevent strnpcinfo(0)+"::OnBoss";
+if($Ill_luanda == 1450){											
+mapannounce "com_d02_i","Illusion of Luanda : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(1500-($Ill_luanda)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_luanda == 1400){
+mapannounce "com_d02_i","Illusion of Luanda : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(1500-($Ill_luanda)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_luanda == 1250){
+mapannounce "com_d02_i","Illusion of Luanda : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(1500-($Ill_luanda)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_luanda == 1000){
+mapannounce "com_d02_i","Illusion of Luanda : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(1500-($Ill_luanda)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_luanda == 500){
+mapannounce "com_d02_i","Illusion of Luanda : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(1500-($Ill_luanda)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_luanda == 0){
+mapannounce "com_d02_i","Illusion of Luanda : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(1500-($Ill_luanda)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+$Ill_luanda += 1;
+}
+if($Ill_luandamob == 1){
+sleep 5000;
+monster "com_d02_i",0,0,"Ancient Megalith",20272,1,"#Ill_luanda::OnIllMobDead3";
+}
+if($Ill_luandamob == 2){
+sleep 5000;
+monster "com_d02_i",0,0,"Ancient Wootan Fighter",20276,1,"#Ill_luanda::OnIllMobDead3";
+}
+end;
+
+
+OnEnd:
+$Ill_luanda_delay = 1;
+$Ill_luanda = 0;											
+$Ill_luandaBOSS = 0;
+initnpctimer;
+if($Ill_luandamob == 1){
+mapannounce "com_d02_i","Ancient Tao Gunka : ไอเจ้ามนุษย์โซโครก แกต้องชดใช้ !! เฮื้ออออ..",bc_map,0xFFFF00,FW_NORMAL,16;
+sleep 2000;
+announce "Illusion of Luanda : เหลือเวลาอีก "+ (120-($Ill_luanda_delay)) +" นาที บอสจะฟื้นคืนชีพอีกครั้ง !!",bc_all,0xFFFF00;
+donpcevent strnpcinfo(0)+"::OnTest";
+end;
+}
+if($Ill_luandamob == 2){
+mapannounce "com_d02_i","Ancient Wootan Defender : ไอเจ้ามนุษย์โซโครก แกต้องชดใช้ !! เฮื้ออออ..",bc_map,0xFFFF00,FW_NORMAL,16;
+sleep 2000;
+announce "Illusion of Luanda : เหลือเวลาอีก "+ (120-($Ill_luanda_delay)) +" นาที บอสจะฟื้นคืนชีพอีกครั้ง !!",bc_all,0xFFFF00;
+donpcevent strnpcinfo(0)+"::OnTest";
+end;
+}
+end;
+
+
+OnTest:
+if($Ill_luandamob == 1){
+$Ill_luandamob = 2;
+sleep 1000;
+killmonster "com_d02_i","#Ill_luanda::OnIllMobDead1";
+killmonster "com_d02_i","#Ill_luanda::OnIllMobDead2";
+killmonster "com_d02_i","#Ill_luanda::OnIllMobDead3";
+sleep 1000;
+monster "com_d02_i",0,0,"Ancient Stone Shooter",20274,50,"#Ill_luanda::OnIllMobDead1";
+monster "com_d02_i",0,0,"Ancient Wootan Shooter",20275,50,"#Ill_luanda::OnIllMobDead2";
+monster "com_d02_i",0,0,"Ancient Wootan Fighter",20276,50,"#Ill_luanda::OnIllMobDead3";
+end;
+}
+$Ill_luandamob = 1;
+sleep 1000;
+killmonster "com_d02_i","#Ill_luanda::OnIllMobDead1";
+killmonster "com_d02_i","#Ill_luanda::OnIllMobDead2";
+killmonster "com_d02_i","#Ill_luanda::OnIllMobDead3";
+sleep 1000;
+monster "com_d02_i",0,0,"Ancient Tri Joint",20270,50,"#Ill_luanda::OnIllMobDead1";
+monster "com_d02_i",0,0,"Ancient Stalactic Golem",20271,50,"#Ill_luanda::OnIllMobDead2";
+monster "com_d02_i",0,0,"Ancient Megalith",20272,50,"#Ill_luanda::OnIllMobDead3";
+end;
+
+
+
+OnTimer60000:
+	$Ill_luanda_delay += 1;
+
+	if ($Ill_luanda_delay < 120) { // unknown delay (currently 100 mins)
+		initnpctimer;
+	}
+	else {
+		stopnpctimer;		
+		$Ill_luanda_delay = 0;
+		//mapannounce "com_d02_i","Illusion of Luanda : Ancient Tao Gunka พร้อมแล้ว",bc_map,0xFFFF00,FW_NORMAL,16;
+	}
+	end;
+
+}
+
+

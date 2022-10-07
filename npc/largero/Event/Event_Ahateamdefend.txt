@@ -1,0 +1,502 @@
+moroccz,201,93,4	script	AhaTeamDefend#1	734,{
+	set .@npcname$,"[ ^FF0000Aha Team Defend^000000 ]"; //name Npc
+	set .@gm_level, 99; // GM level required to start/stop the event
+	
+	// - โหมดรางวัลกิจกรรม 
+	//0 = Zeny , 1 = Item
+	set $@atd_mode,1;
+	set $@atd_mode_itemid,61006;
+	//จำนวนรางวัล
+	set $@atd_mode_amount,100;
+	
+	// - รางวัลโบนัสเปิดกล่อง โอกาส ที่ได้ 50เปอเซ็น
+	set $@atd_mode_itemid_bonus,61006;
+	set $@atd_mode_amount_bonus,100;
+	
+	mes .@npcname$;
+	mes "ยินดีต้อนรับผู้กล้าทั้งหลายเข้าสู่ ^FF0000Aha Team Defend^000000.";
+	mes "เมื่อเจ้าออกหรือตายใน ^FF0000Aha Team Defend^000000, เจ้าจะไม่สามารถจะเข้ามาได้อีก. จนกว่าจะถึงเวลาอีกครั้ง";
+	next;
+	switch(select("- แน่นอนข้าจะไป:- ข้าต้องการฟังรายละเอียดอีกครั้ง:" + ((getgmlevel() >= .@gm_level) ? "- GM Menu." : "") + ":- ไม่ล่ะ ข้าไม่เอาด้วยหรอก")) {
+	case 1:
+		if (.start != 1) { // registration period
+		OnError:
+			mes .@npcname$;
+			mes "ขณะนี้ประตูเข้าสู่ ^FF0000Aha Team Defend^000000 ได้ปิดลงแล้ว";
+			mes "จะเปิดอีกครั้งเมื่อเวลา"; // display your times here
+			mes "11:00 , 13:00 , 23:00 , 01:00";
+			close;
+		}
+	next;
+	mes .@npcname$;
+	mes "ท่านเลือกห้องที่ต้องการอยู่";
+	mes "^FF0000ห้องหนึ่งห้องมีผู้กล้าไม่เกิน 6 ท่าน^000000";
+	switch(select("- ห้องที่ 1 จำนวน [ "+$@ppatd1+" ] คน","- ห้องที่ 2 จำนวน [ "+$@ppatd2+" ] คน","- ห้องที่ 3 จำนวน [ "+$@ppatd3+" ] คน","- ห้องที่ 4 จำนวน [ "+$@ppatd4+" ] คน"))
+	{
+	case 1:
+	if($@ppatd1>=6) goto OnError;
+	set $@ppatd1,$@ppatd1+1;
+	percentheal 100,100;
+	warp "force_2-3",20,120; 
+	announce "AhaTeamDefend : "+strcharinfo(0)+" ได้เข้าสู่ห้องที่ 1 แล้ว",bc_all,0x00ff99;
+	end;
+	
+	case 2:
+	if($@ppatd2>=6) goto OnError;
+	set $@ppatd2,$@ppatd2+1;
+	percentheal 100,100;
+	warp "force_2-3",140,80; 
+	announce "AhaTeamDefend : "+strcharinfo(0)+" ได้เข้าสู่ห้องที่ 2 แล้ว",bc_all,0x00ff99;
+	end;
+	
+	case 3:
+	if($@ppatd3>=6) goto OnError;
+	set $@ppatd3,$@ppatd3+1;
+	percentheal 100,100;
+	warp "force_2-3",100,40; 
+	announce "AhaTeamDefend : "+strcharinfo(0)+" ได้เข้าสู่ห้องที่ 3 แล้ว",bc_all,0x00ff99;
+	end;
+	
+	case 4:
+	if($@ppatd4>=6) goto OnError; 
+	set $@ppatd4,$@ppatd4+1;
+	percentheal 100,100;
+	warp "force_2-3",80,100; 
+	announce "AhaTeamDefend : "+strcharinfo(0)+" ได้เข้าสู่ห้องที่ 4 แล้ว",bc_all,0x00ff99;
+	end;
+	}
+	case 2:
+		mes .@npcname$;
+		mes "ไม่มีใครรู้รายละเอียดเลยท่าน"; 
+		mes "ผู้ที่รู้ไม่เคยรอดกลับมาอีกเลย"; 
+		close;
+	case 3:
+		mes .@npcname$;
+		switch (.start) { // event states
+			case 0: mes "ขณะนี้ ^FF0000Aha Team Defend^000000 ยังไม่เริ่ม."; break;
+			case 1: mes "ขณะนี้ ^FF0000Aha Team Defend^000000 เปิดให้เข้า."; break;
+			//case 2: mes "ขณะนี้ ^FF0000Aha Team Defend^000000 กำลังทำงานอยู่ในรอบที่ "+ .round +" และ เหลือมอนเตอร์อีก "+ .mob +" ตัว."; break;
+		}
+		next;
+		switch(select("- เปิดกิจกรรม.:- ปิดกิจกรรม.:- ยกเลิก.")) {
+		case 1:
+			mes .@npcname$;
+			if (.start)
+				mes "^FF0000Aha Team Defend^000000 ได้เปิดอยู่แล้ว.";
+			else {
+				mes "^FF0000Aha Team Defend^000000 ได้เริ่มแล้ว ณ บัดนี้...";
+				donpcevent strnpcinfo(0)+"::OnStartEvent";
+			}
+			close;
+		case 2:
+			mes .@npcname$;
+			if (!.start)
+				mes "^FF0000Aha Team Defend^000000 ได้ปิดอยู่แล้ว.";
+			else {
+				mes "^FF0000Aha Team Defend^000000 ได้จบลงแล้ว ณ บัดนี้..";
+				donpcevent strnpcinfo(0)+"::OnStopEvent";
+			}
+			close;
+		case 3:
+			break;
+		}
+		break;
+	case 4:
+		break;
+	}
+	mes .@npcname$;
+	mes "ลาก่อน!!.";
+	close;
+
+OnStartEvent:
+OnClock0100:
+OnClock1100:
+OnClock1300:
+OnClock2300:
+	set .start,1;
+	mapannounce "force_2-3","Aha Team Defend ได้จบลงแล้ว ณ บัดนี้.", bc_map, 0x00ff99;
+	getmapxy .@map$, .@x, .@y, 1;
+	mapwarp "force_2-3", .@map$, .@x, .@y;
+	killmonsterall "force_2-3";
+	set $@ppatd1,0;
+	set $@ppatd2,0;
+	set $@ppatd3,0;
+	set $@ppatd4,0;
+	announce "Aha Team Defend กำลังจะเปิดใน 5 นาที ให้ผู้กล้าทั้งหลายจงเตรียมพร้อม.", bc_all, 0x00ff99;
+	sleep 60000;
+	announce "Aha Team Defend จะเริ่มต้นภายใน 4 นาที.", bc_all, 0x00ff99;
+	sleep 60000;
+	announce "Aha Team Defend จะเริ่มต้นภายใน 3 นาที.", bc_all, 0x00ff99;
+	sleep 60000;
+	announce "Aha Team Defend จะเริ่มต้นภายใน 2 นาที.", bc_all, 0x00ff99;
+	sleep 60000;
+	announce "Aha Team Defend จะเริ่มต้นภายใน 1 นาที.", bc_all, 0x00ff99;
+	sleep 60000;
+	announce "Aha Team Defend ได้เริ่มต้นขึ้นแล้ว ณ บัดนี้!!! ห้อง ไหนเสร็จ ห้อง แรกจะได้รับ โบนัส ", bc_all, 0x00ff99;
+	if ( !getmapusers("force_2-3") )
+		goto OnStopEvent;
+	set .start,2;
+	set $@atd1room1,0;
+	set $@atd1room2,0;
+	set $@atd1room3,0;
+	set $@atd1room4,0;
+	set $@atdfirstroom,0;
+	monster "force_2-3",20,140,"Obsidian",1615,10,strnpcinfo(0)+"::On1room1";
+	monster "force_2-3",20,140,"Orc Archer",1189,10,strnpcinfo(0)+"::On1room1";
+	monster "force_2-3",20,140,"Merman",1264,10,strnpcinfo(0)+"::On1room1";
+	monster "force_2-3",140,100,"Obsidian",1615,10,strnpcinfo(0)+"::On1room2";
+	monster "force_2-3",140,100,"Orc Archer",1189,10,strnpcinfo(0)+"::On1room2";
+	monster "force_2-3",140,100,"Merman",1264,10,strnpcinfo(0)+"::On1room2";
+	monster "force_2-3",100,60,"Obsidian",1615,10,strnpcinfo(0)+"::On1room3";
+	monster "force_2-3",100,60,"Orc Archer",1189,10,strnpcinfo(0)+"::On1room3";
+	monster "force_2-3",100,60,"Merman",1264,10,strnpcinfo(0)+"::On1room3";
+	monster "force_2-3",60,100,"Obsidian",1615,10,strnpcinfo(0)+"::On1room4";
+	monster "force_2-3",60,100,"Orc Archer",1189,10,strnpcinfo(0)+"::On1room4";
+	monster "force_2-3",60,100,"Merman",1264,10,strnpcinfo(0)+"::On1room4";
+	areamonster "force_2-3",50,51,53,54,"[MVP] BOSS SERVER",1150,2,strnpcinfo(0)+"::Ondevildead1";
+	end;
+
+On1room1:
+	set $@atd1room1,$@atd1room1+1;
+	if($@atd1room1==30) {
+	set $@atd2room1,0;
+	Mapannounce "force_2-3","AhaTeamDefend Room 1 : AhaTeamDefend ได้เข้าสู่ระดับที่ 2 แล้ว", bc_map, 0x00ff99;
+	monster "force_2-3",20,100,"WRAITH",1192,5,strnpcinfo(0)+"::On2room1";
+	monster "force_2-3",20,100,"MIMIC",1191,5,strnpcinfo(0)+"::On2room1";
+	monster "force_2-3",20,100,"Rideword",1195,20,strnpcinfo(0)+"::On2room1";
+	monster "force_2-3",20,100,"Raydric",1163,10,strnpcinfo(0)+"::On2room1";
+	}
+	end;
+	
+On1room2:
+	set $@atd1room2,$@atd1room2+1;
+	if($@atd1room2==30) {
+	set $@atd2room2,0;
+	Mapannounce "force_2-3","AhaTeamDefend Room 2 : AhaTeamDefend ได้เข้าสู่ระดับที่ 2 แล้ว", bc_map, 0x00ff99;
+	monster "force_2-3",140,60,"WRAITH",1192,5,strnpcinfo(0)+"::On2room2";
+	monster "force_2-3",140,60,"MIMIC",1191,5,strnpcinfo(0)+"::On2room2";
+	monster "force_2-3",140,60,"Rideword",1195,20,strnpcinfo(0)+"::On2room2";
+	monster "force_2-3",140,60,"Raydric",1163,10,strnpcinfo(0)+"::On2room2";
+	}
+	end;
+	
+On1room3:
+	set $@atd1room3,$@atd1room3+1;
+	if($@atd1room3==30) {
+	set $@atd2room3,0;
+	Mapannounce "force_2-3","AhaTeamDefend Room 3 : AhaTeamDefend ได้เข้าสู่ระดับที่ 2 แล้ว", bc_map, 0x00ff99;
+	monster "force_2-3",100,20,"WRAITH",1192,5,strnpcinfo(0)+"::On2room3";
+	monster "force_2-3",100,20,"MIMIC",1191,5,strnpcinfo(0)+"::On2room3";
+	monster "force_2-3",100,20,"Rideword",1195,20,strnpcinfo(0)+"::On2room3";
+	monster "force_2-3",100,20,"Raydric",1163,10,strnpcinfo(0)+"::On2room3";
+	}
+	end;
+	
+On1room4:
+	set $@atd1room4,$@atd1room4+1;
+	if($@atd1room4==30) {
+	set $@atd2room4,0;
+	Mapannounce "force_2-3","AhaTeamDefend Room 4 : AhaTeamDefend ได้เข้าสู่ระดับที่ 2 แล้ว", bc_map, 0x00ff99;
+	monster "force_2-3",100,100,"WRAITH",1192,5,strnpcinfo(0)+"::On2room4";
+	monster "force_2-3",100,100,"MIMIC",1191,5,strnpcinfo(0)+"::On2room4";
+	monster "force_2-3",100,100,"Rideword",1195,20,strnpcinfo(0)+"::On2room4";
+	monster "force_2-3",100,100,"Raydric",1163,10,strnpcinfo(0)+"::On2room4";
+	}
+	end;
+
+On2room1:
+	set $@atd2room1,$@atd2room1+1;
+	if($@atd2room1==40) {
+	set $@atd3room1,0;
+	Mapannounce "force_2-3","AhaTeamDefend Room 1 : AhaTeamDefend ได้เข้าสู่ระดับที่ 3 แล้ว", bc_map, 0x00ff99;
+	monster "force_2-3",20,140,"Bloodyknight",1268,3,strnpcinfo(0)+"::On3room1";
+	monster "force_2-3",20,140,"Abysknight",1219,5,strnpcinfo(0)+"::On3room1";
+	monster "force_2-3",20,140,"Phreeoni",1159,2,strnpcinfo(0)+"::On3room1";
+	}
+	end;
+
+On2room2:
+	set $@atd2room2,$@atd2room2+1;
+	if($@atd2room2==40) {
+	set $@atd3room2,0;
+	Mapannounce "force_2-3","AhaTeamDefend Room 2 : AhaTeamDefend ได้เข้าสู่ระดับที่ 3 แล้ว", bc_map, 0x00ff99;
+	monster "force_2-3",140,100,"Bloodyknight",1268,3,strnpcinfo(0)+"::On3room2";
+	monster "force_2-3",140,100,"Abysknight",1219,5,strnpcinfo(0)+"::On3room2";
+	monster "force_2-3",140,100,"Phreeoni",1159,2,strnpcinfo(0)+"::On3room2";
+	}
+	end;
+
+On2room3:
+	set $@atd2room3,$@atd2room3+1;
+	if($@atd2room3==40) {
+	set $@atd3room3,0;
+	Mapannounce "force_2-3","AhaTeamDefend Room 3 : AhaTeamDefend ได้เข้าสู่ระดับที่ 3 แล้ว", bc_map, 0x00ff99;
+	monster "force_2-3",100,60,"Bloodyknight",1268,3,strnpcinfo(0)+"::On3room3";
+	monster "force_2-3",100,60,"Abysknight",1219,5,strnpcinfo(0)+"::On3room3";
+	monster "force_2-3",100,60,"Phreeoni",1159,2,strnpcinfo(0)+"::On3room3";
+	}
+	end;
+
+On2room4:
+	set $@atd2room4,$@atd2room4+1;
+	if($@atd2room4==40){
+	set $@atd3room4,0;
+	Mapannounce "force_2-3","AhaTeamDefend Room 4 : AhaTeamDefend ได้เข้าสู่ระดับที่ 3 แล้ว", bc_map, 0x00ff99;
+	monster "force_2-3",60,100,"Bloodyknight",1268,3,strnpcinfo(0)+"::On3room4";
+	monster "force_2-3",60,100,"Abysknight",1219,5,strnpcinfo(0)+"::On3room4";
+	monster "force_2-3",60,100,"Phreeoni",1159,2,strnpcinfo(0)+"::On3room4";
+	}
+	end;
+
+On3room1:
+	set $@atd3room1,$@atd3room1+1;
+	if($@atd3room1==10) {
+	set $@atd4room1,0;
+	Mapannounce "force_2-3","AhaTeamDefend Room 1 : AhaTeamDefend ได้เข้าสู่ระดับสุดท้ายแล้ว", bc_map, 0x00ff99;
+	monster "force_2-3",20,100,"Owl Baron,Owl",1295,10,strnpcinfo(0)+"::On4room1";
+	monster "force_2-3",20,100,"Mini Demon",1292,10,strnpcinfo(0)+"::On4room1";
+	monster "force_2-3",20,100,"Majoruros",1310,10,strnpcinfo(0)+"::On4room1";
+	monster "force_2-3",20,100,"Moonlight",1150,3,strnpcinfo(0)+"::On4room1";
+	}
+	end;
+
+On3room2:
+	set $@atd3room2,$@atd3room2+1;
+	if($@atd3room2==10) {
+	set $@atd4room2,0;
+	Mapannounce "force_2-3","AhaTeamDefend Room 2 : AhaTeamDefend ได้เข้าสู่ระดับสุดท้ายแล้ว", bc_map, 0x00ff99;
+	monster "force_2-3",140,60,"Owl Baron,Owl",1295,10,strnpcinfo(0)+"::On4room2";
+	monster "force_2-3",140,60,"Mini Demon",1292,10,strnpcinfo(0)+"::On4room2";
+	monster "force_2-3",140,60,"Majoruros",1310,10,strnpcinfo(0)+"::On4room2";
+	monster "force_2-3",140,60,"Moonlight",1150,3,strnpcinfo(0)+"::On4room2";
+	}
+	end;
+
+On3room3:
+	set $@atd3room3,$@atd3room3+1;
+	if($@atd3room3==10) {
+	set $@atd4room3,0;
+	Mapannounce "force_2-3","AhaTeamDefend Room 3 : AhaTeamDefend ได้เข้าสู่ระดับสุดท้ายแล้ว", bc_map, 0x00ff99;
+	monster "force_2-3",100,20,"Owl Baron,Owl",1295,10,strnpcinfo(0)+"::On4room3";
+	monster "force_2-3",100,20,"Mini Demon",1292,10,strnpcinfo(0)+"::On4room3";
+	monster "force_2-3",100,20,"Majoruros",1310,10,strnpcinfo(0)+"::On4room3";
+	monster "force_2-3",100,20,"Moonlight",1150,3,strnpcinfo(0)+"::On4room3";
+	}
+	end;
+
+On3room4:
+	set $@atd3room4,$@atd3room4+1;
+	if($@atd3room4==10) {
+	set $@atd4room4,0;
+	Mapannounce "force_2-3","AhaTeamDefend Room 4 : AhaTeamDefend ได้เข้าสู่ระดับสุดท้ายแล้ว", bc_map, 0x00ff99;
+	monster "force_2-3",100,100,"Owl Baron,Owl",1295,10,strnpcinfo(0)+"::On4room4";
+	monster "force_2-3",100,100,"Mini Demon",1292,10,strnpcinfo(0)+"::On4room4";
+	monster "force_2-3",100,100,"Majoruros",1310,10,strnpcinfo(0)+"::On4room4";
+	monster "force_2-3",100,100,"Moonlight",1150,3,strnpcinfo(0)+"::On4room4";
+	}
+	end;
+
+On4room1:
+	set $@atd4room1,$@atd4room1+1;
+	if($@atd4room1==33) {
+	Mapannounce "force_2-3","AhaTeamDefend Room 1 : AhaTeamDefend ได้เข้าสู่ชั้นขุมทรัพย์แล้ว", bc_map, 0x00ff99;
+	set $@atd5room1,0;
+	monster "force_2-3",20,120,"Treasure Box",1324,1,strnpcinfo(0)+"::On1boxdead"; 
+	monster "force_2-3",20,122,"Treasure Box",1324,1,strnpcinfo(0)+"::On1boxdead"; 
+	monster "force_2-3",20,124,"Treasure Box",1324,1,strnpcinfo(0)+"::On1boxdead"; 
+	monster "force_2-3",20,126,"Treasure Box",1324,1,strnpcinfo(0)+"::On1boxdead"; 
+	monster "force_2-3",20,128,"Treasure Box",1324,1,strnpcinfo(0)+"::On1boxdead"; 
+	monster "force_2-3",20,118,"Treasure Box",1324,1,strnpcinfo(0)+"::On1boxdead"; 
+	monster "force_2-3",20,116,"Treasure Box",1324,1,strnpcinfo(0)+"::On1boxdead"; 
+	monster "force_2-3",20,114,"Treasure Box",1324,1,strnpcinfo(0)+"::On1boxdead"; 
+	monster "force_2-3",20,112,"Treasure Box",1324,1,strnpcinfo(0)+"::On1boxdead"; 
+	monster "force_2-3",20,110,"Treasure Box",1324,1,strnpcinfo(0)+"::On1boxdead"; 
+	}
+	end;
+	
+On4room2:
+	set $@atd4room2,$@atd4room2+1;
+	if($@atd4room2==33) {
+	Mapannounce "force_2-3","AhaTeamDefend Room 2 : AhaTeamDefend ได้เข้าสู่ชั้นขุมทรัพย์แล้ว", bc_map, 0x00ff99;
+	set $@atd5room2,0;
+	monster "force_2-3",140,80,"Treasure Box",1324,1,strnpcinfo(0)+"::On2boxdead"; 
+	monster "force_2-3",140,82,"Treasure Box",1324,1,strnpcinfo(0)+"::On2boxdead"; 
+	monster "force_2-3",140,84,"Treasure Box",1324,1,strnpcinfo(0)+"::On2boxdead"; 
+	monster "force_2-3",140,86,"Treasure Box",1324,1,strnpcinfo(0)+"::On2boxdead"; 
+	monster "force_2-3",140,88,"Treasure Box",1324,1,strnpcinfo(0)+"::On2boxdead"; 
+	monster "force_2-3",140,78,"Treasure Box",1324,1,strnpcinfo(0)+"::On2boxdead"; 
+	monster "force_2-3",140,76,"Treasure Box",1324,1,strnpcinfo(0)+"::On2boxdead"; 
+	monster "force_2-3",140,74,"Treasure Box",1324,1,strnpcinfo(0)+"::On2boxdead"; 
+	monster "force_2-3",140,72,"Treasure Box",1324,1,strnpcinfo(0)+"::On2boxdead"; 
+	monster "force_2-3",140,70,"Treasure Box",1324,1,strnpcinfo(0)+"::On2boxdead"; 
+	}
+	end;
+	
+On4room3:
+	set $@atd4room3,$@atd4room3+1;
+	if($@atd4room3==33) {
+	Mapannounce "force_2-3","AhaTeamDefend Room 3 : AhaTeamDefend ได้เข้าสู่ชั้นขุมทรัพย์แล้ว", bc_map, 0x00ff99;
+	set $@atd5room3,0;
+	monster "force_2-3",100,40,"Treasure Box",1324,1,strnpcinfo(0)+"::On3boxdead"; 
+	monster "force_2-3",100,42,"Treasure Box",1324,1,strnpcinfo(0)+"::On3boxdead"; 
+	monster "force_2-3",100,44,"Treasure Box",1324,1,strnpcinfo(0)+"::On3boxdead"; 
+	monster "force_2-3",100,46,"Treasure Box",1324,1,strnpcinfo(0)+"::On3boxdead"; 
+	monster "force_2-3",100,48,"Treasure Box",1324,1,strnpcinfo(0)+"::On3boxdead"; 
+	monster "force_2-3",100,38,"Treasure Box",1324,1,strnpcinfo(0)+"::On3boxdead"; 
+	monster "force_2-3",100,36,"Treasure Box",1324,1,strnpcinfo(0)+"::On3boxdead"; 
+	monster "force_2-3",100,34,"Treasure Box",1324,1,strnpcinfo(0)+"::On3boxdead"; 
+	monster "force_2-3",100,32,"Treasure Box",1324,1,strnpcinfo(0)+"::On3boxdead"; 
+	monster "force_2-3",100,30,"Treasure Box",1324,1,strnpcinfo(0)+"::On3boxdead"; 
+	}
+	end;
+	
+On4room4:
+	set $@atd4room4,$@atd4room4+1;
+	if($@atd4room4==33) {
+	Mapannounce "force_2-3","AhaTeamDefend Room 4 : AhaTeamDefend ได้เข้าสู่ชั้นขุมทรัพย์แล้ว", bc_map, 0x00ff99;
+	set $@atd5room4,0;
+	monster "force_2-3",80,100,"Treasure Box",1324,1,strnpcinfo(0)+"::On4boxdead"; 
+	monster "force_2-3",82,100,"Treasure Box",1324,1,strnpcinfo(0)+"::On4boxdead"; 
+	monster "force_2-3",84,100,"Treasure Box",1324,1,strnpcinfo(0)+"::On4boxdead"; 
+	monster "force_2-3",86,100,"Treasure Box",1324,1,strnpcinfo(0)+"::On4boxdead"; 
+	monster "force_2-3",88,100,"Treasure Box",1324,1,strnpcinfo(0)+"::On4boxdead"; 
+	monster "force_2-3",78,100,"Treasure Box",1324,1,strnpcinfo(0)+"::On4boxdead"; 
+	monster "force_2-3",76,100,"Treasure Box",1324,1,strnpcinfo(0)+"::On4boxdead"; 
+	monster "force_2-3",74,100,"Treasure Box",1324,1,strnpcinfo(0)+"::On4boxdead"; 
+	monster "force_2-3",72,100,"Treasure Box",1324,1,strnpcinfo(0)+"::On4boxdead"; 
+	monster "force_2-3",70,100,"Treasure Box",1324,1,strnpcinfo(0)+"::On4boxdead"; 
+	}
+	end;
+
+On1boxdead:
+	set $@atd5room1,$@atd5room1+1;
+	Mapannounce "force_2-3","AhaTeamDefend Room 1 : " + strcharinfo(0) +" ได้เปิดขุมทรัพย์แล้ว", bc_map, 0x00ff99;
+	if($@atd5room1==10&&$@atdfirstroom==0) {
+	set $@atdfirstroom,1;
+	Mapannounce "force_2-3","AhaTeamDefend Room 1 : เสร็จห้องแรกได้รับ Bonus เพิ่ม !!", bc_map, 0x00ff99;
+	monster "force_2-3",20,120,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",20,122,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",20,124,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",20,126,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",20,128,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",20,118,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",20,116,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",20,114,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",20,112,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",20,110,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	}
+	goto Onboxndead;
+	end; 
+
+On2boxdead:
+	set $@atd5room2,$@atd5room2+1;
+	Mapannounce "force_2-3","AhaTeamDefend Room 2 : " + strcharinfo(0) +" ได้เปิดขุมทรัพย์แล้ว", bc_map, 0x00ff99;
+	if($@atd5room2==10&&$@atdfirstroom==0) {
+	set $@atdfirstroom,2;
+	Mapannounce "force_2-3","AhaTeamDefend Room 2 : เสร็จห้องแรกได้รับ Bonus เพิ่ม !!", bc_map, 0x00ff99;
+	monster "force_2-3",140,80,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",140,82,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",140,84,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",140,86,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",140,88,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",140,78,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",140,76,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",140,74,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",140,72,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",140,70,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	}
+	goto Onboxndead;
+	end; 
+
+On3boxdead:
+	set $@atd5room3,$@atd5room3+1;
+	Mapannounce "force_2-3","AhaTeamDefend Room 3 : " + strcharinfo(0) +" ได้เปิดขุมทรัพย์แล้ว", bc_map, 0x00ff99;
+	if($@atd5room3==10&&$@atdfirstroom==0) {
+	set $@atdfirstroom,3;
+	Mapannounce "force_2-3","AhaTeamDefend Room 3 : เสร็จห้องแรกได้รับ Bonus เพิ่ม !!", bc_map, 0x00ff99;
+	monster "force_2-3",100,40,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",100,42,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",100,44,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",100,46,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",100,48,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",100,38,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",100,36,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",100,34,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",100,32,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",100,30,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	}
+	goto Onboxndead;
+	end; 
+
+On4boxdead:
+	set $@atd5room4,$@atd5room4+1;
+	Mapannounce "force_2-3","AhaTeamDefend Room 4 : " + strcharinfo(0) +" ได้เปิดขุมทรัพย์แล้ว", bc_map, 0x00ff99;
+	if($@atd5room4==10&&$@atdfirstroom==0) {
+	set $@atdfirstroom,4;
+	Mapannounce "force_2-3","AhaTeamDefend Room 4 : เสร็จห้องแรกได้รับ Bonus เพิ่ม !!", bc_map, 0x00ff99;
+	monster "force_2-3",100,40,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",100,42,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",100,44,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",100,46,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",100,48,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",100,38,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",100,36,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",100,34,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",100,32,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	monster "force_2-3",100,30,"Treasure Box",1324,1,strnpcinfo(0)+"::Onboxdead"; 
+	}
+	goto Onboxndead;
+	end;
+
+			
+Onboxdead:
+if(($@atd5room1==10&&$@atdfirstroom==1)||($@atd5room2==10&&$@atdfirstroom==2)||($@atd5room3==10&&$@atdfirstroom==3)||($@atd5room4==10&&$@atdfirstroom==4)){
+Mapannounce "force_2-3","AhaTeamDefend Room Bonus : " + strcharinfo(0) +" ได้เปิดขุมทรัพย์แล้ว", bc_map, 0x00ff99;
+}
+if ($@atd_mode) {
+		getitem $@atd_mode_itemid,$@atd_mode_amount;
+	}
+	else if (!$@atd_mode) {
+		set Zeny,Zeny + $@atd_mode_amount;
+	}
+
+// ไอเทมรางวัลโบนัส
+if(rand(1,10)<=5){
+	getitem $@atd_mode_itemid_bonus,$@atd_mode_amount_bonus;
+}
+end;
+
+Onboxndead:
+// ไอเทมรางวัลธรรมดา
+if ($@atd_mode) {
+		getitem $@atd_mode_itemid,$@atd_mode_amount;
+	}
+	else if (!$@atd_mode) {
+		set Zeny,Zeny + $@atd_mode_amount;
+	}
+end;
+
+	
+OnStopEvent:
+	killmonsterall "force_2-3";
+	Announce "Aha Team Defend ได้จบลงแล้ว",bc_all,0x00ff99;
+	set .start,0;
+	set $@ppatd1,0;
+	set $@ppatd2,0;
+	set $@ppatd3,0;
+	set $@ppatd4,0;
+	end;
+}
+
+
+// -- Mapflags 
+force_2-3	mapflag	nowarp 
+force_2-3	mapflag	nowarpto 
+force_2-3	mapflag	noteleport 
+force_2-3	mapflag	nosave	SavePoint 
+force_2-3	mapflag	nomemo 
+force_2-3	mapflag	nobranch 
+force_2-3	mapflag	nopenalty 
+force_2-3	mapflag	noreturn
+force_2-3	mapflag	monster_noteleport
+// -- End of Mapflags 

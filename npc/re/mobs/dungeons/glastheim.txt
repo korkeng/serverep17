@@ -1,0 +1,412 @@
+//===== rAthena Script =======================================
+//= Glast Heim Monster Spawn Script
+//===== By: ==================================================
+//= Athena (1.0)
+//===== Current Version: =====================================
+//= 1.7
+//===== Compatible With: =====================================
+//= rAthena Project
+//===== Additional Comments: =================================
+//= 1.1 [Lupus]
+//= 1.2 Updated to ep 8.5 aegis spawns [MasterOfMuppets]
+//= 1.3 Official 10.1 kRO spawns [Playtester]
+//= 1.4 More accurate spawns [Playtester]
+//= 1.5 Corrected MVP spawn variance. [L0ne_W0lf]
+//= 1.6 Added Nightmare Glastheim [Ridley8819]
+//= 1.7 Correct Spawn by Navigation's mob data. [attackjom]
+//============================================================
+
+//==================================================
+// glast_01 - Glast Heim
+//==================================================
+glast_01,0,0	monster	Gargoyle	1253,10,5000
+glast_01,0,0	monster	Green Plant	1080,8,5000
+glast_01,0,0	monster	Abysmal Knight	1219,2,5000
+glast_01,233,209,15,15	monster	Shining Plant	1083,1,1800000,900000
+glast_01,233,209,15,15	monster	Green Plant	1080,8,360000,180000
+glast_01,233,209,15,15	monster	Blue Plant	1079,2,900000,450000
+
+//==================================================
+// gl_cas01 - Glast Heim 1f
+//==================================================
+gl_cas01,0,0	monster	Carat	1267,50,5000
+gl_cas01,0,0	monster	Dark Frame	1260,35,5000
+gl_cas01,0,0	monster	Owl Duke	1320,35,5000
+gl_cas01,0,0	monster	Rideword	1195,26,5000
+gl_cas01,0,0	monster	Sage Worm	1281,17,5000
+gl_cas01,0,0	monster	Whisper	1179,17,5000
+gl_cas01,0,0	monster	Owl Baron	1295,10,5000
+gl_cas01,0,0	monster	Alice	1275,1,5000
+
+//==================================================
+// gl_cas02 - Glast Heim 2f 
+//==================================================
+gl_cas02,0,0	monster	Wanderer	1208,41,5000
+gl_cas02,0,0	monster	Raydric	1163,36,5000
+gl_cas02,0,0	monster	Rideword	1195,29,5000
+gl_cas02,0,0	monster	Raydric Archer	1276,20,5000
+gl_cas02,0,0	monster	Evil Druid	1117,9,5000
+gl_cas02,0,0	monster	Abysmal Knight	1219,7,5000
+gl_cas02,0,0	monster	Khalitzburg	1132,6,5000
+gl_cas02,0,0	monster	Chimera	1283,3,5000
+gl_cas02,0,0	monster	Mimic	1191,2,5000
+gl_cas02,0,0	monster	Alice	1275,1,5000
+gl_cas02,102,180	monster	Whisper	1185,1,1800000,900000
+gl_cas02,104,145,5,5	monster	Mysteltainn	1203,1,7200000,3600000
+gl_cas02,0,0	monster	Ogretooth	1204,1,7200000,3600000
+
+//==================================================
+// gl_church - Glast Heim St. Abbey
+//==================================================
+gl_church,0,0	monster	Evil Druid	1117,85,5000
+gl_church,0,0	monster	Wraith	1192,78,5000
+gl_church,0,0	monster	Mimic	1191,12,5000
+
+//==================================================
+// gl_chyard - Glast Heim Churchyard
+//==================================================
+gl_chyard,0,0	monster	Dark Priest	1198,95,5000
+gl_chyard,0,0	monster	Wraith	1192,55,5000
+gl_chyard,0,0	monster	Evil Druid	1117,15,5000
+gl_chyard,0,0	monster	Mimic	1191,4,5000
+gl_chyard,0,0	monster	Hunter Fly	1035,4,5000
+gl_chyard,0,0,0,0	boss_monster	Dark Lord	1272,1,3600000,600000,1
+gl_chyard,0,0	monster	Dark Illusion	1302,1,3600000,1800000
+
+//==================================================
+// gl_dun01 - The Lowest Cave in Glast Heim
+//==================================================
+gl_dun01,0,0	monster	Arclouze	1194,53,5000
+gl_dun01,0,0	monster	Sting	1207,43,5000
+
+//==================================================
+// gl_dun02 - The Lowest Cave in Glast Heim
+//==================================================
+gl_dun02,0,0	monster	Majoruros	1310,52,5000
+gl_dun02,0,0	monster	Gargoyle	1253,17,5000
+
+//==================================================
+// gl_in01 - Inside Glast Heim
+//==================================================
+gl_in01,0,0	monster	Marionette	1143,25,5000
+gl_in01,0,0	monster	Sage Worm	1281,17,5000
+gl_in01,0,0	monster	Dark Frame	1260,12,5000
+gl_in01,0,0	monster	Rideword	1195,10,5000
+gl_in01,0,0	monster	Wanderer	1208,1,5000
+gl_in01,0,0	monster	Alice	1275,1,5000
+
+//==================================================
+// gl_knt01 - Inside Glast Heim Chivalry
+//==================================================
+gl_knt01,0,0	monster	Raydric	1163,126,5000
+gl_knt01,0,0	monster	Rideword	1195,29,5000
+gl_knt01,0,0	monster	Raydric Archer	1276,14,5000
+gl_knt01,0,0	monster	Abysmal Knight	1219,14,5000
+gl_knt01,0,0	monster	Khalitzburg	1132,14,5000
+gl_knt01,0,0	monster	Alice	1275,1,5000
+gl_knt01,21,278	monster	Giant Whisper	1186,1,3600000,1800000
+gl_knt01,9,184	monster	Black Mushroom	1084,1,3600000,1800000
+gl_knt01,8,184	monster	Black Mushroom	1084,1,3600000,1800000
+gl_knt01,7,184	monster	Black Mushroom	1084,1,3600000,1800000
+gl_knt01,6,184	monster	Black Mushroom	1084,1,3600000,1800000
+gl_knt01,5,184	monster	Black Mushroom	1084,1,3600000,1800000
+gl_knt01,4,184	monster	Black Mushroom	1084,1,3600000,1800000
+gl_knt01,9,185	monster	Black Mushroom	1084,1,3600000,1800000
+gl_knt01,8,185	monster	Black Mushroom	1084,1,3600000,1800000
+gl_knt01,7,185	monster	Black Mushroom	1084,1,3600000,1800000
+gl_knt01,6,185	monster	Black Mushroom	1084,1,3600000,1800000
+gl_knt01,5,185	monster	Black Mushroom	1084,1,3600000,1800000
+gl_knt01,4,185	monster	Black Mushroom	1084,1,3600000,1800000
+
+//==================================================
+// gl_knt02 - Inside Glast Heim Chivalry
+//==================================================
+gl_knt02,0,0	monster	Raydric	1163,101,5000
+gl_knt02,0,0	monster	Khalitzburg	1132,50,5000
+gl_knt02,0,0	monster	Raydric Archer	1276,38,5000
+gl_knt02,0,0	monster	Abysmal Knight	1219,7,5000
+gl_knt02,0,0	monster	Alice	1275,1,5000
+gl_knt02,0,0	monster	Mysteltainn	1203,1,1800000,1200000
+gl_knt02,0,0	monster	Bloody Knight	1268,1,3600000,1800000
+
+//==================================================
+// gl_prison - Glast Heim Underprison
+//==================================================
+gl_prison,0,0	monster	Zombie Prisoner	1197,38,5000
+gl_prison,0,0	monster	Injustice	1257,25,5000
+gl_prison,0,0	monster	Rybio	1201,19,5000
+gl_prison,0,0	monster	Hunter Fly	1035,12,5000
+
+//==================================================
+// gl_prison1 - Glast Heim Underprison
+//==================================================
+gl_prison1,0,0	monster	Injustice	1257,40,5000
+gl_prison1,0,0	monster	Skeleton Prisoner	1196,30,5000
+gl_prison1,0,0	monster	Rybio	1201,10,5000
+gl_prison1,0,0	monster	Phendark	1202,10,5000
+gl_prison1,0,0	monster	Hunter Fly	1035,10,5000
+gl_prison1,0,0	monster	Cramp	1209,5,5000
+gl_prison1,0,0	monster	Zealotus	1200,1,3600000,1800000
+
+//==================================================
+// gl_sew01 - Glast Heim Culvert
+//==================================================
+gl_sew01,0,0	monster	Whisper	1179,66,5000
+gl_sew01,0,0	monster	Gargoyle	1253,49,5000
+gl_sew01,0,0	monster	Arclouze	1194,16,5000
+
+//==================================================
+// gl_sew02 - Glast Heim Culvert
+//==================================================
+gl_sew02,0,0	monster	Gargoyle	1253,89,5000
+gl_sew02,0,0	monster	Cramp	1209,24,5000
+
+//==================================================
+// gl_sew03 - Glast Heim Culvert
+//==================================================
+gl_sew03,0,0	monster	Sting	1207,99,5000
+gl_sew03,0,0	monster	Gargoyle	1253,56,5000
+
+//==================================================
+// gl_sew04 - Glast Heim Culvert
+//==================================================
+gl_sew04,0,0	monster	Anolian	1206,126,5000
+gl_sew04,0,0	monster	Gargoyle	1253,25,5000
+gl_sew04,0,0	monster	Drainliar	1111,12,5000
+
+//==================================================
+// gl_step - Glast Heim Staircase Dungeon
+//==================================================
+gl_step,0,0	monster	Wind Ghost	1263,138,5000
+gl_step,0,0	monster	Raydric Archer	1276,13,5000
+gl_step,0,0	monster	Mimic	1191,6,5000
+
+//==================================================
+// gl_cas02_ - Nightmare Mode 2f
+//==================================================
+gl_cas02_,0,0	monster	Evil Druid (Nightmare)	2480,4,0,0,0
+gl_cas02_,0,0	monster	Chimera (Nightmare)	2485,1,0,0,0
+gl_cas02_,0,0	monster	Mimic (Nightmare)	2479,19,0,0,0
+gl_cas02_,0,0	monster	Rideword (Nightmare)	2478,10,0,0,0
+gl_cas02_,0,0	monster	Wanderer (Nightmare)	2477,60,0,0,0
+gl_cas02_,0,0	monster	Mysteltainn	1203,1,7200000,3600000
+gl_cas02_,0,0	monster	Alice	1275,1,5000
+gl_cas02_,102,180	monster	Whisper	1185,1,1800000,900000
+gl_cas02_,0,0	monster	Baphomet (Nightmare)	2483,1,7200000,0,0
+
+//==================================================
+// gl_chyard_ - Nightmare Mode Churchyard
+//==================================================
+gl_chyard_,0,0	monster	Wraith Dead (Nightmare)	2481,91,0,0,0
+gl_chyard_,0,0	monster	Wraith Dead	1291,31,0,0,0
+gl_chyard_,0,0	monster	Evil Druid (Nightmare)	2480,22,60000,0,0
+gl_chyard_,0,0	monster	Mimic (Nightmare)	2479,34,60000,0,0
+gl_chyard_,0,0,0,0	boss_monster	Dark Lord	1272,1,3600000,600000,1
+
+
+//==================================================
+// gl_cas01_ - Abyss Glast Hiem
+//==================================================
+gl_cas01_,0,0	monster	Contaminated Sting	20370,17,5000
+gl_cas01_,0,0	monster	Contaminated Raydric Archer	20368,50,5000
+gl_cas01_,0,0	monster	Contaminated Raydric	20367,50,5000
+gl_cas01_,0,0	monster	Frozen Gargoyle	20369,50,5000
+gl_cas01_,0,0	monster	Prison Breaker	20371,50,5000
+gl_cas01_,0,0	monster	Corrupted Wanderer	20420,50,5000
+gl_cas01_,0,0	monster	Ice Ghost	20379,50,5000
+gl_cas01_,0,0	monster	Flame Ghost	20380,50,5000
+gl_cas01_,0,0,0,0	boss_monster	Corrupted Dark Lor	20422,1,7200000,600000,0
+gl_cas01_,0,0,0,0	boss_monster	Corrupted Spider Queen	20421,1,7200000,600000,0
+
+//===== rAthena Script =======================================
+//= OGH Abyss Script
+//===== By: ================================================== 
+//= mr.TAURUS
+//===== Current Version: =====================================
+//= 1.0
+//===== Compatible With: ===================================== 
+//= rAthena Project
+//============================================================
+
+//==================================================
+// Quest
+//==================================================
+glast_01,189,272,4	script	Mage Nillem#glast	4_M_JOB_WIZARD,{
+	disable_items;
+	mes .NPCname$;
+	if(BaseLevel < 175) {
+		mes "เจ้ามาทำอะไรที่นี่?";
+		mes "ข้ากำลังมองหานักผจญภัยที่แข็งแกร่งเพื่อเติมเต็มความอยากรู้อยากเห็นของข้า!";
+		next;
+		mes .NPCname$;
+		mes "กลับมาเมื่อเจ้ามีเลเวลไม่ต่ำกว่า 175.";
+		close;
+	}
+	mes "ข้าคิดว่าข้าเพิ่งค้นพบสถานที่แห่งหนึ่ง! เจ้าอยากจะรู้เกี่ยวกับมันไหม?";
+	next;
+	switch(select(
+		""+.sb$+" ข้าจะไปที่นั่น!",
+		""+.sb$+" ข้าต้องการคำอธิบาย",
+		""+.sb$+" แบ่งปันการค้นพบ",
+		""+.sb$+" ไม่มีอะไร."
+	)) {
+		case 1:
+			mes .NPCname$;
+			mes "นั่นคือทางไป!";
+			mes "ข้าดีใจที่ได้เห็นความกระตือรือร้นของเจ้า.";
+			close2;
+			warp "gl_cas01_",200,26;
+			end;
+	
+		case 2:
+			mes .NPCname$;
+			mes "มีรายงานเกี่ยวกับพลังเวทย์มนตร์แปลก ๆ ใกล้กับปราสาท Glast Heim.";
+			mes "ข้ามาเพื่อสืบสวน และข้าค้นพบบางอย่าง?";
+			next;
+			mes .NPCname$;
+			mes "ช่องว่างในมิติ!";
+			mes "พ่อมดอัจฉริยะคนนี้ยังสร้างช่องว่างมิติได้ดีอีกด้วย.";
+			next;
+			mes .NPCname$;
+			mes "ข้าก็เลยบังคับมัน! ข้าเข้าไปข้างใน...";
+			mes "กาลเวลาหยุดไหล...";
+			mes "อืม. ข้าไม่มีอะไรจะพูดเกี่ยวกับมันอีกแล้ว.";
+			next;
+			mes .NPCname$;
+			mes "อย่างไรก็ตาม, มอนสเตอร์ที่ชั่วร้าย ที่ติดอยู่ข้างในนั้นมากับคลื่นกาลเวลา!";
+			next;
+			mes .NPCname$;
+			mes "ข้าเกือบตาย แต่ก็ออกมาทันเวลา.";
+			mes "ข้ากำลังหานักผจญภัยมาร่วมสำรวจด้วยกัน ~ <3";
+			close;
+	
+		case 3:
+			mes .NPCname$;
+			mes "ข้าไม่แจกภารกิจ ข้าแค่ต้องการค้นพบพื้นที่ใหม่!";
+			mes "มีบางอย่างที่ข้าอยากจะทำกับเจ้า โปรดบอกข้าก่อนที่เราจะไปกัน ~ <3";
+			next;
+			.@q = select("ความว่างเปล่า.:การแช่แข็ง.:เหมือนกระจก:ข้าเสร็จแล้ว.") - 1;
+			mes .NPCname$;
+			if(.@q == 3) {
+				mes "โอ้, ไม่เป็นไร.";
+				mes "เหนื่อยนักก็ควรพัก.";
+				mes "เจอกันพรุ่งนี้.";
+				mes "อย่าหักโหมจนเกินไป ~ <3";
+				close;
+			}
+			switch(checkquest(.abyss_delay[.@q],PLAYTIME)) {
+				case 0:
+				case 1:
+				mes "เจ้ายังคงเหน็ดเหนื่อยจากการค้นพบในอดีต...ควรจะพักผ่อนสักหน่อย.";
+				close;
+			
+				case 2:
+				completequest .abyss_delay[.@q];
+				erasequest .abyss_delay[.@q];
+				mes "เจ้ามีอิสระที่จะแบ่งปันการค้นพบของเจ้ากับข้าอีกครั้ง ~ <3.";
+				close;
+			}
+			switch(checkquest(.abyss_quest[.@q],HUNTING)) {
+				case -1:
+				mes "นอกเหนือจากช่องว่าง ยังมีสิ่งที่เหมือนว่างเปล่า.";
+				switch(.@q) {
+
+					case 0: // Quest: Nothing to see
+					mes "^0000FFCorrupted Raydrics^000000 และ ^0000FFCorrupted Raydric Archers^000000...";
+					mes "มันเกี่ยวกับการปนเปื้อนของพวกนั้น...";
+					mes "มันส่งผลต่อเจ้าอย่างไร?";
+					next;
+					mes .NPCname$;
+					mes "^0000FF20 Corrupted Raydrics,";
+					mes "Corrupted Raydric Archers.^000000";
+					break;
+						
+					case 1: // Quest: High Freezing Point
+					mes "^0000FFFrozen Gargyoles^000000 และ ^0000FFPrison Breakers^000000...";
+					next;
+					mes .NPCname$;
+					mes "^0000FF5 Frozen Gargyoles,";
+					mes "5 Prison Breakers.^000000";
+					break;
+							
+					case 2: // Quest: A Mirror
+					mes "^0000FFIce Ghosts^000000 และ ^0000FFFlame Ghosts^000000...";
+					mes "ดูแตกต่างอย่างสิ้นเชิงในมิตินี้.";
+					next;
+					mes .NPCname$;
+					mes "^0000FF10 Ice Ghosts,";
+					mes "10 Flame Ghosts.^000000";
+					break;
+				}
+				mes "เมื่อไหร่ที่เจ้ากลับมา, ข้าจะตรวจสอบผลลัพธ์ของเจ้า.";
+				mes "เป็นยังไงบ้าง?";
+				next;
+				if(select("ไม่ยากเกินไป:ข้าปฏิเสธ") == 2) {
+					mes .NPCname$;
+					mes "ไม่ว่างก็ช่วยไม่ได้.";
+					mes "ช่วยกันเมื่อมีเวลาว่าง ~ <3";
+					close;
+				}
+				mes .NPCname$;
+				mes "มาทำกัน.";
+				mes "เกินจุดนี้ รู้ผลยาก.";
+				mes "ถ้าต้องการหนีออกจากช่องว่างมิติ มาคุยกับข้าที่ทางเข้า ~ <3";
+				setquest .abyss_quest[.@q];
+				break;
+				
+				case 0:
+				case 1:
+				switch(.@q) {
+					case 0:
+					mes "เจ้ายังไม่เสร็จสิ้นในการค้นพบ.";
+					mes "เจ้าคิดว่าพวกมันได้รับอิทธิพลจากความว่างเปล่าหรือไม่?";
+					close;
+					
+					case 1:
+					mes "เจ้ายังไม่เสร็จสิ้นในการค้นพบ.";
+					mes "มันไม่ใช่น้ำแข็ง";
+					mes "อุณหภูมิ แต่ถ้าเจ้าหนาวจัด";
+					mes "มาหาข้า.";
+					close;
+					
+					case 2:
+					mes "เจ้ายังไม่เสร็จสิ้นในการค้นพบ.";
+					mes "ข้าไม่คิดว่าพวกมันอยู่อีกด้านของกระจก";
+					mes "แต่พวกมันอยู่บนช่องว่างมิติอื่น..."; 
+					close;
+				}
+				case 2:
+				switch(.@q) {
+					case 0:
+					case 1:
+					case 2:
+					mes "โอ้! ทำได้ดีมาก นั่นคือสิ่งที่ข้าต้องการ.";
+					mes "น่าสนใจมาก...";
+					mes "โอ้ ใช่แล้ว นี่คือรางวัลสำหรับการทำงานหนักของเจ้า.";
+					mes "แล้วพบกันใหม่ ~ <3";
+					getexp .abyss_bexp[.@q],.abyss_jexp[.@q];
+					completequest .abyss_quest[.@q];
+					erasequest .abyss_quest[.@q];
+					setquest .abyss_delay[.@q];
+					close;
+				}
+			}
+			close;
+	
+		case 4:
+		mes .NPCname$;
+		mes "โอ้, วันนี้ข้ารู้สึกหนาว.";
+		mes "Nillelm กำลังเศร้า!";
+		break;
+}
+close;
+
+OnInit:
+	.NPCname$  = "[^0000FF "+strnpcinfo(1)+" ^000000]";
+	.sb$ = "~";
+	setarray .abyss_quest[0],8541,8544,8547;
+	setarray .abyss_delay[0],8542,8545,8548;
+	setarray .abyss_bexp[0],2000000,2000000,2000000;
+	setarray .abyss_jexp[0],2000000,2000000,2000000;
+end;
+}

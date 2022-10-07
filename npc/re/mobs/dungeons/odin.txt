@@ -1,0 +1,609 @@
+//===== rAthena Script =======================================
+//= Odin Temple Monster Spawn Script
+//===== By: ==================================================
+//= Poki#3 (0.1)
+//===== Current Version: =====================================
+//= 1.3
+//===== Compatible With: =====================================
+//= rAthena Project
+//===== Additional Comments: =================================
+//= 1.0 Updated by using Tharis' Homun AI, by Tharis [Vicious]
+//= 1.1 More accurate spawns [Playtester]
+//= 1.2 Corrected MVP spawn variance. [L0ne_W0lf]
+//= 1.3 Correct Spawn by Navigation's mob data. [attackjom]
+//============================================================
+
+//==================================================
+// odin_tem01 - Odin Shrine
+//==================================================
+odin_tem01,0,0	monster	Plasma	1693,14,5000
+odin_tem01,0,0	monster	Breeze	1692,14,5000
+odin_tem01,0,0	monster	Frus	1753,7,5000
+odin_tem01,0,0	monster	Skogul	1752,7,5000
+odin_tem01,0,0	monster	Plasma	1697,4,5000
+odin_tem01,0,0	monster	Plasma	1695,4,5000
+odin_tem01,0,0	monster	Plasma	1696,4,5000
+odin_tem01,0,0	monster	Plasma	1694,4,5000
+odin_tem01,0,0	monster	Green Plant	1080,7,60000,30000
+odin_tem01,0,0	monster	Yellow Plant	1081,7,60000,30000
+odin_tem01,0,0	monster	Blue Plant	1079,7,600000,300000
+
+//==================================================
+// odin_tem02 - Odin Shrine
+//==================================================
+odin_tem02,0,0	monster	Skogul	1752,40,5000
+odin_tem02,0,0	monster	Frus	1753,40,5000
+odin_tem02,0,0	monster	Plasma	1693,20,5000
+odin_tem02,0,0	monster	Frus	1762,4,5000
+odin_tem02,0,0	monster	Skogul	1761,2,5000
+odin_tem02,0,0	monster	Skeggiold	1754,1,5000
+odin_tem02,0,0	monster	Skeggiold	1755,1,5000
+odin_tem02,0,0	monster	Blue Plant	1079,13,1800000,900000
+
+//==================================================
+// odin_tem03 - Odin Shrine
+//==================================================
+odin_tem03,0,0	monster	Plasma	1693,24,5000
+odin_tem03,0,0	monster	Skeggiold	1754,19,5000
+odin_tem03,0,0	monster	Skeggiold	1755,19,5000
+odin_tem03,0,0	monster	Skogul	1761,6,5000
+odin_tem03,0,0	monster	Frus	1762,6,5000
+odin_tem03,0,0	monster	Skogul	1752,4,5000
+odin_tem03,0,0	monster	Frus	1753,4,5000
+odin_tem03,0,0	monster	Valkyrie	1765,2,5400000,1800000
+odin_tem03,0,0,0,0	boss_monster	Valkyrie Randgris	1751,1,28800000,600000,1
+odin_tem03,0,0	monster	Blue Plant	1079,18,1800000,900000
+odin_tem03,0,0	monster	Shining Plant	1083,18,1800000,900000
+
+//==================================================
+// odin_past - Ancient Odin Shrine
+//==================================================
+odin_past,0,0	monster	Angelgolt	20604,40,5000
+odin_past,0,0	monster	Angelgolt	20605,60,5000
+odin_past,0,0	monster	Holy Frus	20606, 45,5000
+odin_past,0,0	monster	Holy Skogul	20607, 45,5000
+odin_past,0,0	monster	Arch Plasma	20608,5,5000
+odin_past,0,0	monster	Spectral Plasma	20609,5,5000
+odin_past,0,0,0,0	boss_monster	Valkyrie Reginleif	20610,1,28800000,600000,1
+odin_past,0,0,0,0	boss_monster	Valkyrie Ingrid	20611,1,28800000,600000,1
+odin_past,0,0	monster	Blue Plant	1079,5,1800000,900000
+odin_past,0,0	monster	Shining Plant	1083,2,1800000,900000
+
+
+// Ancient Odin Temple - 3F
+odin_tem03,276,236,0	script	odinpast#odin	WARPNPC,1,1,{
+	end;
+
+OnTouch:
+	if (BaseLevel < 180) {
+		message strcharinfo(0), strcharinfo(0) + " What is it? This light is...";
+		end;
+	}
+	mes "It's a warm light.";
+	mes "Beyond the shining light, there's something...";
+	mes "that I know.";
+	next;
+	switch ( select( "I'm going to the place where the light leads me.", "Avoid the place." )) {
+		case 1:
+			close2;
+			warp "odin_past",291,230;
+			end;
+		case 2:
+			mes "You are avoiding it.";
+			close;
+		}
+	}
+
+odin_past,291,235,0	warp	thirdfloor#odin	1,1,odin_tem03,276,232
+
+//===== rAthena Script ======================================= 
+//= Soutanes Enchanter
+//===== By: ================================================== 
+//= mundussan
+//===== Current Version: ===================================== 
+//= 1.0
+//===== Compatible With: ===================================== 
+//= rAthena Project
+//===== Description: ========================================= 
+//= [Unofficial] 
+//= Merchant for enchanting Soutanes and Clergy equipment.
+//===== Additional Comments: ================================= 
+//= 1.0 First release. [mundussan]
+//============================================================ 
+-	script	#odinenchant	HIDDEN_NPC,{
+    disable_items;
+	if (MaxWeight - Weight < 1000) {
+		mes "[ Susan Gray ]",
+        "Your bag is too heavy. Reduce some weight and come back.";
+		close;
+	}
+    mes "[ Susan Gray ]",
+    "I'm Susan Gray, studying about Odin's Relics. Do you need my help?";
+    next;
+    switch(select("What we do here?:Enchant equipments.:Reset enchants.")){
+    case 1:
+    mes "[ Susan Gray ]",
+    "You know that there are quite a few adventurers who visit this place who like the Temple of Odin.";
+    next;
+    mes "[ Susan Gray ]",
+    "And sometimes they bring me this...",
+    "[<ITEM>Odin Relics<INFO>23986</INFO></ITEM>].";
+    next;
+    mes "[ Susan Gray ]",
+    "As you may have noticed, there are many kinds of equipment in this relics. I'm a scholar who studies them.";
+    next;
+    mes "[ Susan Gray ]",
+    "I can handle some of them with my own hands, so it's now possible for me to strengthen them.";
+    next;
+    if(select("Show me what you can do.") == 1){
+    mes "[ Susan Gray ]",
+    "[<ITEM>Str Soutane<INFO>15397</INFO></ITEM>]",
+    "[<ITEM>Agi Soutane<INFO>15398</INFO></ITEM>]",
+    "[<ITEM>Vit Soutane<INFO>15399</INFO></ITEM>]",
+    "[<ITEM>Int Soutane<INFO>15401</INFO></ITEM>]",
+    "[<ITEM>Dex Soutane<INFO>15400</INFO></ITEM>]",
+    "[<ITEM>Luk Soutane<INFO>15402</INFO></ITEM>]",
+    "[<ITEM>Clergy's Boots<INFO>22209</INFO></ITEM>]",
+    "[<ITEM>Clergy's Manteau<INFO>20947</INFO></ITEM>]";
+    next;
+    mes "[ Susan Gray ]",
+    "This is what I can handle.";
+    next;
+    mes "[ Susan Gray ]",
+    "Generally",
+    "3 x [<ITEM>Angel's Dream<INFO>25767</INFO></ITEM>]",
+    "and 500,000z.",
+    "This is my payment.";
+    next;
+    mes "[ Susan Gray ]",
+    "If the refine is higher than 9 and if you bring me 3 [<ITEM>Silvervine Fruit<INFO>6909</INFO></ITEM>], I can strengthen the equipment with better options.";
+    next;
+    mes "[ Susan Gray ]",
+    "To reset the enchants, I need 500,000z or 2 x [<ITEM>Silvervine Fruit<INFO>6909</INFO></ITEM>]. There's a 30% chance of failure when resetting with zeny, so please take that into account.";
+    close;
+    }
+	case 2:
+    mes "[ Susan Gray ]",
+    "Which equipment do you want me to work on?";
+    next;
+    switch(select("Cancel.:Armor.:Garment.:Shoes.")){   
+    case 1:
+        mes "[ Susan Gray ]",
+        "Come back whenever you want.";
+        close;
+        case 2:
+		.@part = EQI_ARMOR;
+		break;
+	case 3:
+		.@part = EQI_GARMENT;
+		break;
+	case 4:
+		.@part = EQI_SHOES;
+		break;
+	}
+	.@equip_id = getequipid(.@part);
+    switch( .@equip_id ){
+        case 15397:
+        case 15398:
+        case 15399:
+        case 15400:
+        case 15401:
+        case 15402:
+        case 20947:
+        case 22209:
+            break;
+        case -1:
+		    mes "[ Susan Gray ]",
+		    "Are you wearing the item?";
+		    close;
+            end;
+            break;
+        default:
+        	mes "[ Susan Gray ]",
+		    "I don't handle items like this.";
+            close;
+            end;
+            break;
+    }
+    .@refine = getequiprefinerycnt(.@part);
+    set .@itemused, 25767;
+    set .@cost, 3;
+    set .@zeny_cost, 500000;
+    mes "[ Susan Gray ]",
+    "[<ITEM>"+getitemname(.@equip_id)+"<INFO>"+.@equip_id+"</INFO></ITEM>]",
+    "[<ITEM>Angel's Dream<INFO>25767</INFO></ITEM>] x 3",
+    "500,000z",
+    "Are you sure you want to strengthen this equipment?";
+    next;
+    if(select("Cancel:Proceed") == 1){
+        mes "[ Susan Gray ]",
+        "Please come again when you're ready to strengthen you equipment.";
+        close;
+    }
+    else{
+        setarray .@card[0],getequipcardid(.@part,0),getequipcardid(.@part,1),getequipcardid(.@part,2),getequipcardid(.@part,3);
+        copyarray .@tmp_card[0], .@card[0], 4;
+        if ((.@card[1] && getiteminfo(.@card[1], ITEMINFO_SUBTYPE) == CARD_NORMAL) || (.@card[2] && getiteminfo(.@card[2], ITEMINFO_SUBTYPE) == CARD_NORMAL) || (.@card[3] && getiteminfo(.@card[3], ITEMINFO_SUBTYPE) == CARD_NORMAL)) {// armor enchant system custom check
+		mes "[ Susan Gray ]";
+		    mes "Something wrong happened.";
+		    close;
+	    }
+        if(.@card[1] > 0 && .@card[2] > 0 && .@card[3] > 0){
+            mes "[ Susan Gray ]",
+            "This equipment is reinforced to its limit. No further reinforcement is possible.";
+            close;
+        }
+        if(countitem(.@itemused) < .@cost ||  Zeny < .@zeny_cost){
+        mes "[ Susan Gray ]",
+        "Hmm, you are missing " + (.@cost - countitem(.@itemused)) + " Angel's Dreams or you doesn't have 500000z. Go get more, and then we can talk about more enchants.";
+            specialeffect2 EF_PHARMACY_FAIL;
+            close;
+            end;
+        }
+        else{
+        if (.@card[3] == 0){
+            .@card[3] = callfunc("F_Rand",
+                4705, //STR + 6
+                4706, //STR + 7
+                4707, //STR + 8
+                4735, //AGI + 6
+                4736, //AGI + 7
+                4737, //AGI + 8
+                4725, //DEX + 6
+                4726, //DEX + 7
+                4727, //DEX + 8
+                4745, //VIT + 6
+                4746, //VIT + 7
+                4747, //VIT + 8
+                4715, //INT + 6
+                4716, //INT + 7
+                4717, //INT + 8
+                4755, //LUK + 6
+                4756, //LUK + 7
+                4757, //LUK + 8
+                4764, //CRI + 5
+                4765, //CRI + 7
+                29241,//CRI + 10
+                4762, //FLEE + 6
+                29238,//FLEE + 10
+                4794, //DEF + 12
+                4902, //DEF + 18
+                4786, //MDEF + 2
+                4787, //MDEF + 4
+                4867, //MHP + 3%
+                4900, //MHP + 5%
+                4801, //SP + 100
+                4802);//SP + 150
+            }
+            else if(.@card[2] == 0){
+                .@card[2] = callfunc("F_Rand",
+                4705, //STR + 6
+                4706, //STR + 7
+                4707, //STR + 8
+                4735, //AGI + 6
+                4736, //AGI + 7
+                4737, //AGI + 8
+                4725, //DEX + 6
+                4726, //DEX + 7
+                4727, //DEX + 8
+                4745, //VIT + 6
+                4746, //VIT + 7
+                4747, //VIT + 8
+                4715, //INT + 6
+                4716, //INT + 7
+                4717, //INT + 8
+                4755, //LUK + 6
+                4756, //LUK + 7
+                4757, //LUK + 8
+                4764, //CRI + 5
+                4765, //CRI + 7
+                29241,//CRI + 10
+                4762, //FLEE + 6
+                29238,//FLEE + 10
+                4794, //DEF + 12
+                4902, //DEF + 18
+                4786, //MDEF + 2
+                4787, //MDEF + 4
+                4867, //MHP + 3%
+                4900, //MHP + 5%
+                4801, //SP + 100
+                4802);//SP + 150
+            }
+            else if (.@card[1] == 0){
+                if( .@refine < 9){
+                    .@card[1] = callfunc("F_Rand",
+                    4705, //STR + 6
+                    4706, //STR + 7
+                    4707, //STR + 8
+                    4735, //AGI + 6
+                    4736, //AGI + 7
+                    4737, //AGI + 8
+                    4725, //DEX + 6
+                    4726, //DEX + 7
+                    4727, //DEX + 8
+                    4745, //VIT + 6
+                    4746, //VIT + 7
+                    4747, //VIT + 8
+                    4715, //INT + 6
+                    4716, //INT + 7
+                    4717, //INT + 8
+                    4755, //LUK + 6
+                    4756, //LUK + 7
+                    4757, //LUK + 8
+                    4764, //CRI + 5
+                    4765, //CRI + 7
+                    29241,//CRI + 10
+                    4762, //FLEE + 6
+                    29238,//FLEE + 10
+                    4794, //DEF + 12
+                    4902, //DEF + 18
+                    4786, //MDEF + 2
+                    4787, //MDEF + 4
+                    4867, //MHP + 3%
+                    4900, //MHP + 5%
+                    4801, //SP + 100
+                    4802);//SP + 150
+                }
+                else{
+                mes "[ Susan Gray ]",
+                "Oh wait! Seems you have a powerful equipment there. I can give you a better enchant if you give me 3x [<ITEM>"+getitemname(6909)+"<INFO>6909</INFO></ITEM>].",
+                "What would you say?";
+                next;
+                switch(select("Cancel.:Proceed with Angel's Dream.:Proceed with "+getitemname(6909)+".")){
+                    case 1:
+                            mes "[ Susan Gray ]",
+                            "Please come again when you're ready to strengthen you equipment.";
+                            close;
+                            break;
+                    case 2:
+                    .@card[1] = callfunc("F_Rand",
+                    4705, //STR + 6
+                    4706, //STR + 7
+                    4707, //STR + 8
+                    4735, //AGI + 6
+                    4736, //AGI + 7
+                    4737, //AGI + 8
+                    4725, //DEX + 6
+                    4726, //DEX + 7
+                    4727, //DEX + 8
+                    4745, //VIT + 6
+                    4746, //VIT + 7
+                    4747, //VIT + 8
+                    4715, //INT + 6
+                    4716, //INT + 7
+                    4717, //INT + 8
+                    4755, //LUK + 6
+                    4756, //LUK + 7
+                    4757, //LUK + 8
+                    4764, //CRI + 5
+                    4765, //CRI + 7
+                    29241,//CRI + 10
+                    4762, //FLEE + 6
+                    29238,//FLEE + 10
+                    4794, //DEF + 12
+                    4902, //DEF + 18
+                    4786, //MDEF + 2
+                    4787, //MDEF + 4
+                    4867, //MHP + 3%
+                    4900, //MHP + 5%
+                    4801, //SP + 100
+                    4802);//SP + 150
+                    break;
+                    case 3:
+                    set .@itemused, 6909;
+                    set .@cost, 3;
+                    set .@zeny_cost, 0;
+                    if(countitem(.@itemused) < .@cost){
+                            mes "[ Susan Gray ]",
+                            "Hmm, you are missing " + (.@cost - countitem(.@itemused)) +" "+ getitemname(6909) +"s. Go get more, and then we can talk about more enchants.";
+                            specialeffect2 EF_PHARMACY_FAIL;
+                            close;
+                            end;
+                    }
+                    else{
+                            if(.@part == EQI_ARMOR){
+                            .@card[1] = callfunc("F_Rand",
+                            4706,//STR + 7
+                            4707,//STR + 8
+                            4736,//AGI + 7
+                            4737,//AGI + 8
+                            4726,//DEX + 7
+                            4727,//DEX + 8
+                            4746,//VIT + 7
+                            4747,//VIT + 8
+                            4716,//INT + 7
+                            4717,//INT + 8
+                            4756,//LUK + 7
+                            4757,//LUK + 8
+                            4900,//MHP + 5%
+                            4802,//SP + 150
+                            29241,//CRI + 10
+                            29238,//FLEE + 10
+                            4903,//DEF + 21
+                            4790,//MDEF + 10
+                            4820,//FS 5
+                            4821,//FS 6
+                            4812,//Spell 4
+                            4826,//Spell 5
+                            4835,//EA 4
+                            4836,//EA 5
+                            4843,//Sharp 4
+                            4844,//Sharp 5
+                            4873,//ASPD 3
+                            4881,//ASPD 4
+                            310076,//STR Blessing
+                            310077,//AGI Blessing
+                            310078,//VIT Blessing
+                            310079,//DEX Blessing
+                            310080,//INT Blessing
+                            310081);//LUK Blessing 
+                            }
+                            else{
+                            .@card[1] = callfunc("F_Rand",
+                            4706,//STR + 7
+                            4707,//STR + 8
+                            4736,//AGI + 7
+                            4737,//AGI + 8
+                            4726,//DEX + 7
+                            4727,//DEX + 8
+                            4746,//VIT + 7
+                            4747,//VIT + 8
+                            4716,//INT + 7
+                            4717,//INT + 8
+                            4756,//LUK + 7
+                            4757,//LUK + 8
+                            4765,//CRI + 7
+                            29241,//CRI + 10
+                            4762,//FLEE + 6
+                            29238,//FLEE + 10
+                            4902,//DEF + 18
+                            29026,//DEF + 20
+                            4788,//MDEF + 6
+                            4789,//MDEF + 8
+                            4867,//MHP + 3%
+                            4900,//MHP + 5%
+                            4801,//SP + 100
+                            4802);//SP + 150
+                            }
+                            }
+                    }
+                }
+            }
+                specialeffect2 EF_REPAIRWEAPON;
+                delitem .@itemused, .@cost;
+                set Zeny, Zeny - .@zeny_cost;
+                if (callfunc("F_IsEquipIDHack", .@part, .@equip_id) || callfunc("F_IsEquipRefineHack", .@part, .@refine) || callfunc("F_IsEquipCardHack", .@part, .@tmp_card[0], .@tmp_card[1], .@tmp_card[2], .@tmp_card[3])){
+                    close;
+                }
+                delequip .@part;
+                getitem2 .@equip_id,1,1,.@refine,0,.@card[0],.@card[1],.@card[2],.@card[3];
+                mes "[ Susan Gray ]",
+                "Reinforcement of [<ITEM>"+getitemname(.@equip_id)+"<INFO>"+.@equip_id+"</INFO></ITEM>] has been completed.";
+                close;
+        }
+        }
+        case 3:
+            mes "[ Susan Gray ]",
+            "Which equipment do you want me to work on?";
+            next;
+            switch(select("Cancel.:Armor.:Garment.:Shoes.")){   
+                case 1:
+                mes "[ Susan Gray ]",
+                "Come back whenever you want.";
+                close;
+                case 2:
+                .@part = EQI_ARMOR;
+                break;
+            case 3:
+                .@part = EQI_GARMENT;
+                break;
+            case 4:
+                .@part = EQI_SHOES;
+                break;
+            }
+            .@equip_id = getequipid(.@part);
+            switch( .@equip_id ){
+                case 15397:
+                case 15398:
+                case 15399:
+                case 15400:
+                case 15401:
+                case 15402:
+                case 20947:
+                case 22209:
+                    break;
+                case -1:
+                    mes "[ Susan Gray ]",
+                    "Are you wearing the item?";
+                    close;
+                    break;
+                default:
+                    mes "[ Susan Gray ]",
+                    "I don't handle items like this.";
+                    close;
+                    end;
+                    break;
+            }
+            .@refine = getequiprefinerycnt(.@part);
+            setarray .@card[0], getequipcardid(.@part,0), getequipcardid(.@part,1), getequipcardid(.@part,2), getequipcardid(.@part,3);
+                mes "[ Susan Gray ]",
+                "[<ITEM>"+getitemname(.@equip_id)+"<INFO>"+.@equip_id+"</INFO></ITEM>]",
+                "==============================",
+                "[<ITEM>"+getitemname(6909)+"<INFO>6909</INFO></ITEM>] x2",
+                "or";
+                next;
+                mes "[ Susan Gray ]",
+                "[<ITEM>"+getitemname(.@equip_id)+"<INFO>"+.@equip_id+"</INFO></ITEM>]",
+                "==============================",
+                "500,000z";
+                mes "What type of reset are you going to use?";
+                next;
+                switch(select("Cancel:Using "+getitemname(6909)+".:Using zeny.")){
+                    case 1:
+                    mes "[ Susan Gray ]",
+                    "Please come again when you're ready to strengthen you equipment.";
+                    close;
+                    break;
+                    case 2:
+                        if(.@card[1] >0){
+                            if(countitem(6909) < 2){
+                                mes "[ Susan Gray ]",
+                                "Hmmm, I think you forgot something... I need you bring me more "+2 - countitem(6909)+" "+ getitemname(6909)+"s to reset.";
+                                close;                        
+                            }
+                            else{
+                                delitem 6909, 2;
+                                delequip .@part;
+                                specialeffect2 EF_REPAIRWEAPON;
+                                getitem2 .@equip_id,1,1,.@refine,0,.@card[0],0,0,0;
+                                mes "[ Susan Gray ]",
+                                "Done. Here is your clean [<ITEM>"+getitemname(.@equip_id)+"<INFO>"+.@equip_id+"</INFO></ITEM>]";                      
+                                close;
+                            }
+                        }
+                        else{
+                            mes "[ Susan Gray ]",
+                            "To use this service, I'll need you fully enchant your equipment before resetting.";
+                            close;
+                            end;
+                        }
+                    case 3:
+                        if(.@card[1] >0){
+                            if(Zeny < 500000){
+                                mes "[ Susan Gray ]",
+                                "Hmmm, I think you forgot something... I need you bring me 500,000z to reset.";
+                                close;                        
+                            }
+                            else{
+                                set Zeny, Zeny - 500000;
+                                if(rand(100) < 30){
+                                    specialeffect2 EF_LORD;
+                                    mes "[ Susan Gray ]";
+                                    mes "Oops, it failed!";
+                                    mes "Try again another time.";
+                                    close;
+                                }
+                                delequip .@part;
+                                specialeffect2 EF_REPAIRWEAPON;
+                                getitem2 .@equip_id,1,1,.@refine,0,.@card[0],0,0,0;
+                                mes "[ Susan Gray ]",
+                                "Done. Here is your clean [<ITEM>"+getitemname(.@equip_id)+"<INFO>"+.@equip_id+"</INFO></ITEM>]";                      
+                                close;
+                            }
+                        }
+                        else{
+                            mes "[ Susan Gray ]",
+                            "To use this service, I'll need you fully enchant your equipment before resetting.";
+                            close;
+                            end;
+                        }
+
+                }
+    }
+    end;
+    //OnInit:
+    //setunittitle getnpcid(0), "<Divine Power Researcher>";
+	setunitdata getnpcid(0),UNPC_GROUP_ID,1016;
+}
+
+hu_in01,99,322,4	duplicate(#odinenchant)	Susan Grey#enchanter	893

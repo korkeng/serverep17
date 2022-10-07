@@ -1,0 +1,76 @@
+-	script	PlayBoxTimer	-1,{
+	OnMinute00:
+	OnMinute36:
+		setarray .@RandMonster[0], 	1193,	//Alarm
+									1699,	//Ancient Mimic
+									1593,	//Ancient Mummy
+									1475,	//Wraith
+									1450,	//Wind Ghost
+									1771,	//Vanberk
+									1195,	//Rideword
+									1163,	//Raydric
+									1276,	//Raydric Archer
+									1216,	//Penomena
+									1178,	//Zerom
+									1417,	//Zipper Bear
+									1394,	//Zombie
+									1028,	//Soldier Skeleton
+									1169,	//Skeleton Worker
+									1164,	//Requiem
+									1077,	//Poison Spore
+									1071,	//Pirate Skeleton
+									1273,	//Orc Lady
+									1462;	//Orc Skeleton
+		set .@RandMobCount,getarraysize(.@RandMonster);
+		set .@MonsterID,.@RandMonster[rand(.@RandMobCount)];
+		set .MonsterNum,rand(50,80);
+		announce "( มอนเตอร์บุกเมือง  ) ~ ขณะนี้ "+getmonsterinfo(.@MonsterID,MOB_NAME)+" จำนวน "+.MonsterNum+" ได้ทำการบุกเมือง มีเวลากำจัด 2 นาที",0;
+		monster "moroccz",0,0,getmonsterinfo(.@MonsterID,MOB_NAME),.@MonsterID,.MonsterNum,"PlayBoxTimer::OnBox";
+		initnpctimer;
+		end;
+
+	OnBox:
+		if (.MonsterNum == 0 ) {
+		} else {
+			set .MonsterNum, .MonsterNum - 1;			
+			setarray .@RandReward[0], 61006,61006,61006,61001;
+			set .@RandReCount,getarraysize(.@RandReward);
+			set .@RewardID,.@RandReward[rand(.@RandReCount)];
+			announce "( มอนเตอร์บุกเมือง  ) ~ ถูกกำจัดโดยคุณ [ "+strcharinfo(0)+" ] ได้รับ [ "+getitemname(.@RewardID)+" ] เหลืออีก "+.MonsterNum+" ตัว",0;
+			if ( .@RewardID == 61006 ) {
+				getitem .@RewardID,3;
+			} else {
+				getitem .@RewardID,1;
+			}
+		}
+		end;
+		
+		OnTimer60000:
+		announce "( มอนเตอร์บุกเมือง  ) ~  มีเวลาในการกำจัดอีก 1 นาที ",0;
+		end;
+		
+		OnTimer120000:
+		announce "( มอนเตอร์บุกเมือง  ) ~  หมดเวลากิจกรรมแล้ว ไว้พบกันใหม่ทุกชั่วโมง ตลอด 24 ชั่วโมง",0;
+		stopnpctimer;
+		set .MonsterNum,0;
+		killmonster "moroccz","PlayBoxTimer::OnBox",1;
+		end;
+	
+	OnInit:
+	bindatcmd "@mobtown", strnpcinfo(0)+"::OnCommand", 99, 99;
+	end;
+	
+	OnCommand:
+	menu
+	"> เปิดกิจกล่อง",ST_ON,
+	"> ฆ่ากล่องทุกตัวในกิจกรรม",ST_KILL;
+	ST_ON:
+	donpcevent strnpcinfo(0)+"::OnMinute00";
+	end;
+	
+	ST_KILL:
+	set .MonsterNum,0;
+	killmonster "moroccz","PlayBoxTimer::OnBox",1;
+	announce "( มอนเตอร์บุกเมือง ) ~ Gm ได้ทำลายมอนเตอร์ทั้งหมดแล้ว",0;
+	end;
+}

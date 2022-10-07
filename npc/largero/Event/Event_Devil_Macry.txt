@@ -1,0 +1,518 @@
+moroccz,211,94,4	script	Devil Macry#1	731,{
+	set .@npcname$,"[ ^FF0000Devil Macry^000000 ]"; //name Npc
+	set .@gm_level, 99; // LV GM  เปิด/ปิด กิจกรรม
+	
+	// - โหมดรางวัลกิจกรรม 
+	//0 = Zeny , 1 = Item
+	set $@dvm_mode,1;
+	set $@dvm_mode_itemid,607;
+	//จำนวนรางวัล
+	set $@dvm_mode_amount,100;
+	
+	// - รางวัลโบนัสเปิดกล่อง โอกาส ที่ได้ 50 เปอเซ็น
+	set $@dvm_mode_itemid_bonus,607;
+	set $@dvm_mode_amount_bonus,50;
+	
+	mes .@npcname$;
+	mes "ยินดีต้อนรับผู้กล้าทั้งหลายเข้าสู่ ^FF0000Devil Macry^000000.";
+	mes "เมื่อเจ้าออกหรือตายใน ^FF0000Devil Macry^000000, เจ้าจะไม่สามารถจะเข้ามาได้อีก. จนกว่าจะถึงเวลาอีกครั้ง";
+	next;
+	switch(select("- แน่นอนข้าจะไป:- ข้าต้องการฟังรายละเอียดอีกครั้ง:" + ((getgmlevel() >= .@gm_level) ? "- GM Menu." : "") + ":- ไม่ล่ะ ข้าไม่เอาด้วยหรอก")) {
+	case 1:
+		if (.start != 1) {
+			mes .@npcname$;
+			mes "ขณะนี้ประตูเข้าสู่ ^FF0000Devil Macry^000000 ได้ปิดลงแล้ว";
+			mes "จะเปิดอีกครั้งเมื่อเวลา";
+			mes "12:30 , 14:30 , 00:30 , 02:30";
+			close;
+		}
+		if (BaseLevel < 70 || Zeny < 20000) { // requirements
+			mes .@npcname$;
+			mes "เงื่อนไขเจ้าต้องเป็นไปตาม ^FF0000Devil Macry^000000 กำหนด";
+			mes " ";
+			mes "เจ้าต้องมี:";
+			mes " - ต้องการ Base Level 70";
+			mes " - ค่าบริการวาปเข้าไปครั้งละ 20,000z";
+			close;
+		}
+		set Zeny,Zeny - 20000;
+		announce strcharinfo(0)+" ได้เข้าสู่ Devil Macry.", bc_npc, 0x00ff99;
+		percentheal 100,100;
+		warp "06guild_01",49,75;
+		close;
+	case 2:
+		mes .@npcname$;
+		mes "เมื่อเจ้าเข้าสู่ Devil Macry แล้ว จะมี Boss 20 ระดับด้วยกัน";
+		next;
+		mes .@npcname$;
+		mes "ระดับยิ่งสูง Boss ก็จะเก่งขึ้นตามลำดับ";
+		close;
+	case 3:
+		mes .@npcname$;
+		switch (.start) { // event states
+			case 0: mes "ขณะนี้ ^FF0000Devil Macry^000000 ยังไม่เริ่ม."; break;
+			case 1: mes "ขณะนี้ ^FF0000Devil Macry^000000 เปิดให้เข้า."; break;
+			case 2: mes "ขณะนี้ ^FF0000Devil Macry^000000 กำลังทำงานอยู่ในรอบที่ "+ .round +" และ เหลือมอนเตอร์อีก "+ .mob +" ตัว."; break;
+		}
+		next;
+		switch(select("- เปิดกิจกรรม.:- ปิดกิจกรรม.:- ยกเลิก.")) {
+		case 1:
+			mes .@npcname$;
+			if (.start)
+				mes "^FF0000Devil Macry^000000 ได้เปิดอยู่แล้ว.";
+			else {
+				mes "^FF0000Devil Macry^000000 ได้เริ่มแล้ว ณ บัดนี้...";
+				donpcevent strnpcinfo(0)+"::OnStartEvent";
+			}
+			close;
+		case 2:
+			mes .@npcname$;
+			if (!.start)
+				mes "^FF0000Devil Macry^000000 ได้ปิดอยู่แล้ว.";
+			else {
+				mes "^FF0000Devil Macry^000000 ได้จบลงแล้ว ณ บัดนี้..";
+				donpcevent strnpcinfo(0)+"::OnStopEvent";
+			}
+			close;
+		case 3:
+			break;
+		}
+		break;
+	case 4:
+		break;
+	}
+	mes .@npcname$;
+	mes "ลาก่อย!!.";
+	close;
+
+OnStartEvent:
+OnClock0030:
+OnClock0230:
+OnClock1230:
+OnClock1430:
+	set .start, 1;
+	mapannounce "06guild_01","Devil Macry ได้จบลงแล้ว ณ บัดนี้.", bc_map, 0x00ff99;
+	getmapxy .@map$, .@x, .@y, 1;
+	mapwarp "06guild_01", .@map$, .@x, .@y;
+	killmonsterall "06guild_01";
+	disablenpc "Devil Macry#2";
+	announce "Devil Macry กำลังจะเปิดใน 5 นาที ให้ผู้กล้าทั้งหลายจงเตรียมพร้อม.", bc_all, 0x00ff99;
+	sleep 60000;
+	announce "Devil Macry จะเริ่มต้นภายใน 4 นาที.", bc_all;
+	sleep 60000;
+	announce "Devil Macry จะเริ่มต้นภายใน 3 นาที.", bc_all, 0x00ff99;
+	sleep 60000;
+	announce "Devil Macry จะเริ่มต้นภายใน 2 นาที.", bc_all, 0x00ff99;
+	sleep 60000;
+	announce "Devil Macry จะเริ่มต้นภายใน 1 นาที.", bc_all, 0x00ff99;
+	sleep 60000;
+	announce "Devil Macry ได้เริ่มต้นขึ้นแล้ว ณ บัดนี้!", bc_all, 0x00ff99;
+	if ( !getmapusers("06guild_01") )
+		goto OnStopEvent;
+	set .start, 2;
+	set .round, 1;
+	set .mob, 2;
+	areamonster "06guild_01",50,51,53,54,"[MVP] BOSS SERVER",1150,2,strnpcinfo(0)+"::OnDevilDead1";
+	end;
+
+OnDevilDead1:
+	set .mob,.mob-1;
+	if ( .mob == 1 )
+		announce "Devil Macry : เหลือ MVP BOSS อีก "+ .mob +" ตัวสู่ทางผ่านระดับที่ 2.", bc_map, 0x00ff99;
+	else if ( .mob <= 0 ) {
+		announce "Devil Macry ได้เข้าสู่ระดับที่ 2...", bc_map, 0x00ff99;
+		goto OnDevil2;
+	}
+	end;
+
+OnDevil2:
+	set .round, 2;
+	set .mob, 2;
+	areamonster "06guild_01",50,51,53,54,"[MVP] BOSS SERVER",1115,2,strnpcinfo(0)+"::OnDevilDead2";
+	end;
+
+OnDevilDead2:
+	set .mob,.mob-1;
+	if ( .mob == 1 )
+		announce "Devil Macry : เหลือ MVP BOSS อีก "+ .mob +" ตัวสู่ทางผ่านระดับที่ 3.", bc_map, 0x00ff99;
+	else if ( .mob <= 0 ) {
+		announce "Devil Macry ได้เข้าสู่ระดับที่ 3...", bc_map, 0x00ff99;
+		goto OnDevil3;
+	}
+	end;
+
+OnDevil3:
+	set .round, 3;
+	set .mob, 2;
+	areamonster "06guild_01",50,51,53,54,"[MVP] BOSS SERVER",1059,2,strnpcinfo(0)+"::OnDevilDead3";
+	end;
+
+OnDevilDead3:
+	set .mob,.mob-1;
+	if ( .mob == 1 )
+		announce "Devil Macry : เหลือ MVP BOSS อีก "+ .mob +" ตัวสู่ทางผ่านระดับที่ 4.", bc_map, 0x00ff99;
+	else if ( .mob <= 0 ) {
+		announce "Devil Macry ได้เข้าสู่ระดับที่ 4...", bc_map, 0x00ff99;
+		goto OnDevil4;
+	}
+	end;
+
+OnDevil4:
+	set .round, 4;
+	set .mob, 2;
+	areamonster "06guild_01",50,51,53,54,"[MVP] BOSS SERVER",1087,2,strnpcinfo(0)+"::OnDevilDead4";
+	end;
+
+OnDevilDead4:
+	set .mob,.mob-1;
+	if ( .mob == 1 )
+		announce "Devil Macry : เหลือ MVP BOSS อีก "+ .mob +" ตัวสู่ทางผ่านระดับที่ 5.", bc_map, 0x00ff99;
+	else if ( .mob <= 0 ) {
+		announce "Devil Macry ได้เข้าสู่ระดับที่ 5...", bc_map, 0x00ff99;
+		goto OnDevil5;
+	}
+	end;
+
+OnDevil5:
+	set .round, 5;
+	set .mob, 2;
+	areamonster "06guild_01",50,51,53,54,"[MVP] BOSS SERVER",1038,2,strnpcinfo(0)+"::OnDevilDead5";
+	end;
+
+OnDevilDead5:
+	set .mob,.mob-1;
+	if ( .mob == 1 )
+		announce "Devil Macry : เหลือ MVP BOSS อีก "+ .mob +" ตัวสู่ทางผ่านระดับที่ 6.", bc_map, 0x00ff99;
+	else if ( .mob <= 0 ) {
+		announce "Devil Macry ได้เข้าสู่ระดับที่ 6...", bc_map, 0x00ff99;
+		goto OnDevil6;
+	}
+	end;
+	
+OnDevil6:
+	set .round, 6;
+	set .mob, 3;
+	areamonster "06guild_01",50,51,53,54,"[MVP] BOSS SERVER",1159,3,strnpcinfo(0)+"::OnDevilDead6";
+	end;
+
+OnDevilDead6:
+	set .mob,.mob-1;
+	if ( .mob == 2 )
+		announce "Devil Macry : เหลือ MVP BOSS อีก "+ .mob +" ตัวสู่ทางผ่านระดับที่ 7.", bc_map, 0x00ff99;
+	if ( .mob == 1 )
+		announce "Devil Macry : เหลือ MVP BOSS อีก "+ .mob +" ตัวสู่ทางผ่านระดับที่ 7.", bc_map, 0x00ff99;
+	else if ( .mob <= 0 ) {
+		announce "Devil Macry ได้เข้าสู่ระดับที่ 7...", bc_map, 0x00ff99;
+		goto OnDevil7;
+	}
+	end;
+
+OnDevil7:
+	set .round, 7;
+	set .mob, 3;
+	areamonster "06guild_01",50,51,53,54,"[MVP] BOSS SERVER",1086,3,strnpcinfo(0)+"::OnDevilDead7";
+	end;
+
+OnDevilDead7:
+	set .mob,.mob-1;
+	if ( .mob == 2 )
+		announce "Devil Macry : เหลือ MVP BOSS อีก "+ .mob +" ตัวสู่ทางผ่านระดับที่ 8.", bc_map, 0x00ff99;
+	if ( .mob == 1 )
+		announce "Devil Macry : เหลือ MVP BOSS อีก "+ .mob +" ตัวสู่ทางผ่านระดับที่ 8.", bc_map, 0x00ff99;
+	else if ( .mob <= 0 ) {
+		announce "Devil Macry ได้เข้าสู่ระดับที่ 8...", bc_map, 0x00ff99;
+		goto OnDevil8;
+	}
+	end;
+
+OnDevil8:
+	set .round, 8;
+	set .mob, 3;
+	areamonster "06guild_01",50,51,53,54,"[MVP] BOSS SERVER",1251,3,strnpcinfo(0)+"::OnDevilDead8";
+	end;
+
+OnDevilDead8:
+	set .mob,.mob-1;
+	if ( .mob == 2 )
+		announce "Devil Macry : เหลือ MVP BOSS อีก "+ .mob +" ตัวสู่ทางผ่านระดับที่ 9.", bc_map, 0x00ff99;
+	if ( .mob == 1 )
+		announce "Devil Macry : เหลือ MVP BOSS อีก "+ .mob +" ตัวสู่ทางผ่านระดับที่ 9.", bc_map, 0x00ff99;
+	else if ( .mob <= 0 ) {
+		announce "Devil Macry ได้เข้าสู่ระดับที่ 9...", bc_map, 0x00ff99;
+		goto OnDevil9;
+	}
+	end;
+
+OnDevil9:
+	set .round, 9;
+	set .mob, 3;
+	areamonster "06guild_01",50,51,53,54,"[MVP] BOSS SERVER",1046,3,strnpcinfo(0)+"::OnDevilDead9";
+	end;
+
+OnDevilDead9:
+	set .mob,.mob-1;
+	if ( .mob == 2 )
+		announce "Devil Macry : เหลือ MVP BOSS อีก "+ .mob +" ตัวสู่ทางผ่านระดับที่ 10.", bc_map, 0x00ff99;
+	if ( .mob == 1 )
+		announce "Devil Macry : เหลือ MVP BOSS อีก "+ .mob +" ตัวสู่ทางผ่านระดับที่ 10.", bc_map, 0x00ff99;
+	else if ( .mob <= 0 ) {
+		announce "Devil Macry ได้เข้าสู่ระดับที่ 10...", bc_map, 0x00ff99;
+		goto OnDevil10;
+	}
+	end;
+
+OnDevil10:
+	set .round, 10;
+	set .mob, 3;
+	areamonster "06guild_01",50,51,53,54,"[MVP] BOSS SERVER",1039,3,strnpcinfo(0)+"::OnDevilDead10";
+	end;
+
+OnDevilDead10:
+	set .mob,.mob-1;
+	if ( .mob == 2 )
+		announce "Devil Macry : เหลือ MVP BOSS อีก "+ .mob +" ตัวสู่ทางผ่านระดับที่ 11.", bc_map, 0x00ff99;
+	if ( .mob == 1 )
+		announce "Devil Macry : เหลือ MVP BOSS อีก "+ .mob +" ตัวสู่ทางผ่านระดับที่ 11.", bc_map, 0x00ff99;
+	else if ( .mob <= 0 ) {
+		announce "Devil Macry ได้เข้าสู่ระดับที่ 11...", bc_map, 0x00ff99;
+		goto OnDevil11;
+	}
+	end;
+
+OnDevil11:
+	set .round, 11;
+	set .mob, 4;
+	areamonster "06guild_01",50,51,53,54,"[MVP] BOSS SERVER",1112,4,strnpcinfo(0)+"::OnDevilDead11";
+	end;
+
+OnDevilDead11:
+	set .mob,.mob-1;
+	if ( .mob == 3 )
+		announce "Devil Macry : เหลือ MVP BOSS อีก "+ .mob +" ตัวสู่ทางผ่านระดับที่ 12.", bc_map, 0x00ff99;
+	if ( .mob == 2 )
+		announce "Devil Macry : เหลือ MVP BOSS อีก "+ .mob +" ตัวสู่ทางผ่านระดับที่ 12.", bc_map, 0x00ff99;
+	if ( .mob == 1 )
+		announce "Devil Macry : เหลือ MVP BOSS อีก "+ .mob +" ตัวสู่ทางผ่านระดับที่ 12.", bc_map, 0x00ff99;
+	else if ( .mob <= 0 ) {
+		announce "Devil Macry ได้เข้าสู่ระดับที่ 12...", bc_map, 0x00ff99;
+		goto OnDevil12;
+	}
+	end;
+
+OnDevil12:
+	set .round, 12;
+	set .mob, 4;
+	areamonster "06guild_01",50,51,53,54,"[MVP] BOSS SERVER",1147,4,strnpcinfo(0)+"::OnDevilDead12";
+	end;
+
+OnDevilDead12:
+	set .mob,.mob-1;
+	if ( .mob == 3 )
+		announce "Devil Macry : เหลือ MVP BOSS อีก "+ .mob +" ตัวสู่ทางผ่านระดับที่ 13.", bc_map, 0x00ff99;
+	if ( .mob == 2 )
+		announce "Devil Macry : เหลือ MVP BOSS อีก "+ .mob +" ตัวสู่ทางผ่านระดับที่ 13.", bc_map, 0x00ff99;
+	if ( .mob == 1 )
+		announce "Devil Macry : เหลือ MVP BOSS อีก "+ .mob +" ตัวสู่ทางผ่านระดับที่ 13.", bc_map, 0x00ff99;
+	else if ( .mob <= 0 ) {
+		announce "Devil Macry ได้เข้าสู่ระดับที่ 13...", bc_map, 0x00ff99;
+		goto OnDevil13;
+	}
+	end;
+
+OnDevil13:
+	set .round, 13;
+	set .mob, 4;
+	areamonster "06guild_01",50,51,53,54,"[MVP] BOSS SERVER",1157,4,strnpcinfo(0)+"::OnDevilDead13";
+	end;
+
+OnDevilDead13:
+	set .mob,.mob-1;
+	if ( .mob == 3 )
+		announce "Devil Macry : เหลือ MVP BOSS อีก "+ .mob +" ตัวสู่ทางผ่านระดับที่ 14.", bc_map, 0x00ff99;
+	if ( .mob == 2 )
+		announce "Devil Macry : เหลือ MVP BOSS อีก "+ .mob +" ตัวสู่ทางผ่านระดับที่ 14.", bc_map, 0x00ff99;
+	if ( .mob == 1 )
+		announce "Devil Macry : เหลือ MVP BOSS อีก "+ .mob +" ตัวสู่ทางผ่านระดับที่ 14.", bc_map, 0x00ff99;
+	else if ( .mob <= 0 ) {
+		announce "Devil Macry ได้เข้าสู่ระดับที่ 14...", bc_map, 0x00ff99;
+		goto OnDevil14;
+	}
+	end;
+
+OnDevil14:
+	set .round, 14;
+	set .mob, 4;
+	areamonster "06guild_01",50,51,53,54,"[MVP] BOSS SERVER",1190,4,strnpcinfo(0)+"::OnDevilDead14";
+	end;
+
+OnDevilDead14:
+	set .mob,.mob-1;
+	if ( .mob == 3 )
+		announce "Devil Macry : เหลือ MVP BOSS อีก "+ .mob +" ตัวสู่ทางผ่านระดับที่ 15.", bc_map, 0x00ff99;
+	if ( .mob == 2 )
+		announce "Devil Macry : เหลือ MVP BOSS อีก "+ .mob +" ตัวสู่ทางผ่านระดับที่ 15.", bc_map, 0x00ff99;
+	if ( .mob == 1 )
+		announce "Devil Macry : เหลือ MVP BOSS อีก "+ .mob +" ตัวสู่ทางผ่านระดับที่ 15.", bc_map, 0x00ff99;
+	else if ( .mob <= 0 ) {
+		announce "Devil Macry ได้เข้าสู่ระดับที่ 15...", bc_map, 0x00ff99;
+		goto OnDevil15;
+	}
+	end;
+
+OnDevil15:
+	set .round, 15;
+	set .mob, 3;
+	areamonster "06guild_01",50,51,53,54,"[MVP] BOSS SERVER",1272,3,strnpcinfo(0)+"::OnDevilDead15";
+	end;
+
+OnDevilDead15:
+	set .mob,.mob-1;
+	if ( .mob == 2 )
+		announce "Devil Macry : เหลือ MVP BOSS อีก "+ .mob +" ตัวสู่ทางผ่านระดับที่ 16.", bc_map, 0x00ff99;
+	if ( .mob == 1 )
+		announce "Devil Macry : เหลือ MVP BOSS อีก "+ .mob +" ตัวสู่ทางผ่านระดับที่ 16.", bc_map, 0x00ff99;
+	else if ( .mob <= 0 ) {
+		announce "Devil Macry ได้เข้าสู่ระดับที่ 16...", bc_map, 0x00ff99;
+		goto OnDevil16;
+	}
+	end;
+
+OnDevil16:
+	set .round, 16;
+	set .mob, 1;
+	areamonster "06guild_01",50,51,53,54,"[MVP] BOSS SERVER",1511,1,strnpcinfo(0)+"::OnDevilDead16";
+	end;
+
+OnDevilDead16:
+	set .mob,.mob-1;
+	if ( .mob <= 0 ) {
+		announce "Devil Macry ได้เข้าสู่ระดับที่ 17...", bc_map, 0x00ff99;
+		goto OnDevil17;
+	}
+	end;
+
+OnDevil17:
+	set .round, 17;
+	set .mob, 2;
+	areamonster "06guild_01",50,51,53,54,"[MVP] BOSS SERVER",1719,2,strnpcinfo(0)+"::OnDevilDead17";
+	end;
+
+OnDevilDead17:
+	set .mob,.mob-1;
+	if ( .mob == 1 )
+		announce "Devil Macry : เหลือ MVP BOSS อีก "+ .mob +" ตัวสู่ทางผ่านระดับที่ 18.", bc_map, 0x00ff99;
+	else if ( .mob <= 0 ) {
+		announce "Devil Macry ได้เข้าสู่ระดับที่ 18...", bc_map, 0x00ff99;
+		goto OnDevil18;
+	}
+	end;
+
+OnDevil18:
+	set .round, 18;
+	set .mob, 2;
+	areamonster "06guild_01",50,51,53,54,"[MVP] BOSS SERVER",1719,2,strnpcinfo(0)+"::OnDevilDead18";
+	end;
+
+OnDevilDead18:
+	set .mob,.mob-1;
+	if ( .mob == 1 )
+		announce "Devil Macry : เหลือ MVP BOSS อีก "+ .mob +" ตัวสู่ทางผ่านระดับที่ 19.", bc_map, 0x00ff99;
+	else if ( .mob <= 0 ) {
+		announce "Devil Macry ได้เข้าสู่ระดับที่ 19...", bc_map, 0x00ff99;
+		goto OnDevil19;
+	}
+	end;
+
+OnDevil19:
+	set .round, 19;
+	set .mob, 2;
+	areamonster "06guild_01",50,51,53,54,"[MVP] BOSS SERVER",1734,2,strnpcinfo(0)+"::OnDevilDead19";
+	end;
+
+OnDevilDead19:
+	set .mob,.mob-1;
+	if ( .mob == 1 )
+		announce "Devil Macry : เหลือ MVP BOSS อีก "+ .mob +" ตัวสู่ทางผ่านระดับที่ 20.", bc_map, 0x00ff99;
+	else if ( .mob <= 0 ) {
+		announce "Devil Macry ได้เข้าสู่ระดับที่ 20... ซึ่งเป็นระดับสุดท้ายแล้ว!!", bc_map, 0x00ff99;
+		goto OnDevil20;
+	}
+	end;
+
+OnDevil20:
+	set .round, 20;
+	set .mob, 3;
+	areamonster "06guild_01",50,51,53,54,"[MVP] BOSS SERVER",1623,2,strnpcinfo(0)+"::OnDevilDead20";
+	areamonster "06guild_01",50,51,53,54,"[MVP] BOSS SERVER",1751,1,strnpcinfo(0)+"::OnDevilDead20";
+	end;
+
+OnDevilDead20:
+	set .mob,.mob-1;
+	if ( .mob == 2 )
+		announce "Devil Macry : เหลือ MVP BOSS อีก "+ .mob +" ตัว  ท่านจะชนะเหล่าอสูรร้ายทั้งหมด", bc_map, 0x00ff99;
+	if ( .mob == 1 )
+		announce "Devil Macry : เหลือ MVP BOSS อีก "+ .mob +" ตัว  ท่านจะชนะเหล่าอสูรร้ายทั้งหมด", bc_map, 0x00ff99;
+	else if ( .mob <= 0 ) {
+		announce "Devil Macry ท่านจะชนะเหล่าอสูรร้ายทั้งหมด...!!", bc_map, 0x00ff99;
+		goto Ondevilbox;
+	}
+	end;
+
+Ondevilbox:
+set .mob, 10;
+areamonster "06guild_01",0,0,53,54,"ตัวคุมสมบัติ ของ Devil Macry",1324,10,strnpcinfo(0)+"::OnTreasureDead";
+end;
+
+OnTreasureDead:
+	set .mob,.mob-1;
+	mapannounce "06guild_01","Devil Macry : "+strcharinfo(0)+" ได้เปิดขุมทรัพย์ Devil Macry แล้ว เหลืออีกจำนวน "+ .mob +" กล่อง", bc_map, 0x00ff99;
+	if ( .mob <= 0 )
+		goto OnStopEvent;
+	if ($@dvm_mode) {
+		getitem $@dvm_mode_itemid,$@dvm_mode_amount;
+	}
+	else if (!$@dvm_mode) {
+		set Zeny,Zeny-$@dvm_mode_amount;
+	}
+	if(rand(1,10)<=5){
+		getitem $@dvm_mode_itemid_bonus,$@dvm_mode_amount_bonus;
+	}
+end;
+
+
+	
+OnStopEvent:
+	killmonsterall "06guild_01";
+	enablenpc "Devil Macry#2";
+	set .start, 0;
+	set .round, 0;
+	set .mob, 0;
+	end;
+}
+
+06guild_01,50,50,7	script	Devil Macry#2	406,{
+	mes "[Exit]";
+	mes "นี่คือทางออก Devil Macry";
+	mes "ท่านจะกลับออกไปหรือไม่";
+	menu "- กลับออกไป",-,"- ยังไม่ต้อง",L_exit;
+	warp getsavepoint(0),getsavepoint(1),getsavepoint(2);
+	end;
+L_exit:
+mes " ";
+mes "โอเค, จะกลับเข้ามาบอกข้านะ";
+close;
+end;
+}
+
+
+// -- Mapflags 
+06guild_01	mapflag	nowarp
+06guild_01	mapflag	nowarpto
+06guild_01	mapflag	noteleport
+06guild_01	mapflag	nosave	SavePoint
+06guild_01	mapflag	nomemo
+06guild_01	mapflag	pvp	off
+06guild_01	mapflag	nobranch
+06guild_01	mapflag	nopenalty
+06guild_01	mapflag	noicewall
+// -- End of Mapflags 

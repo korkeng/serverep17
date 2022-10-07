@@ -1,0 +1,403 @@
+prt_maze01,96,26,6	script	<Priest Class> Irene	10337,{
+
+	mes "[ <Priest Class> Irene ]";
+	menu
+	"^FF0000•^000000 Illusion of Labyrinth [ Lv 170+ ]",go1,
+	"^FF0000•^000000 Cancle",cancle;
+	go1:
+	if(baselevel > 169){
+	warp "prt_mz03_i",179,185;
+	end;
+	}
+	mes "Base Lv ของเจ้าน้อยเกินไป";
+	end;
+	cancle:
+	end;
+}
+
+/*
+prt_fild01,141,367,4	script	<Priesthood> Esmeralda#ill_bapho	677,{
+	mes "[ <Priesthood> Esmeralda ]";
+	mes "ต้องการอะไร?";
+	next;
+	switch(select("<Priesthood> Esmeralda:Upgrade Weapon.:Upgrade Armor.")){
+		case 1:
+			mes "[ <Priesthood> Esmeralda ]";
+			mes "ข้าจะถลุงแร่ Illusion Gemstone","โดยอยู่ที่อัตรา 5:1";
+			next;
+			mes "[ <Priesthood> Esmeralda ]";
+			mes "เจ้าจะทำไหม";
+			next;
+			if (select ("ทำ:ไม่ทำ") == 2 ) end;
+			if (countitem(25272) < 5 ) {
+				mes "[ <Priesthood> Esmeralda ]";
+				mes "รบกวยนำ Illusion Gemstone มาด้วย";
+				end;
+			}
+			.@stone_trade = countitem(25272)/5;
+			delitem 25272,.@stone_trade*5;
+			getitem 25271,.@stone_trade;
+			mes "[ <Priesthood> Esmeralda ]";
+			mes "เรียบร้อย นี้ Illusion stome ของเจ้า";
+			close;
+			
+		case 2:
+			disable_items;
+			if(checkweight(25271,1) == 0 || (MaxWeight - Weight) < 1000){
+				mes "- คุณถือของมากเกินไป. -";
+				close;
+			}
+			mes "[ <Priesthood> Esmeralda ]";
+			mes "ข้าทำของได้ตามนี้.";
+			for(.@i = 0; .@i < getarraysize(.weapons$); .@i++){
+				explode(.@T$,.weapons$[.@i],"|");
+				.@item_id = atoi(.@T$[0]);
+				mes "<ITEM>"+getitemname(.@item_id)+"<INFO>"+.@item_id+"</INFO></ITEM>";
+			}
+			next;
+			mes "[ <Priesthood> Esmeralda ]";
+			mes "ให้แน่ใจว่า ^0000FFอุปกรณ์ของท่านต้องมีระดับตีบวกมากกว่า 9^000000 ก่อนจะนำมาให้ข้า.";
+			next;
+			mes "[ <Priesthood> Esmeralda ]";
+			mes "ที่สำคัญ, ^0000FFการ์ด และตีบวกจะหายไปทั้งหมด.^000000";
+			next;
+			mes "[ <Priesthood> Esmeralda ]";
+			mes "วัตถุดิบที่ต้องการจะมี ^0000FFIllusion Stones และของบางอย่าง^000000 สำหรับการพัฒนาอุปกรณ์.";
+			next;
+			for(.@i = 0; .@i < getarraysize(.weapons$); .@i++){
+				explode(.@T$,.weapons$[.@i],"|");
+				.@item_id = atoi(.@T$[0]);
+				.@menu$ += getitemname(.@item_id) +":";
+			}
+			.@s = select(.@menu$) - 1;
+			explode(.@T$,.weapons$[.@s],"|");
+			explode(.@TT$,.@T$[2],",");
+			mes "[ <Priesthood> Esmeralda ]";
+			mes "นี้คือของที่ต้องการ.";
+			mes "^0000FF+9 " + getitemname(atoi(.@T$[1])) + " []^000000";
+			for(.@i = 0; .@i < getarraysize(.@TT$); .@i++){
+				explode(.@data$,.@TT$[.@i],":");
+				.@item_id[.@i] = atoi(.@data$[0]);
+				.@amount[.@i] = atoi(.@data$[1]);
+				mes "^0000FF" + .@amount[.@i] +" "+ getitemname(.@item_id[.@i]) + "^000000";
+			}
+			mes "พัฒนาอุปกรณ์นี้เลยไหม";
+			next;
+			if(select("เอาเลย.:ยังต้องการวัตถุดิบเพิ่มเติม") == 2){
+				mes "[ <Priesthood> Esmeralda ]";
+				mes "มาหาข้า เมื่อเจ้าพร้อม.";
+				close;
+			}
+			if(getequipid(EQI_HAND_R) != atoi(.@T$[1])){
+				mes "[ <Priesthood> Esmeralda ]";
+				mes "กรุณาสวมใส่ " + getitemname(atoi(.@T$[1])) + " ก่อน.";
+				close;
+			}
+			for(.@i = 0; .@i < getarraysize(.@item_id); .@i++){
+				if(countitem(.@item_id[.@i]) < .@amount[.@i])
+					.@miss++;
+			}
+			if(getequiprefinerycnt(EQI_HAND_R) < 9 || .@miss > 0){
+				mes "[ <Priesthood> Esmeralda ]";
+				mes "วัตถุดิบไม่เพียงพอ หรือ อุปกรณ์ของเจ้าตีบวกไม่ถึงเกณฑ์";
+				end;
+			}
+			mes "[Illusion Researcher]";
+			mes "กำลังจัดทำ.";
+			delequip(EQI_HAND_R);
+			for(.@i = 0; .@i < getarraysize(.@item_id); .@i++)
+				delitem .@item_id[.@i],.@amount[.@i];
+			getitem atoi(.@T$[0]),1;			
+			break;
+			
+			
+		case 3:
+			disable_items;
+			if(checkweight(25271,1) == 0 || (MaxWeight - Weight) < 1000){
+				mes "- คุณถือของมากเกินไป. -";
+				close;
+			}
+			mes "[ <Priesthood> Esmeralda ]";
+			mes "ข้าทำของได้ตามนี้.";
+			for(.@i = 0; .@i < getarraysize(.armors$); .@i++){
+				explode(.@T$,.armors$[.@i],"|");
+				.@item_id = atoi(.@T$[0]);
+				mes "<ITEM>"+getitemname(.@item_id)+"<INFO>"+.@item_id+"</INFO></ITEM>";
+			}
+			next;
+			mes "[ <Priesthood> Esmeralda ]";
+			mes "ให้แน่ใจว่า ^0000FFอุปกรณ์ของท่านต้องมีระดับตีบวกมากกว่า 9^000000 ก่อนจะนำมาให้ข้า.";
+			next;
+			mes "[ <Priesthood> Esmeralda ]";
+			mes "ที่สำคัญ, ^0000FFการ์ด และตีบวกจะหายไปทั้งหมด.^000000";
+			next;
+			mes "[ <Priesthood> Esmeralda ]";
+			mes "วัตถุดิบที่ต้องการจะมี ^0000FFIllusion Stones และของบางอย่าง^000000 สำหรับการพัฒนาอุปกรณ์.";
+			next;
+			for(.@i = 0; .@i < getarraysize(.armors$); .@i++){
+				explode(.@T$,.armors$[.@i],"|");
+				.@item_id = atoi(.@T$[0]);
+				.@menu$ += getitemname(.@item_id) +":";
+			}
+			.@s = select(.@menu$) - 1;
+			explode(.@T$,.armors$[.@s],"|");
+			explode(.@TT$,.@T$[2],",");
+			.@slot = atoi(.@T$[3]);
+			mes "[ <Priesthood> Esmeralda ]";
+			mes "นี้คือของที่ต้องการ.";
+			mes "^0000FF+9 " + getitemname(atoi(.@T$[1])) + "^000000";
+			for(.@i = 0; .@i < getarraysize(.@TT$); .@i++){
+				explode(.@data$,.@TT$[.@i],":");
+				.@item_id[.@i] = atoi(.@data$[0]);
+				.@amount[.@i] = atoi(.@data$[1]);
+				mes "^0000FF" + .@amount[.@i] +" "+ getitemname(.@item_id[.@i]) + "^000000";
+			}
+			mes "พัฒนาอุปกรณ์นี้เลยไหม";
+			next;
+			if(select("เอาเลย.:ยังต้องการวัตถุดิบเพิ่มเติม") == 2){
+				mes "[ <Priesthood> Esmeralda ]";
+				mes "มาหาข้า เมื่อเจ้าพร้อม.";
+				close;
+			}
+			if(getequipid(.@slot) != atoi(.@T$[1])){
+				mes "[ <Priesthood> Esmeralda ]";
+				mes "กรุณาสวมใส่ " + getitemname(atoi(.@T$[1])) + " ก่อน.";
+				close;
+			}
+			for(.@i = 0; .@i < getarraysize(.@item_id); .@i++){
+				if(countitem(.@item_id[.@i]) < .@amount[.@i])
+					.@miss += 1;
+			}
+			if(getequiprefinerycnt(.@slot) < 9 || .@miss > 0){
+				mes "[ <Priesthood> Esmeralda ]";
+				mes "วัตถุดิบไม่เพียงพอ หรือ อุปกรณ์ของเจ้าตีบวกไม่ถึงเกณฑ์";
+				end;
+			}
+			mes "[Illusion Researcher]";
+			mes "กำลังจัดทำ.";
+			delequip(.@slot);
+			for(.@i = 0; .@i < getarraysize(.@item_id); .@i++)
+				delitem .@item_id[.@i],.@amount[.@i];
+			getitem atoi(.@T$[0]),1;			
+			break;
+	}
+	next;
+	mes "[ <Priesthood> Esmeralda ]";
+	mes "เสร็จแล้ว.";
+	end;
+	
+OnInit:
+	setarray .weapons$,
+		"28254|13159|25271:120,25772:150",
+		"21050|1181|25271:120,25779:150",
+		"32301|13106|25271:120,25773:150",
+		"28762|1231|25271:120,25774:150";
+	setarray .armors$,
+		"19428|5126|25271:100,25775:100|6",
+		"20948|2518|25271:100,25778:100|3",
+		"32238|2648|25271:100,25776:100,25780:4|0",
+		"32239|2649|25271:100,25777:100,25780:4|0";
+
+end;
+}
+*/
+// 3rd Floor No.01	-------------------------------------------------------------
+prt_mz03_i,22,194,0	warp	Illumazewarp5301	1,1,prt_mz03_i,175,48	/*To No.3-20*/
+prt_mz03_i,5,186,0	warp	Illumazewarp5302	1,1,prt_mz03_i,151,134	/*To No.3-9*/
+//3rd Floor No.02
+prt_mz03_i,58,194,0	script	#Illumazewarp5303	45,1,1,{
+	switch(rand(4)) {
+		case 0: warp "prt_mz03_i",98,151; end;	/*To No.3-8*/
+		case 1: warp "prt_mz03_i",137,128; end;	/*To No.3-9*/
+		case 2: warp "prt_mz03_i",14,71; end;	/*To No.3-16*/
+		case 3: warp "prt_mz03_i",54,8; end;	/*To No.3-22*/
+	}
+}
+// 3rd Floor No.03
+prt_mz03_i,102,165,0	warp	Illumazewarp5304	1,1,prt_mz03_i,137,71	/*To No.3-19*/
+prt_mz03_i,85,174,0	warp	Illumazewarp5305	1,1,prt_mz03_i,14,47	/*To No.3-16*/
+// 3rd Floor No.04
+prt_mz03_i,154,181,0	warp	Illumazewarp5306	1,1,prt_mz03_i,139,48	/*To No.3-19*/
+prt_mz03_i,125,171,0	warp	Illumazewarp5307	1,1,prt_mz03_i,105,111	/*To No.3-13*/
+// 3rd Floor No.05
+prt_mz03_i,175,165,0	warp	Illumazewarp5308	1,1,prt_mz03_i,71,12	/*To No.3-22*/
+prt_mz03_i,194,175,0	warp	Illumazewarp5309	1,1,prt_mz03_i,191,139	/*To No.3-10*/
+// 3rd Floor No.06
+prt_mz03_i,18,154,0	warp	Illumazewarp5310	1,1,prt_mz03_i,48,21	/*To No.3-22*/
+prt_mz03_i,23,125,0	warp	Illumazewarp5311	1,1,prt_mz03_i,177,71	/*To No.3-20*/
+prt_mz03_i,5,140,0	warp	Illumazewarp5312	1,1,prt_mz03_i,111,56	/*To No.3-18*/
+// 3rd Floor No.07
+prt_mz03_i,54,154,0	warp	Illumazewarp5313	1,1,prt_mz03_i,142,111	/*To No.3-14*/
+prt_mz03_i,63,125,0	warp	Illumazewarp5314	1,1,prt_mz03_i,88,97	/*To No.3-13*/
+// 3rd Floor No.08
+prt_mz03_i,98,154,0	warp	Illumazewarp5315	1,1,prt_mz03_i,99,31	/*To No.3-23*/
+prt_mz03_i,114,145,0	warp	Illumazewarp5316	1,1,prt_mz03_i,168,22	/*To No.3-25*/
+prt_mz03_i,85,146,0	warp	Illumazewarp5317	1,1,prt_mz03_i,22,88	/*To No.3-11*/
+// 3rd Floor No.09
+prt_mz03_i,137,125,0	warp	Illumazewarp5318	1,1,prt_mz03_i,71,71	/*To No.3-17*/
+prt_mz03_i,154,134,0	warp	Illumazewarp5319	1,1,prt_mz03_i,8,186	/*To No.3-1*/
+// 3rd Floor No.10
+prt_mz03_i,194,139,0	warp	Illumazewarp5320	1,1,prt_mz03_i,191,175	/*To No.3-5*/
+prt_mz03_i,166,139,0	warp	Illumazewarp5321	1,1,prt_mz03_i,63,88	/*To No.3-12*/
+// 3rd Floor No.11
+prt_mz03_i,17,114,0	warp	Illumazewarp5322	1,1,prt_mz03_i,128,105	/*To No.3-14*/
+prt_mz03_i,22,85,0	warp	Illumazewarp5323	1,1,prt_mz03_i,88,146	/*To No.3-8*/
+// 3rd Floor No.12
+prt_mz03_i,63,114,0	warp	Illumazewarp5324	1,1,prt_mz03_i,14,71	/*To No.3-16*/
+prt_mz03_i,63,85,0	warp	Illumazewarp5325	1,1,prt_mz03_i,169,139	/*To No.3-10*/
+prt_mz03_i,74,97,0	warp	Illumazewarp5326	1,1,prt_mz03_i,54,8	/*To No.3-22*/
+prt_mz03_i,45,104,0	warp	Illumazewarp5327	1,1,prt_mz03_i,96,48	/*To No.3-18*/
+// 3rd Floor No.13
+prt_mz03_i,105,114,0	warp	Illumazewarp5328	1,1,prt_mz03_i,128,171	/*To No.3-4*/
+prt_mz03_i,114,95,0	warp	Illumazewarp5329	1,1,prt_mz03_i,176,8	/*To No.3-25*/
+prt_mz03_i,85,97,0	warp	Illumazewarp5330	1,1,prt_mz03_i,63,128	/*To No.3-7*/
+// 3rd Floor No.14
+prt_mz03_i,142,114,0	warp	Illumazewarp5331	1,1,prt_mz03_i,54,151	/*To No.3-7*/
+prt_mz03_i,125,105,0	warp	Illumazewarp5332	1,1,prt_mz03_i,58,191	/*To No.3-2*/
+// 3rd Floor No.15
+prt_mz03_i,182,85,0	warp	Illumazewarp5333	1,1,prt_maze02,100,179
+prt_mz03_i,194,94,0	warp	Illumazewarp5334	1,1,prt_mz03_i,151,22	/*To No.3-24*/
+prt_mz03_i,168,94,0	warp	Illumazewarp5335	1,1,prt_mz03_i,191,54	/*To No.3-20*/
+// 3rd Floor No.16
+prt_mz03_i,14,74,0	warp	Illumazewarp5336	1,1,prt_mz03_i,63,111	/*To No.3-12*/
+prt_mz03_i,14,45,0	warp	Illumazewarp5337	1,1,prt_mz03_i,88,174	/*To No.3-3*/
+prt_mz03_i,5,58,0	warp	Illumazewarp5338	1,1,prt_mz03_i,191,15	/*To No.3-25*/
+// 3rd Floor No.17
+prt_mz03_i,74,74,0	script	#Illumazewarp5339	45,1,1,{
+	switch(rand(4)) {
+		case 0: warp "prt_mz03_i",98,151; end;	/*To No.3-8*/
+		case 1: warp "prt_mz03_i",137,128; end;	/*To No.3-9*/
+		case 2: warp "prt_mz03_i",14,71; end;	/*To No.3-16*/
+		case 3: warp "prt_mz03_i",54,8; end;	/*To No.3-22*/
+	}
+}
+prt_mz03_i,52,45,0	warp	Illumazewarp5340	1,1,prt_mz03_i,16,31	/*To No.3-21*/
+// 3rd Floor No.18
+prt_mz03_i,104,74,0	warp	Illumazewarp5341	1,1,prt_mz03_i,111,22	/*To No.3-23*/
+prt_mz03_i,96,45,0	warp	Illumazewarp5342	1,1,prt_mz03_i,48,104	/*To No.3-12*/
+prt_mz03_i,114,56,0	warp	Illumazewarp5343	1,1,prt_mz03_i,8,140	/*To No.3-6*/
+prt_mz03_i,85,56,0	warp	Illumazewarp5344	1,1,prt_mz03_i,176,31	/*To No.3-25*/
+// 3rd Floor No.19
+prt_mz03_i,137,74,0	warp	Illumazewarp5345	1,1,prt_mz03_i,102,168	/*To No.3-3*/
+prt_mz03_i,139,45,0	script	#Illumazewarp5346	45,1,1,{
+	switch(rand(4)) {
+		case 0: warp "prt_mz03_i",98,151; end;	/*To No.3-8*/
+		case 1: warp "prt_mz03_i",137,128; end;	/*To No.3-9*/
+		case 2: warp "prt_mz03_i",14,71; end;	/*To No.3-16*/
+		case 3: warp "prt_mz03_i",54,8; end;	/*To No.3-22*/
+	}
+}
+// 3rd Floor No.20
+prt_mz03_i,177,74,0	warp	Illumazewarp5347	1,1,prt_mz03_i,23,128	/*To No.3-6*/
+prt_mz03_i,175,45,0	warp	Illumazewarp5348	1,1,prt_mz03_i,22,191	/*To No.3-1*/
+prt_mz03_i,194,54,0	warp	Illumazewarp5349	1,1,prt_mz03_i,171,94	/*To No.3-15*/
+// 3rd Floor No.21
+prt_mz03_i,16,34,0	warp	Illumazewarp5350	1,1,prt_mz03_i,52,48	/*To No.3-17*/
+prt_mz03_i,23,5,0	warp	Illumazewarp5351	1,1,prt_mz03_i,88,13	/*To No.3-23*/
+// 3rd Floor No.22
+prt_mz03_i,54,5,0	warp	Illumazewarp5352	1,1,prt_mz03_i,71,97	/*To No.3-12*/
+prt_mz03_i,74,12,0	warp	Illumazewarp5353	1,1,prt_mz03_i,175,168	/*To No.3-5*/
+prt_mz03_i,45,21,0	warp	Illumazewarp5354	1,1,prt_mz03_i,18,151	/*To No.3-6*/
+// 3rd Floor No.23
+prt_mz03_i,99,34,0	warp	Illumazewarp5355	1,1,prt_mz03_i,98,151	/*To No.3-8*/
+prt_mz03_i,114,22,0	warp	Illumazewarp5356	1,1,prt_mz03_i,104,71	/*To No.3-18*/
+prt_mz03_i,85,13,0	warp	Illumazewarp5357	1,1,prt_mz03_i,23,8	/*To No.3-21*/
+// 3rd Floor No.24
+prt_mz03_i,154,22,0	script	#Illumazewarp5358	45,1,1,{
+	switch(rand(4)) {
+		case 0: warp "prt_mz03_i",98,151; end;	/*To No.3-8*/
+		case 1: warp "prt_mz03_i",137,128; end;	/*To No.3-9*/
+		case 2: warp "prt_mz03_i",14,71; end;	/*To No.3-16*/
+		case 3: warp "prt_mz03_i",54,8; end;	/*To No.3-22*/
+	}
+}
+// 3rd Floor No.25
+prt_mz03_i,176,34,0	warp	Illumazewarp5359	1,1,prt_mz03_i,88,56	/*To No.3-18*/
+prt_mz03_i,176,5,0	warp	Illumazewarp5360	1,1,prt_mz03_i,111,95	/*To No.3-13*/
+prt_mz03_i,194,15,0	warp	Illumazewarp5361	1,1,prt_mz03_i,8,58	/*To No.3-16*/
+prt_mz03_i,165,22,0	warp	Illumazewarp5362	1,1,prt_mz03_i,111,145	/*To No.3-8*/
+
+
+// Monster Spawn
+
+prt_mz03_i	monster	Chaotic Andrea  	20521,5,5000,5000,"#Ill_bapho::OnIllMobDead"
+prt_mz03_i	monster	Chaotic Anes 	20522,5,5000,5000,"#Ill_bapho::OnIllMobDead"
+prt_mz03_i	monster	Chaotic Silvano 	20523,5,5000,5000,"#Ill_bapho::OnIllMobDead"
+prt_mz03_i	monster	Chaotic Cecilia 	20524,5,5000,5000,"#Ill_bapho::OnIllMobDead"
+prt_mz03_i	monster	Chaotic Baphomet Jr. 	20525,25,5000,5000,"#Ill_bapho::OnIllMobDead"
+prt_mz03_i	monster	Chaotic Side Winder	20526,10,5000,5000,"#Ill_bapho::OnIllMobDead"
+prt_mz03_i	monster	Chaotic Hunter Fly 	20527,30,5000,5000,"#Ill_bapho::OnIllMobDead"
+prt_mz03_i	monster	Chaotic Mantis 	20528,30,5000,5000,"#Ill_bapho::OnIllMobDead"
+prt_mz03_i	monster	Chaotic Ghostring 	20529,1,5000,5000,"#Ill_bapho::OnIllMobDead"
+prt_mz03_i	monster	Chaotic Killer Mantis 	20530,1,5000,5000,"#Ill_bapho::OnIllMobDead"
+prt_mz03_i	monster	Chaotic Poporing	20531,52,5000,5000,"#Ill_bapho::OnIllMobDead"
+prt_mz03_i	monster	Chaotic Stem Worm	20532,20,5000,5000,"#Ill_bapho::OnIllMobDead"
+
+
+prt_mz03_i,0,0,0	script	#Ill_bapho	-1,{
+
+OnInit:
+$Ill_bapho = 0;
+$Ill_bapho_delay = 0;
+$Ill_baphoBOSS = 0;
+end;
+
+OnIllMobDead:
+if($Ill_bapho_delay == 0 && $Ill_baphoBOSS == 0){
+if($Ill_bapho == 1450){											
+mapannounce "prt_mz03_i","Illusion of Labyrinth : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(1500-($Ill_bapho)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_bapho == 1400){
+mapannounce "prt_mz03_i","Illusion of Labyrinth : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(1500-($Ill_bapho)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_bapho == 1250){
+mapannounce "prt_mz03_i","Illusion of Labyrinth : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(1500-($Ill_bapho)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_bapho == 1000){
+mapannounce "prt_mz03_i","Illusion of Labyrinth : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(1500-($Ill_bapho)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_bapho == 500){
+mapannounce "prt_mz03_i","Illusion of Labyrinth : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(1500-($Ill_bapho)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_bapho == 0){
+mapannounce "prt_mz03_i","Illusion of Labyrinth : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(1500-($Ill_bapho)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+$Ill_bapho += 1;
+if($Ill_bapho >= 1500){
+monster "prt_mz03_i",0,0,"Chaotic Baphomet",20520,1,strnpcinfo(0)+"::OnEnd";
+$Ill_baphoBOSS += 1;
+announce "Illusion of Labyrinth : ขณะนี้บอสได้ปรากฏตัวออกมาแล้ว นักผจญภัยทุกท่านโปรดระวังตัวให้ดี !!",bc_all,0xFFFF00;
+sleep 2000;
+mapannounce "prt_mz03_i","Chaotic Baphomet : ข้าได้กลิ่นสาบของมนุษย์ในถิ่นของข้า จงนำมันมาเป็นอาหารแก่ข้า เดี๋ยวนี้ !!",bc_map,0xFFFF00,FW_NORMAL,16;
+end;
+}
+}
+end;
+
+
+
+OnEnd:
+initnpctimer;
+$Ill_bapho_delay = 1;
+mapannounce "prt_mz03_i","Chaotic Baphomet : ไอเจ้ามนุษย์โซโครก แกต้องชดใช้ !! เฮื้ออออ..",bc_map,0xFFFF00,FW_NORMAL,16;
+sleep 2000;
+announce "Illusion of Labyrinth : เหลือเวลาอีก "+ (120-($Ill_bapho_delay)) +" นาที บอสจะฟื้นคืนชีพอีกครั้ง !!",bc_all,0xFFFF00;
+$Ill_bapho = 0;											
+$Ill_baphoBOSS = 0;
+end;
+
+
+OnTimer60000:
+	$Ill_bapho_delay += 1;
+
+	if ($Ill_bapho_delay < 120) { // unknown delay (currently 100 mins)
+		initnpctimer;
+	}
+	else {
+		stopnpctimer;		
+		$Ill_bapho_delay = 0;
+		//mapannounce "prt_mz03_i","Illusion of Labyrinth : Chaotic Baphomet พร้อมแล้ว",bc_map,0xFFFF00,FW_NORMAL,16;
+	}
+	end;
+
+}

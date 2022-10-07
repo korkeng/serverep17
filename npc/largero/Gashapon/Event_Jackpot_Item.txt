@@ -1,0 +1,225 @@
+//===== rAthena Script =======================================
+//= Jackpot_Item
+//===== By: ==================================================
+//= DurexzOfficial
+//= Striker
+//= Joam
+//===== Current Version: =====================================
+//= Ver.1.0 - เปิด-ปิดการใช้งานผ่าน GM เท่านั้น
+//= Ver.2.0 - เพิ่มสะสมยอดสุ่ม เป็น Zeny คิดเป็น xx%
+//= Ver.2.1 - เพิ่มตัวแปร กำหนด % ในสะสมยอดสุ่มเป็น Zeny
+//= Ver.2.2 - เพิ่มตัวแปร กำหนด % ประกาศในเซิร์ฟเวอร์
+//===== Compatible With: =====================================
+//= rAthena Project
+//============================================================
+moroccz,129,115,4	script	Jackpot Item#i1	563,{
+	
+//============= Setting ===========================================================================
+	disable_items;
+	set .@cash,2000;		//จำนวนแคชที่ใช้
+	set .@money,200000000;	// เงิน M ที่ใช้
+	set .@vat,1;		// กำหนด % ยอดสะสม เช่น เงินที่ใช้ 300,000 คิด 10% ได้ยอดสะสม 30,000
+	set .@announce,10;	// กำหนด % ประกาศในเซิร์ฟเวอร์ ถ้าน้อยกว่า หรือ เท่ากับ xx จะประกาศ
+	.@GM = getgmlevel() >= 99;	// กำหนดระดับสิทธิ์
+	// item id 909(ห้ามแก้) rate 1% = ยอดสะสม zeny
+	setarray .@item[0],61216,61215,34168,63503,63511,63512,63513,20535,34090,34014,50201,15189,28502,2202,61504,61506,32010  ,40000,32120,32121,32122,32123,32124,32125,32126,32127,32128,32129,32130,32131,32132,32133; // item_id
+	setarray .@arr[0],8,5,1,1,1,1,1,3,3,1,2,5,5,80,50   ,70,70,70,70,70,70,70,70,70,70,70,70,70,70,70         ;	// item_rate
+	setarray .@amt[0],1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1   ,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1    ;	// item_amount
+//=================================================================================================
+	mes .NPCname$;
+	mes "ยินดีต้อนรับท่าน ^0000FF["+strcharinfo(0)+"]^000000";
+	mes "ยอดเงินสะสม : "+callfunc("F_InsertComma",$jackpot_zeny)+" Zeny";
+	if(!.status){
+		mes "สถานะ : ^FF0000"+((.status)?"เปิดใช้งาน":"ปิดใช้งาน")+"^000000";
+		if(!.@GM) end;
+		goto GM;
+	}else{
+		mes "สถานะ : ^017A01เปิดใช้งาน^000000";
+	}
+	next;
+
+GM:
+	if(.@GM){
+		switch(select("~ เมนูเริ่มสุ่ม ^FF0000[GM Only]^000000",
+			""+((!.status)?"~ ^017A01เปิดใช้งาน^000000":"~ ^FF0000ปิดใช้งาน^000000"),
+		"~ ออก")){
+			case 1:
+				break;
+			case 2:
+				if(!.status){
+					.status = 1;
+					announce "ขณะนี้ตู้ "+.NPCname$+" ได้เปิดใช้งานเรียบร้อยแล้ว",bc_all;
+				}else{
+					.status = 0;
+					announce "ขณะนี้ตู้ "+.NPCname$+" ได้ปิดใช้งานเรียบร้อยแล้ว",bc_all;
+				}
+				end;
+			default:
+				end;
+		}
+	} // if end .@GM
+	next;
+	mes .NPCname$;
+	mes "รายการของดังต่อไปนี้";
+	for(.@i = 0; .@i < getarraysize(.@item) ; .@i += 1) 
+		mes .@i+1+". <ITEM>"+getitemname(.@item[.@i])+"<INFO>"+.@item[.@i]+"</INFO></ITEM>";
+	next;
+	menu "~ สุ่มโดยใช้ ^FF0000("+callfunc("F_InsertComma",.@cash)+")^000000 Cash Point",Cost_use,
+	"~ สุ่มโดยใช้ ^0000ff("+callfunc("F_InsertComma",.@money)+")^000000 Zeny",Cost_use,
+	"~ จัดอันดับผู้เล่น",Ranking,
+	""+(.@GM ? "~ ^FF0000ล้างระบบพ้อย^000000":""),Reset,
+	"~ ไม่ล่ะ เอาไว้ก่อน",-;
+	end;
+	
+Cost_use:
+	if (@menu == 1 ) {
+		if(#CASHPOINTS <= .@cash){
+			mes .NPCname$;
+			mes "เจ้ามี Cash ไม่เพียงพอ";
+			end;
+		}
+		#CASHPOINTS -= .@cash;
+		goto Random_Item;
+	}
+	if (@menu == 2 ) {
+		if(zeny <= .@money ){
+			mes .NPCname$;
+			mes "เจ้ามี Zeny ไม่เพียงพอ";
+			end;
+		}
+		zeny -= .@money;
+		goto Random_Item;
+	}
+	
+Random_Item:
+	$jackpot_zeny += (.@money*.@vat)/100;
+	delwaitingroom;
+	waitingroom "สะสม: "+callfunc("F_InsertComma",$jackpot_zeny)+" Zeny",0;
+	mes .NPCname$;
+	query_sql "UPDATE `char` SET `point_jack_item`=(`point_jack_item` + 1) WHERE `char_id`='"+getcharid(0)+"' LIMIT 1";
+
+//============= Random ===========================================================================
+	// start sort variable max to min
+	for(.@i = 1; .@i < getarraysize(.@arr); .@i++){
+		for( .@j = .@i; .@j>0; .@j--) {
+			if(.@arr[.@j]>.@arr[.@j-1] ){
+				// swap position rate
+				.@rate = .@arr[.@j-1];
+				.@arr[.@j-1] = .@arr[.@j];
+				.@arr[.@j] = .@rate;
+				// swap position item
+				.@rate = .@item[.@j-1];
+				.@item[.@j-1] = .@item[.@j];
+				.@item[.@j] = .@rate;
+				// swap position amt
+				.@rate = .@amt[.@j-1];
+				.@amt[.@j-1] = .@amt[.@j];
+				.@amt[.@j] = .@rate;
+			}
+			else {
+				break;
+			}
+		}
+	}
+	// end sort variable max to min
+	// start cut rate more to single variable
+	set .@x,.@arr[0];
+	set .@tok,.@arr[0];
+	for(.@i = 1; .@i < getarraysize(.@arr);.@i++) {
+		if(.@arr[.@i] != .@tok ){
+			set .@x[getarraysize(.@x)],.@arr[.@i];
+			set .@tok,.@arr[.@i];
+		}
+	}
+	//end cut rate more to single variable
+	
+	set .@total,0;
+	for(.@i = 0; .@i < getarraysize(.@x);.@i++) {
+		.@total+=.@x[.@i];
+	}
+	.@luck = rand(.@total); //random range 0 to total-1
+	set .@check,0;
+	for(.@i = 0; .@i < getarraysize(.@x);.@i++) {
+		.@check+=.@x[.@i];
+		if(.@luck<.@check){
+			.@get=.@x[.@i];
+			break;
+		}
+	}
+	//new random
+
+	.@start = -1;
+	.@stop = getarraysize(.@arr)-1;
+	for(.@b = 0; .@b < getarraysize(.@arr); .@b++) {
+		if(.@arr[.@b] == .@get) {
+			if(.@start == -1) {
+				.@start = .@b;
+			}
+		} else {
+			if(.@start != -1){
+				.@stop = .@b-1;
+				break;
+			}
+		}
+	}
+	.@pos = rand(.@start,.@stop);
+//====================================================================================================
+
+	mes "ท่านได้รับ Item.....";
+	//sleep2 300;
+	//mes "3 !";
+	//sleep2 300;
+	//mes "2 !";
+	//sleep2 300;
+	//mes "1 !";
+	//sleep2 500;
+	mes "";
+	mes "[ "+getitemname(.@item[.@pos])+" จำนวน "+.@amt[.@pos]+" ชิ้น ]";
+	mes "^FF0000[ โอกาสได้รับ "+.@get+"% ]^000000";
+	if(.@get <= .@announce)	announce "[ Jackpot Item ] : คุณ "+strcharinfo(0)+" ได้รับ "+getitemname(.@item[.@pos])+" จำนวน "+.@amt[.@pos]+" ชิ้น โอกาสได้รับ "+.@get+"%",bc_all,0xFF99FF;
+		getitem .@item[.@pos],.@amt[.@pos];
+	if(.@item[.@pos] == 909){
+		announce "[ Jackpot Bonus ] : ขอแสดงความยินดีด้วยคุณ "+strcharinfo(0)+" ได้รับยอดสะสมจำนวน "+callfunc("F_InsertComma",$jackpot_zeny)+" Zeny",bc_all,0x33FFFF;
+		zeny += $jackpot_zeny;
+		$jackpot_zeny = 0;
+		delwaitingroom;
+	}
+		
+	//mes "check = "+.@check;
+	//mes "ramdom = "+.@luck;
+	//mes "total = "+.@total;
+	//mes "rate = "+.@get;	
+	//mes "start ="+.@start;
+	//mes "stop ="+.@stop;
+	//mes "pos item = "+.@pos;
+	//mes "item id = "+.@item[.@pos]+" "+getitemname(.@item[.@pos]);
+	end;
+	
+Ranking:
+	query_sql "SELECT `name`,`point_jack_item` FROM `char` ORDER BY `point_jack_item` DESC LIMIT 10",.@name$,.@point;
+		mes "==== Jackpot Item Ranking ====";
+		for (set .@i,0; .@i < 10; set .@i,.@i+1) {
+			if (.@point[.@i] == 0) set .@name$[.@i],"None";
+			mes "["+(.@i+1)+"]  "+.@name$[.@i]+" : คะแนน " +.@point[.@i]+"";
+		}
+		mes "=======================";
+		query_sql "SELECT `point_jack_item` FROM `char` WHERE `char_id`='"+getcharid(0)+"'",.@cpoint;
+		mes "คุณมีคะแนน : ^FF0000"+.@cpoint+"^000000";
+		mes "=======================";
+	end;
+	
+Reset:
+	query_sql "UPDATE `char` set `point_jack_item` = 0 WHERE `point_jack_item` > 1";
+		dispbottom "==================================================";
+		dispbottom "ทำการล้างระบบแต้มตู้ Jackpot Item เรียบร้อยแล้ว";
+		dispbottom "==================================================";
+	end;
+	
+	
+Oninit:
+	if (!query_sql("SHOW COLUMNS FROM `char` WHERE `Field` = 'point_jack_item'", .@fields, .@a, .@b, .@c, .@d, .@e))
+		query_sql "ALTER TABLE `char` ADD COLUMN `point_jack_item` INT DEFAULT 0 AFTER `show_equip`, ADD INDEX(`point_jack_item`)";
+	
+	set .NPCname$,"[ Jackpot Item ]";
+	end;
+}

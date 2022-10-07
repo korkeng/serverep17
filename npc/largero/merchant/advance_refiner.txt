@@ -1,0 +1,184 @@
+moroccz,116,78,6	script	แร่เทพ + ใบกันแตก	1_M_SMITH 3,{
+	disable_items;
+	mes "" + .header$;
+	mes "ตีบวกพิเศษเมื่อ ^FF0000ล้มเหลว^000000";
+	mes "ไอเทมจะ ^26A95Eไม่หายไป^000000 แต่ ^FF0000จำนวนบวก -1^000000";
+	if(.item_req[0] > 0){
+		mes "--- ต้องการไอเทม ---";
+		for(set .@i, 0; .@i < getarraysize(.item_req); set .@i, .@i+2){
+			mes "" + getitemname(.item_req[.@i]) + " x " + .item_req[.@i+1] + " ea";
+		}
+	}
+	next;
+	switch(select("• เอาเลยข้าพร้อมแล้ว","• ยังข้าขอเวลาคิดใหม่")){
+		mes "" + .header$;
+		case 1: callsub S_RefineValidate2; break;
+		case 2: end;
+	}
+	
+	S_RefineValidate2:
+		for(set .@i, 0; .@i < getarraysize(.item_req); set .@i, .@i+2){
+			if(countitem(.item_req[.@i]) < .item_req[.@i+1]){
+				mes "ท่านยังมีไอเทมไม่เพียงพอ";
+				mes "สามารถซื้อใบกันแตกได้ใน Cash Shop";
+				end;
+			}
+		}
+		
+		for(set .@i,1; .@i<getarraysize(.indices); set .@i,.@i+1) {
+			if(getequipisequiped(.indices[.@i])) {
+				set .@menu$, .@menu$ +"^FF6699"+F_getpositionname(.indices[.@i])+"^000000" + " • [ " + getequipname(.indices[.@i]) + " ]";
+				set .@equipped,1;
+			}
+			set .@menu$, .@menu$ + ":";
+		}
+		next;
+		if (.@equipped == 0) {
+			mes "" + .header$;
+			mes "I don't think I can refine any items you have...";
+			close;
+		}
+		set .@part, .indices[select(.@menu$)];
+
+		if(!getequipisequiped(.@part)) { //custom check
+			mes "" + .header$;
+			mes "คุณไม่ได้สวมใส่ไอเทม";
+			emotion ET_AN;
+			close;
+		}
+		//Check if the item is refinable...
+		if(!getequipisenableref(.@part)) {
+			mes "" + .header$;
+			mes "อุปกรณ์ชิ้นนี้ไม่สามารถอัพเกรดได้ ?";
+			close;
+		}
+		//Check to see if the items is already +20
+		if(getequiprefinerycnt(.@part) >= 20) {
+			mes "" + .header$;
+			mes "ไอเท็มชิ้นนี้มาถึงระดับสุดยอดแล้ว";
+			mes "ไม่สามารถอัพเกรดเพิ่มได้อีก ?";
+			close;
+		}
+
+		// Make sure you have the neccessary items and Zeny to refine your items
+		// Determines chance of failure and verifies that you want to continue.
+		switch( getequipweaponlv(.@part) ){
+			case 1: callsub S_RefineValidate,1,7620,500,.@part; break;
+			case 2: callsub S_RefineValidate,2,7620,2000,.@part; break;
+			case 3: callsub S_RefineValidate,3,7620,50000,.@part; break;
+			case 4: callsub S_RefineValidate,4,7620,300000,.@part; break;
+			default: callsub S_RefineValidate,0,7619,300000,.@part; break;
+		}
+
+		if( getequippercentrefinery(.@part) > rand(100) || getequippercentrefinery(.@part) > rand(100) ){
+			mes "" + .header$;
+			mes "แก๊ง!! แก๊ง!! แก๊ง!!";
+			SuccessRefItem .@part;
+			if(.item_req[0] > 0){
+				for(set .@i, 0; .@i < getarraysize(.item_req); set .@i, .@i +2){
+					delitem .item_req[.@i],.item_req[.@i+1];
+				}
+			}
+			
+			if (getequiprefinerycnt(.@part) >= 10){
+				announce "" + .header$ + " : คุณ "+ strcharinfo(0) +" ได้ตีบวก +"+ getequiprefinerycnt(.@part) +" "+ getequipname(.@part) +" สำเร็จ !!",bc_all,0xFB5092;
+			}
+			next;
+			Emotion ET_NO1;
+			mes "" + .header$;
+			mes "เรียบร้อยครับ ยินดีให้บริการครับ";
+			callsub S_RefineValidate2;
+			close;
+		}
+		else if( countitem(.item_req[0]) >= 1 ){
+			mes "" + .header$;
+			mes "แก๊ง!! แก๊ง!! แก๊ง!!";
+			downrefitem .@part,1;
+			if(.item_req[0] > 0){
+				for(set .@i, 0; .@i < getarraysize(.item_req); set .@i, .@i +2){
+					delitem .item_req[.@i],.item_req[.@i+1];
+				}
+			}
+			next;
+			if (rand(5) == 1) Emotion ET_CASH;
+			else Emotion ET_OMG;
+			mes "" + .header$;
+			mes "ล้มเหลวครับ ยินดีให้บริการครับ";
+			callsub S_RefineValidate2;
+			close;
+		}
+		else{
+			mes "" + .header$;
+			mes "แก๊ง!! แก๊ง!! แก๊ง!!";
+			if (getequiprefinerycnt(.@part) >= 5){
+				announce "[Special Refine] : คุณ "+ strcharinfo(0) +" ได้ตีบวก +"+ getequiprefinerycnt(.@part) +" "+ getequipname(.@part) +" ล้มแหลว !!",bc_all,0xFFFFFF;
+			}
+			failedrefitem .@part;
+			next;
+			if (rand(5) == 1) Emotion ET_CASH;
+			else Emotion ET_OMG;
+			mes "" + .header$;
+			mes "ล้มเหลวครับ ยินดีให้บริการครับ";
+			callsub S_RefineValidate2;
+			close;
+		}
+
+	S_RefineValidate:
+		mes "" + .header$;
+		if (getarg(0))
+		mes "อาวุธ Lv. " + getarg(0) + "";
+		mes "ต้องการ ^ff9999" + getitemname(getarg(1)) + "^000000";
+		mes "ต้องการ ^ff9999" + getarg(2) + "^000000 Zeny";
+		mes "คุณต้องการจะตีบวกเลยมั้ยครับ";
+		next;
+		if( select("^009933•^000000 ตีบวก:^FF0000•^000000 ยกเลิก") == 1 ){
+			if( getequippercentrefinery(getarg(3)) < 100 ){
+				mes "" + .header$;
+				mes "มีโอกาสล้มเหลวนะครับ";
+				mes "โอกาสสำเร็จอยู่ที่ ^FF0000" + (getequippercentrefinery(getarg(3))+5) + "^000000 %";
+				mes "คุณต้องยืนยันที่จะตีบวกต่อครับ";
+				next;
+				if( select("^009933•^000000 ยืนยัน:^FF0000•^000000 ยกเลิก") == 2 ){
+					mes "" + .header$;
+					mes "ยินดีให้บริการครับ";
+					close;
+				}
+			}
+			if( countitem(getarg(1)) > 0 && Zeny > getarg(2) ){
+				delitem getarg(1), 1;
+				set Zeny, Zeny - getarg(2);
+				return;
+			}
+			else{
+				mes "" + .header$;
+				mes "กรุณาตรวจสอบ Item ดังนี้ครับ";
+				mes "^FF0000" + getitemname(getarg(1)) + "^000000";
+				mes "^FF0000Zeny^000000";
+				close;
+			}
+		}
+		else{
+			mes "" + .header$;
+			mes "ยินดีให้บริการครับ";
+			close;
+		}
+		end;
+		
+	OnInit:
+		// =============== Configure ==============================
+		set .header$, "[ Advance Refiner ]";			// ชื่อข้อความที่ห้อง
+		setarray .item_req, 7227,1;						// ใบกันแตก,จำนวน
+while (1) {
+			showscript "[ ตีบวกแบบใช้ใบกันแตก ]";
+			sleep 500;
+		}
+end;
+}
+		// ========================================================
+		setarray .indices[1], EQI_HEAD_TOP, EQI_HEAD_MID, EQI_HEAD_LOW, EQI_ARMOR, EQI_HAND_L, EQI_HAND_R, EQI_GARMENT, EQI_SHOES, EQI_ACC_L, EQI_ACC_R;
+}
+
+function	script	Advance_Refiner	{
+	
+	
+}

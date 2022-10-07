@@ -1,0 +1,22 @@
+-	script	SearchItem	-1,{
+
+emotion 18;
+mes "^CC00CF[ โปรดอ่านก่อนใช้บริการ ]^000000";
+mes "เวลาจะหาของ ให้พิมชื่อ item ให้ถูกต้อง เช่น Fly Wing แล้วกด Search";
+mes "หรือเวลาหากาดร์ พิม Poring Card ใส่ในช่อง Item แล้วกด Search";
+mes "เมื่อเราเจอของที่เราหาสามารถ ดึงซื้อได้เลย";
+next;
+mes "[ โปรดอ่านก่อนใช้บริการ ]";
+mes "ลุยเลย";
+searchstores 255,1;
+close;
+
+OnInit: 
+while (1) {
+			showscript "[ บริการค้นหาไอเทมร้านค้า ]";
+			sleep 500;
+		}
+end;
+}
+
+moroccz,168,143,4	duplicate(SearchItem)	ค้นหาไอเทมในร้านค้า#01	100

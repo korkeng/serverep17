@@ -1,0 +1,18 @@
+-	script	refineui	-1,{
+callfunc "refineui";
+	end;
+OnInit: 
+while (1) {
+			showscript "[ ตีบวกทั่วไป ]";
+			sleep 500;
+		}
+end;
+}
+
+function	script	refineui	{
+dispbottom "เปิดใช้งานระบบ อัพเกรด UI เรียบร้อยแล้ว ";
+atcommand "@refineui";
+end;
+}
+
+moroccz,119,81,6	duplicate(refineui)	ตีบวกทั่วไป #01	826

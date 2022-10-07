@@ -1,0 +1,140 @@
+Header:
+  Type: ENCHANT_DB
+  Version: 1
+
+Body:
+  - TableNumber: 2
+    Items:
+      - Gray_W_Manteau
+      - Gray_W_Muffler
+    SlotOrder:
+      - 3
+      - 2
+      - 1
+    MinGrade: 0
+    MinRefine: 7
+    AllowRandomOption: true
+    Reset:
+      Allow: true
+      Chance: 100000
+      Zeny: 100000
+      ItemRequirements:
+        - Name: Ep18_Amethyst_Fragment
+          Amount: 25
+    Slots:
+      3:
+        ItemRequirements:
+          - Name: Ep18_Amethyst_Fragment
+            Amount: 15
+        Zeny: 100000
+        Chance: 100000
+        Enchants:
+          - Name: Wolf_Orb_Str_1
+            Rate: 13666
+          - Name: Wolf_Orb_Dex_1
+            Rate: 13667
+          - Name: Wolf_Orb_Int_1
+            Rate: 13667
+          - Name: Wolf_Orb_Vit_1
+            Rate: 13667
+          - Name: Wolf_Orb_luk_1
+            Rate: 13667
+          - Name: Wolf_Orb_Str_2
+            Rate: 2500
+          - Name: Wolf_Orb_Dex_2
+            Rate: 2500
+          - Name: Wolf_Orb_Int_2
+            Rate: 2500
+          - Name: Wolf_Orb_Vit_2
+            Rate: 2500
+          - Name: Wolf_Orb_luk_2
+            Rate: 2500
+          - Name: Wolf_Orb_Str_3
+            Rate: 500
+          - Name: Wolf_Orb_Dex_3
+            Rate: 500
+          - Name: Wolf_Orb_Int_3
+            Rate: 500
+          - Name: Wolf_Orb_Vit_3
+            Rate: 500
+          - Name: Wolf_Orb_luk_3
+            Rate: 500
+      2:
+        ItemRequirements:
+          - Name: Ep18_Amethyst_Fragment
+            Amount: 25
+        Zeny: 150000
+        Chance: 100000
+        Enchants:
+          - Name: Wolf_Orb_Speed_1
+            Rate: 20000
+          - Name: Wolf_Orb_Caster_1
+            Rate: 20000
+          - Name: Wolf_Orb_Critical_1
+            Rate: 20000
+          - Name: Wolf_Orb_Guide_1
+            Rate: 20000
+          - Name: Wolf_Orb_Speed_2
+            Rate: 4500
+          - Name: Wolf_Orb_Caster_2
+            Rate: 4500
+          - Name: Wolf_Orb_Critical_2
+            Rate: 4500
+          - Name: Wolf_Orb_Guide_2
+            Rate: 4500
+          - Name: Wolf_Orb_Speed_3
+            Rate: 500
+          - Name: Wolf_Orb_Caster_3
+            Rate: 500
+          - Name: Wolf_Orb_Critical_3
+            Rate: 500
+          - Name: Wolf_Orb_Guide_3
+            Rate: 500
+      1:
+        ItemRequirements:
+          - Name: Ep18_Amethyst_Fragment
+            Amount: 50
+        Zeny: 200000
+        Chance: 100000
+        Enchants:
+          - Name: Wolf_Orb_Above_1
+            Rate: 30033
+          - Name: Wolf_Orb_P_Full_1
+            Rate: 30034
+          - Name: Wolf_Orb_M_Counter_1
+            Rate: 30034
+          - Name: Wolf_Orb_Above_2
+            Rate: 3000
+          - Name: Wolf_Orb_P_Full_2
+            Rate: 3000
+          - Name: Wolf_Orb_M_Counter_2
+            Rate: 3000
+          - Name: Wolf_Orb_Above_3
+            Rate: 300
+          - Name: Wolf_Orb_P_Full_3
+            Rate: 300
+          - Name: Wolf_Orb_M_Counter_3
+            Rate: 300
+        PerfectEnchants:
+          - Name: Wolf_Orb_Above_3
+            Zeny: 10000000
+            ItemRequirements:
+              - Name: Ep18_Amethyst_Fragment
+                Amount: 2500
+          - Name: Wolf_Orb_P_Full_3
+            Zeny: 10000000
+            ItemRequirements:
+              - Name: Ep18_Amethyst_Fragment
+                Amount: 2500
+          - Name: Wolf_Orb_M_Counter_3
+            Zeny: 10000000
+            ItemRequirements:
+              - Name: Ep18_Amethyst_Fragment
+                Amount: 2500
+        UpgradeEnchants:
+          Spring_Energy_1:
+            ResultEnchant: Spring_Energy_2
+            Zeny: 10000
+            ItemRequirements:
+              - Name: Small_Spray_Of_Flowers
+                Amount: 10

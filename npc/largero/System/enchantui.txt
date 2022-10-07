@@ -1,0 +1,7 @@
+izlude,125,138,6	script	Enchanter	661,{
+	open_enchant_ui(2);
+}
+
+izlude,129,138,4	script	Reform Master	660,{
+	open_reform_ui(100591);
+}

@@ -1,0 +1,184 @@
+moroccz,189,79,6	script	Hunting Mission	4_M_KY_SOLD,{
+	callfunc "Hunting_Mission";
+	end;
+	OnInit:
+		// =============== Configure ==============================
+		set $@HTM_HEADER$, "[ Hunting Mission ]";
+		set $@HTM_WAITINGROOM, 0;
+		set $@HTM_WAITINGROOM$, "# Hunting Misson";
+		set $@HTM_ABADDONDELAY, 1800;
+		setarray $@HTM_RANDOMPOINT, 10,15;
+		setarray $@HTM_RANDOMAMOUNT, 40,80;
+		setarray $@HTM_SHOPITEM, 61054,80,64701,20000,
+								 64142,200,64174,200,64192,200,
+								 63411,200,63412,200,63413,200,
+								 64055,200,64063,200,64205,200;
+								 
+		// ========================================================
+		setarray $@HTM_POSSIBLEMOB, 1713,1714,1716,1717,1634,1635,1636,1637,1638,1639,
+									1870,1197,1257,1207,1206,1777,1778,1668,1379,1371,
+									1390,1701,1702,1149,1029,1769,1770,1773,1995,1753;
+		npcshopdelitem "mission_shop",512;
+			for (set .@i, 0; .@i < getarraysize($@HTM_SHOPITEM); set .@i, .@i + 2)
+				npcshopadditem "mission_shop", $@HTM_SHOPITEM[.@i], $@HTM_SHOPITEM[.@i+1];
+		query_sql("CREATE TABLE IF NOT EXISTS `hunting_mission` (" +
+				  "`id` int(11) NOT NULL AUTO_INCREMENT," +
+				  "`account_id` int(10) NOT NULL," +
+				  "`point` int(10) NOT NULL," +
+				  "PRIMARY KEY (`id`)" +
+				  ")");
+		sleep 1000;
+		if($@HTM_WAITINGROOM) waitingroom "" + $@HTM_WAITINGROOM$,0;
+		end;
+	
+	OnBuyItem:
+		if(getarraysize(@bought_nameid) < 1){
+			mes "" + $@HTM_HEADER$;
+			mes "ยินดีให้บริการครับ";
+			end;
+		}
+		mes "" + $@HTM_HEADER$;
+		mes "ต้องการจะซื้อไอเทมดังนี้ใช่หรือไม่";
+		for(set .@i, 0; .@i < getarraysize(@bought_nameid); set .@i, .@i + 1){
+			mes "^FF6699- " + getitemname(@bought_nameid[.@i]) + "^000000";
+			set .@precost, inarray($@HTM_SHOPITEM, @bought_nameid[.@i]);
+			set .@postcost, .@postcost + ($@HTM_SHOPITEM[.@precost+1] * @bought_quantity[.@i]);
+			
+		}
+		mes "ราคารวมทั้งหมด ^4169E1" + .@postcost + "^000000 แต้ม";
+		next;
+		if(select("~ ใช่","~ ไม่ใช่") == 2 ) end;
+		query_sql ("SELECT `point` FROM `hunting_mission` WHERE `account_id` = '" + getcharid(3) + "'",.@point);
+		if(.@point < .@postcost){
+			mes "" + $@HTM_HEADER$;
+			mes "จำนวนแต้มภารกิจของท่านไม่เพียงพอ";
+			mes "ไปทำภารกิจเพิ่มก่อนค่อยกลับมาซื้อนะ";
+			end;
+		}
+		set .@postbought_point, .@point - .@postcost;
+		query_sql ("UPDATE `hunting_mission` SET `point` = '" + .@postbought_point + "' WHERE `account_id` = '" + getcharid(3) + "'");
+		for(set .@i, 0; .@i < getarraysize(@bought_nameid); set .@i, .@i + 1){
+			getitem @bought_nameid[.@i], @bought_quantity[.@i];
+		}
+		end;
+}
+
+-	shop	mission_shop	-1,512:-1
+
+function	script	Hunting_Mission	{
+	mes "" + $@HTM_HEADER$;
+	if(#Mission_status){
+		if(#Mission_mobkill == #Mission_amout){
+			mes "^2E8B57->^000000 ภารกิจ `^2E8B57สำเร็จ^000000` แล้ว";
+		} else {
+			mes "^FF0000->^000000 เป้าหมาย ^FF0000" + getmonsterinfo(#Mission_monster,MOB_NAME) + "^000000";
+		}
+	}
+	mes "- กฏกติกาของภารกิจนะครับ -";
+	mes "1.เมื่อกดยกเลิกภารกิจจะติดคูดาวน์ ^FF0000" + $@HTM_ABADDONDELAY + "^000000 นาที";
+	mes "2.ภารกิจจะผูกติดกับไอดีของท่าน";
+	mes "- ข้อมูลภารกิจ -";
+	mes "1.กำจัดมอนส์เตอร์จำนวน ^FF6699" + $@HTM_RANDOMAMOUNT[0] + " - " + $@HTM_RANDOMAMOUNT[1] + "^000000";
+	mes "2.ส่งภารกิจจะได้รับแต้ม ^FF6699" + $@HTM_RANDOMPOINT[0] + " - " + $@HTM_RANDOMPOINT[1] + "^000000";
+	next;
+	switch(select("~ รับภารกิจ","~ ส่งภารกิจ","~ ยกเลิกภารกิจ","~ แลกรางวัลไอเทม","~ ยกเลิก")){
+		case 1:
+			if(#Mission_cooldown > gettimetick(2)){
+				set .@timediff, #Mission_cooldown - gettimetick(2);
+				mes "" + $@HTM_HEADER$;
+				mes "ท่านจำเป็นต้องรออีก ^FF0000" + .@timediff + "^000000 วินาที";
+				mes "ถึงจะรับภารกิจใหม่ได้";
+				end;
+			}
+			if(#Mission_status){
+				mes "" + $@HTM_HEADER$;
+				mes "----------------------------";
+				mes "กำจัด ^FF6699" + getmonsterinfo(#Mission_monster,MOB_NAME) + "^000000 ^FF6699" + #Mission_mobkill + "/" + #Mission_amout + "^000000";
+				mes "----------------------------";
+				mes "หากท่านยังทำภารกิจเก่าไม่เสร็จ";
+				mes "จะไม่สามารถรับภารกิจใหม่ได้แต่";
+				mes "ท่านสามารถยกเลิกภารกิจได้แต่";
+				mes "จะติดคูดาวน์ในการทำครั้งต่อไป";
+				mes "^FF0000" + $@HTM_ABADDONDELAY + "^000000 วินาที";
+				end;
+			} else {
+				set .@mob_rand, rand(0,getarraysize($@HTM_POSSIBLEMOB)-1);
+				set .@amount_rand, rand($@HTM_RANDOMAMOUNT[0],$@HTM_RANDOMAMOUNT[1]);
+				mes "" + $@HTM_HEADER$;
+				mes "ภารกิจของท่านคือ";
+				mes "กำจัด ^FF6699" + getmonsterinfo($@HTM_POSSIBLEMOB[.@mob_rand],MOB_NAME) + "^000000 จำนวน ^FF6699" + .@amount_rand + "^000000 ตัว";
+				mes "เมื่อเสร็จแล้วมาส่งภารกิจให้ข้านะ";
+				set #Mission_status, 1;
+				set #Mission_monster, $@HTM_POSSIBLEMOB[.@mob_rand];
+				set #Mission_amout, .@amount_rand;
+				end;
+			}
+			break;
+		case 2:
+			if(#Mission_status){
+				if(#Mission_mobkill < #Mission_amout){
+					mes "" + $@HTM_HEADER$;
+					mes "ท่านยังกำจัด ^FF0000" + getmonsterinfo(#Mission_monster,MOB_NAME) + "^000000 ไม่ครบ";
+					end;
+				}
+				query_sql ("SELECT `id`,`point` FROM `hunting_mission` WHERE `account_id` = '" + getcharid(3) + "'",.@id,.@point);
+				set .@point_rand, rand($@HTM_RANDOMPOINT[0],$@HTM_RANDOMPOINT[1]);
+				mes "" + $@HTM_HEADER$;
+				mes "ส่งภารกิจเรียบร้อยแล้ว";
+				mes "ท่านได้รับ " + .@point_rand + " แต้ม";
+				set .@added_point, .@point + .@point_rand;
+				if(.@id > 0)
+					query_sql ("UPDATE `hunting_mission` SET `point` = '" + .@added_point + "' WHERE `account_id` = '" + getcharid(3) + "'");
+				else
+					query_sql ("INSERT INTO `hunting_mission`(`account_id`,`point`) VALUES ('" + getcharid(3) + "','" + .@added_point + "')");
+				set #Mission_status, 0;
+				set #Mission_monster, 0;
+				set #Mission_amout, 0;
+				set #Mission_mobkill, 0;
+				end;
+			} else {
+				mes "" + $@HTM_HEADER$;
+				mes "ท่านยังไม่ได้รับภารกิจใดๆ";
+				end;
+			}
+			break;
+		case 3:
+			if(#Mission_status){
+				mes "" + $@HTM_HEADER$;
+				mes "ท่านต้องการยกเลิกภารกิจจริงๆใช่ไหม";
+				next;
+				if(select("~ ใช่ยกเลิก","~ ไม่เอา") == 2) end;
+				mes "" + $@HTM_HEADER$;
+				mes "ท่านได้ `^FF6699ยกเลิก^000000` ภารกิจเรียบร้อยแล้ว";
+				set #Mission_cooldown, gettimetick(2) + $@HTM_ABADDONDELAY;
+				set #Mission_status, 0;
+				set #Mission_monster, 0;
+				set #Mission_amout, 0;
+				set #Mission_mobkill, 0;
+				end;
+			} else {
+				mes "" + $@HTM_HEADER$;
+				mes "ท่านยังไม่ได้รับภารกิจใดๆ";
+				end;
+			}
+			break;
+		case 4:
+			mes "" + $@HTM_HEADER$;
+			query_sql ("SELECT `point` FROM `hunting_mission` WHERE `account_id` = '" + getcharid(3) + "'",.@point);
+			mes "แต้มภารกิจสะสมของท่าน [ " + .@point + " ]";
+			callshop "mission_shop",1;
+			npcshopattach "mission_shop";
+			break;
+		case 5:
+			break;
+	}
+	end;
+}
+
+-	script	Mission Kill	-1,{
+	OnNPCKillEvent:
+		if(#Mission_status && killedrid == #Mission_monster && (#Mission_mobkill < #Mission_amout)){
+			set #Mission_mobkill, #Mission_mobkill + 1;
+			dispbottom "[ Hunting Mission ] : ท่านกำจัด " + getmonsterinfo(#Mission_monster,MOB_NAME) + " ไปแล้ว " + #Mission_mobkill + "/" +#Mission_amout;
+		}
+}

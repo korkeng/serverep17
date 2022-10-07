@@ -1,0 +1,91 @@
+moroccz,147,87,6	script	Cash Exchanger	732,{
+	callfunc "Mvphat";
+	end;
+	OnInit:
+		// =============== Configure ==============================
+		set $@HEX_WAITINGROOM, 0;							// เปิดแสดงชื่อห้องบนหัว ( 0 = ปิด / 1 = เปิด )
+		set $@HEX_WAITINGROOM$, "# รับชื้อหมวกบอส";				// ชื่อห้องบนหัว
+		set $@HEX_HEADER$, "[ Hat Exchanger ]";				// ชื่อข้อความที่ห้อง
+		// Syntax <item_id>,<price>[,<item_id>,<price>];	// รหัสไอเทม,จำนวนแคสที่สามารถแลกได้
+		setarray $@HEX_ITEMBASE, 2234,50,2246,50,2258,50,2268,50,5002,50,5007,50,5019,50,5053,50,2256,50,2235,50;
+		// ========================================================
+		sleep 1000;
+		if($@HEX_WAITINGROOM) waitingroom "" + $@HEX_WAITINGROOM$,0;
+		npcshopdelitem "exg_exp3",501;
+		for ( .@a = 0; .@a < .len; .@a = .@a + 2 ){
+			npcshopadditem "exg_exp3",$@HEX_ITEMBASE[.@a],$@HEX_ITEMBASE[.@a+1];
+		}
+		end;
+		
+	OnBuyItem:
+		setarray .@choice$, "@bought_", "bought", "-1", "@item";
+		if( !checkweight2(getd(.@choice$+"nameid"),getd(.@choice$+"quantity")) ) {
+			mes "I'm sorry but purchasing this many items would put you over weight!";
+			close;
+		}
+		
+	OnSellItem:
+		if( !getarraysize(.@choice$) )
+			setarray .@choice$, "@sold_", "sold", "1", "@delitem";
+		.@len = getarraysize(getd(.@choice$+"nameid"));
+		for ( .@i = 0; .@i < .@len; .@i++ ) {
+		
+			if( .@choice$[1] == "sold" ) {
+				if ( countitem(@sold_nameid[.@i]) < @sold_quantity[.@i] || @sold_quantity[.@i] <= 0 ) {
+					mes "" + $@HEX_HEADER$;
+					mes "เกิดข้อผิดพลาดบางประการ!";
+					close;
+				}
+			} else {
+				if ( @bought_quantity[.@i] <= 0 ) {
+					mes "" + $@HEX_HEADER$;
+					mes "เกิดข้อผิดพลาดบางประการ";
+					close;
+				}
+			}
+			
+			for ( .@a = 0; .@a < getarraysize($@HEX_ITEMBASE); .@a = .@a + 2 ) {
+				if( getd(.@choice$+"nameid["+.@i+"]") == $@HEX_ITEMBASE[.@a] ) {
+					if ( #CASHPOINTS < $@HEX_ITEMBASE[.@a+1] * @bought_quantity[.@i]
+					&&   .@choice$[1] != "sold" ) {
+						mes "[ System ] : คุณมี Cash Point ไม่เพียงพอ";
+						close;
+					}
+					atcommand .@choice$[3]+" "+$@HEX_ITEMBASE[.@a]+" "+getd(.@choice$+"quantity["+.@i+"]");
+					.@cashpoints = ( getd(.@choice$+"quantity["+.@i+"]") * $@HEX_ITEMBASE[.@a+1] ) * atoi(.@choice$[2]);
+					#CASHPOINTS = #CASHPOINTS + .@cashpoints;
+					dispbottom "[ System ] : ขาย " + getitemname($@HEX_ITEMBASE[.@a]) +" จำนวน "+ getd(.@choice$+"quantity["+.@i+"]") +" ชิ้น ได้รับ CashPoint "+ .@cashpoints +" คงเหลือ [ " + #CASHPOINTS +" ]";
+				}
+			}
+		}
+		deletearray getd(.@choice$+"quantity");
+		deletearray getd(.@choice$+"nameid");
+		mes "" + $@HEX_HEADER$;
+		mes "การแลกเปลี่ยนเรียบร้อย";
+		mes "ขอบคุณที่ใช้บริการครับ";
+		close;
+}
+-	shop	exg_exp3	-1,501:50.
+
+function	script	Mvphat	{
+	mes "" + $@HEX_HEADER$;
+	mes "ถ้าคุณขาย ^FFAF33หมวกบอส^000000 คืน";
+	mes "คุณจะได้ ^FFAF33Cash^000000 [ ^33B8FF50^000000 ]";
+	mes "# รับเฉพาะไอเทมที่มีราชื่อดังนี้ #";
+	for(set .@i, 0; .@i < getarraysize($@HEX_ITEMBASE); set .@i, .@i +2){
+		mes "^10A01D" + getitemname($@HEX_ITEMBASE[.@i]) + "^000000 = ^12B6F9" + $@HEX_ITEMBASE[.@i+1] + "^000000 ^FFAF33Cash^000000";
+	}
+	mes "# # # # # # # # # # # # #";
+	next;
+	if(select("~ ขายหมวกบอส","~ ยกเลิก") == 2){
+		mes "" + $@HEX_HEADER$;
+		mes "โอกาสหน้าเชิญใหม่ครับ";
+		end;
+	}
+	callshop "exg_exp3",2;
+	npcshopattach "exg_exp3";
+	end;
+		
+
+	
+}

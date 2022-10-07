@@ -1,0 +1,95 @@
+-	script	collection_script	-1,{
+
+function calbonus;
+function ADD;
+function DISPLAY;
+
+OnPCStatCalcEvent:
+	CallSub ClearDesc;
+	set .@i,0;
+	for( .@i = 0 ; .@i < COL_COUNT ; .@i++ ){
+		if(getd("COL_ITEM_"+.@i) > 0){
+			calbonus( getd("COL_ITEM_"+.@i) );
+		}
+	}
+end;
+
+Oninit:
+	bindatcmd("collection",strnpcinfo(0)+"::OnCommand");
+	end;
+	
+OnCommand:
+	//dispbottom "Found "+COL_COUNT;
+	for( .@i = 0 ; .@i < COL_COUNT ; .@i++ ){
+		if(getd("COL_ITEM_"+.@i) > 0){
+			dispbottom getitemname(getd("COL_ITEM_"+.@i))+" ID:"+getd("COL_ITEM_"+.@i);
+		}
+	}
+end;
+
+ClearDesc:
+	for(set .@i,0 ; .@i < COL_COUNT+1 ; .@i++){
+		setd "@COL_DESC_"+.@i+"$","";
+		setd "@COL_VAL_"+.@i,0;
+	}
+	//dispbottom "clear";
+	return;
+end;
+
+
+
+function DISPLAY {
+	
+	for(set .@i,0 ; .@i < COL_COUNT ; .@i++){
+		//dispbottom ""+getd("@COL_DESC_"+.@i+"$");
+		if(getd("@COL_DESC_"+.@i+"$") == getarg(0)){
+			dispbottom getarg(0)+" + "+getd("@COL_VAL_"+.@i);
+			return;
+		}
+	}
+	dispbottom getarg(0)+" + 0";
+	return;
+}
+
+function ADD {
+	//dispbottom "x"+getarg(0);
+	for(set .@i,0 ; .@i < COL_COUNT ; .@i++){
+		if(getd("@COL_DESC_"+.@i+"$") == getarg(0)){
+			setd "@COL_VAL_"+.@i, getd("@COL_VAL_"+.@i)+getarg(1);
+			return;
+		}else if(getd("@COL_DESC_"+.@i+"$") == ""){
+			setd "@COL_DESC_"+.@i+"$",getarg(0);
+			setd "@COL_VAL_"+.@i,getarg(1);
+			return;
+		}
+	}
+	return;
+}
+
+OnInfo:
+	dispbottom "===== Collection Status =====";
+	DISPLAY("Str");	//display info
+	DISPLAY("Vit");
+	DISPLAY("MaxHP");
+end;
+
+function calbonus {
+	switch(getarg(0)){
+		case 2220:
+			bonus bStr,10;
+			ADD("Str",10);	//add info 
+			break;
+		case 2222:
+			bonus bVit,10;
+			ADD("Vit",10);
+			break;
+		case 2224:
+			bonus bMaxHP,1000;
+			break;				
+		default:
+			break;
+	}
+	return;
+}
+
+}

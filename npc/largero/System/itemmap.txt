@@ -1,0 +1,23 @@
+-	script	#Secret_ItemCmd	-1,{
+OnInit:
+	bindatcmd "itemmap",strnpcinfo(3)+"::OnItemMap",99,99;
+	end;
+	
+OnItemMap:
+	mes "สวัสดีครับท่าน GM มีอะไรให้ข้าช่วย";
+	input $@item;
+	input $@amount;
+	mes "ท่านแจก ^FF0000"+getitemname($@item)+"^000000 จำนวน ^FF0000"+$@amount+"^000000 อัน";
+	next;
+	menu 		"^FF0000•^000000 ตกลง",OK,
+				"^FF0000•^000000 ยกเลิก",NO;
+	end;
+	
+OK:
+	addrid(1);
+	getitem $@item,$@amount;
+	message strcharinfo(0),"คุณได้รับไอเท็มจาก GM";
+	close;
+NO:
+	close;
+}

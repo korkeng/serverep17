@@ -1,0 +1,283 @@
+alberta,211,28,6	script	Knight Aylvar	405,{   
+	mes "[ Knight Aylvar ]";
+	menu
+	"^FF0000•^000000 Illusion of Abyss [ Lv 150+ ]",go1,
+	"^FF0000•^000000 Cancle",cancle;
+	go1:
+	if(baselevel > 149){
+	warp "tur_d03_i",139,186;
+	end;
+	}
+	mes "Base Lv ของเจ้าน้อยเกินไป";
+	end;
+	cancle:
+	end;
+}
+
+/*
+alberta,225,28,4	script	Equipment Researcher#ill_abyss	10002,{
+	mes "[ Equipment Researcher ]";
+	mes "ต้องการอะไร?";
+	next;
+	switch(select("Equipment Researcher:Upgrade Weapon.:Upgrade Armor.")){
+		case 1:
+			mes "[ Equipment Researcher ]";
+			mes "ข้าจะถลุงแร่ Illusion Gemstone","โดยอยู่ที่อัตรา 5:1";
+			next;
+			mes "[ Equipment Researcher ]";
+			mes "เจ้าจะทำไหม";
+			next;
+			if (select ("ทำ:ไม่ทำ") == 2 ) end;
+			if (countitem(25272) < 5 ) {
+				mes "[ Equipment Researcher ]";
+				mes "รบกวยนำ Illusion Gemstone มาด้วย";
+				end;
+			}
+			.@stone_trade = countitem(25272)/5;
+			delitem 25272,.@stone_trade*5;
+			getitem 25271,.@stone_trade;
+			mes "[ Equipment Researcher ]";
+			mes "เรียบร้อย นี้ Illusion stome ของเจ้า";
+			close;
+			
+		case 2:
+			disable_items;
+			if(checkweight(25271,1) == 0 || (MaxWeight - Weight) < 1000){
+				mes "- คุณถือของมากเกินไป. -";
+				close;
+			}
+			mes "[ Equipment Researcher ]";
+			mes "ข้าทำของได้ตามนี้.";
+			for(.@i = 0; .@i < getarraysize(.weapons$); .@i++){
+				explode(.@T$,.weapons$[.@i],"|");
+				.@item_id = atoi(.@T$[0]);
+				mes "<ITEM>"+getitemname(.@item_id)+"<INFO>"+.@item_id+"</INFO></ITEM>";
+			}
+			next;
+			mes "[ Equipment Researcher ]";
+			mes "ให้แน่ใจว่า ^0000FFอุปกรณ์ของท่านต้องมีระดับตีบวกมากกว่า 9^000000 ก่อนจะนำมาให้ข้า.";
+			next;
+			mes "[ Equipment Researcher ]";
+			mes "ที่สำคัญ, ^0000FFการ์ด และตีบวกจะหายไปทั้งหมด.^000000";
+			next;
+			mes "[ Equipment Researcher ]";
+			mes "วัตถุดิบที่ต้องการจะมี ^0000FFIllusion Stones และของบางอย่าง^000000 สำหรับการพัฒนาอุปกรณ์.";
+			next;
+			for(.@i = 0; .@i < getarraysize(.weapons$); .@i++){
+				explode(.@T$,.weapons$[.@i],"|");
+				.@item_id = atoi(.@T$[0]);
+				.@menu$ += getitemname(.@item_id) +":";
+			}
+			.@s = select(.@menu$) - 1;
+			explode(.@T$,.weapons$[.@s],"|");
+			explode(.@TT$,.@T$[2],",");
+			mes "[ Equipment Researcher ]";
+			mes "นี้คือของที่ต้องการ.";
+			mes "^0000FF+9 " + getitemname(atoi(.@T$[1])) + " []^000000";
+			for(.@i = 0; .@i < getarraysize(.@TT$); .@i++){
+				explode(.@data$,.@TT$[.@i],":");
+				.@item_id[.@i] = atoi(.@data$[0]);
+				.@amount[.@i] = atoi(.@data$[1]);
+				mes "^0000FF" + .@amount[.@i] +" "+ getitemname(.@item_id[.@i]) + "^000000";
+			}
+			mes "พัฒนาอุปกรณ์นี้เลยไหม";
+			next;
+			if(select("เอาเลย.:ยังต้องการวัตถุดิบเพิ่มเติม") == 2){
+				mes "[ Equipment Researcher ]";
+				mes "มาหาข้า เมื่อเจ้าพร้อม.";
+				close;
+			}
+			if(getequipid(EQI_HAND_R) != atoi(.@T$[1])){
+				mes "[ Equipment Researcher ]";
+				mes "กรุณาสวมใส่ " + getitemname(atoi(.@T$[1])) + " ก่อน.";
+				close;
+			}
+			for(.@i = 0; .@i < getarraysize(.@item_id); .@i++){
+				if(countitem(.@item_id[.@i]) < .@amount[.@i])
+					.@miss++;
+			}
+			if(getequiprefinerycnt(EQI_HAND_R) < 9 || .@miss > 0){
+				mes "[ Equipment Researcher ]";
+				mes "วัตถุดิบไม่เพียงพอ หรือ อุปกรณ์ของเจ้าตีบวกไม่ถึงเกณฑ์";
+				end;
+			}
+			mes "[Illusion Researcher]";
+			mes "กำลังจัดทำ.";
+			delequip(EQI_HAND_R);
+			for(.@i = 0; .@i < getarraysize(.@item_id); .@i++)
+				delitem .@item_id[.@i],.@amount[.@i];
+			getitem atoi(.@T$[0]),1;			
+			break;
+			
+			
+		case 3:
+			disable_items;
+			if(checkweight(25271,1) == 0 || (MaxWeight - Weight) < 1000){
+				mes "- คุณถือของมากเกินไป. -";
+				close;
+			}
+			mes "[ Equipment Researcher ]";
+			mes "ข้าทำของได้ตามนี้.";
+			for(.@i = 0; .@i < getarraysize(.armors$); .@i++){
+				explode(.@T$,.armors$[.@i],"|");
+				.@item_id = atoi(.@T$[0]);
+				mes "<ITEM>"+getitemname(.@item_id)+"<INFO>"+.@item_id+"</INFO></ITEM>";
+			}
+			next;
+			mes "[ Equipment Researcher ]";
+			mes "ให้แน่ใจว่า ^0000FFอุปกรณ์ของท่านต้องมีระดับตีบวกมากกว่า 9^000000 ก่อนจะนำมาให้ข้า.";
+			next;
+			mes "[ Equipment Researcher ]";
+			mes "ที่สำคัญ, ^0000FFการ์ด และตีบวกจะหายไปทั้งหมด.^000000";
+			next;
+			mes "[ Equipment Researcher ]";
+			mes "วัตถุดิบที่ต้องการจะมี ^0000FFIllusion Stones และของบางอย่าง^000000 สำหรับการพัฒนาอุปกรณ์.";
+			next;
+			for(.@i = 0; .@i < getarraysize(.armors$); .@i++){
+				explode(.@T$,.armors$[.@i],"|");
+				.@item_id = atoi(.@T$[0]);
+				.@menu$ += getitemname(.@item_id) +":";
+			}
+			.@s = select(.@menu$) - 1;
+			explode(.@T$,.armors$[.@s],"|");
+			explode(.@TT$,.@T$[2],",");
+			.@slot = atoi(.@T$[3]);
+			mes "[ Equipment Researcher ]";
+			mes "นี้คือของที่ต้องการ.";
+			mes "^0000FF+9 " + getitemname(atoi(.@T$[1])) + "^000000";
+			for(.@i = 0; .@i < getarraysize(.@TT$); .@i++){
+				explode(.@data$,.@TT$[.@i],":");
+				.@item_id[.@i] = atoi(.@data$[0]);
+				.@amount[.@i] = atoi(.@data$[1]);
+				mes "^0000FF" + .@amount[.@i] +" "+ getitemname(.@item_id[.@i]) + "^000000";
+			}
+			mes "พัฒนาอุปกรณ์นี้เลยไหม";
+			next;
+			if(select("เอาเลย.:ยังต้องการวัตถุดิบเพิ่มเติม") == 2){
+				mes "[ Equipment Researcher ]";
+				mes "มาหาข้า เมื่อเจ้าพร้อม.";
+				close;
+			}
+			if(getequipid(.@slot) != atoi(.@T$[1])){
+				mes "[ Equipment Researcher ]";
+				mes "กรุณาสวมใส่ " + getitemname(atoi(.@T$[1])) + " ก่อน.";
+				close;
+			}
+			for(.@i = 0; .@i < getarraysize(.@item_id); .@i++){
+				if(countitem(.@item_id[.@i]) < .@amount[.@i])
+					.@miss += 1;
+			}
+			if(getequiprefinerycnt(.@slot) < 9 || .@miss > 0){
+				mes "[ Equipment Researcher ]";
+				mes "วัตถุดิบไม่เพียงพอ หรือ อุปกรณ์ของเจ้าตีบวกไม่ถึงเกณฑ์";
+				end;
+			}
+			mes "[Illusion Researcher]";
+			mes "กำลังจัดทำ.";
+			delequip(.@slot);
+			for(.@i = 0; .@i < getarraysize(.@item_id); .@i++)
+				delitem .@item_id[.@i],.@amount[.@i];
+			getitem atoi(.@T$[0]),1;			
+			break;
+	}
+	next;
+	mes "[ Equipment Researcher ]";
+	mes "เสร็จแล้ว.";
+	end;
+	
+OnInit:
+	setarray .weapons$,
+		"1326|1306|25271:100,25311:200",
+		"13338|13300|25271:100,25313:200",
+		"13469|1141|25271:100,25314:50",
+		"16065|1529|25271:100,25313:200",
+		"32005|1417|25271:100,25311:200";
+	setarray .armors$,
+		"19247|2207|25271:50,25312:50|6";
+
+end;
+}
+*/
+//------------------------ Warp -----------------------------//
+tur_d03_i,218,71,0	warp	abyss3warp	1,1,tur_d04_i,100,188
+tur_d04_i,100,194,0	warp	abyss4warp	1,1,tur_d03_i,218,75
+
+
+tur_d03_i,0,0	monster	Ominous Assaulter	3799,35,5000
+tur_d03_i,0,0	monster	Ominous Permeter	3800,15,5000
+tur_d03_i,0,0	monster	Ominous Freezer	3801,40,5000
+tur_d03_i,0,0	monster	Ominous Solider	3802,40,5000
+tur_d03_i,0,0	monster	Ominous Heater	3803,10,5000
+
+tur_d04_i,0,0	monster	Ominous Assaulter	3799,42,5000,5000,"#Ill_abyss::OnIllMobDead"
+tur_d04_i,0,0	monster	Ominous Permeter	3800,40,5000,5000,"#Ill_abyss::OnIllMobDead"
+tur_d04_i,0,0	monster	Ominous Freezer	3801,15,5000,5000,"#Ill_abyss::OnIllMobDead"
+tur_d04_i,0,0	monster	Ominous Solider	3802,10,5000,5000,"#Ill_abyss::OnIllMobDead"
+tur_d04_i,0,0	monster	Ominous Heater	3803,33,5000,5000,"#Ill_abyss::OnIllMobDead"
+
+
+tur_d04_i,0,0,0	script	#Ill_abyss	-1,{
+
+OnInit:
+$Ill_abyss = 0;
+$Ill_abyss_delay = 0;
+$Ill_abyssBOSS = 0;
+end;
+
+OnIllMobDead: 
+if($Ill_abyss_delay == 0 && $Ill_abyssBOSS == 0){ 
+if($Ill_abyss == 950){
+mapannounce "tur_d04_i","Illusion of Abyss : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(1000-($Ill_abyss)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_abyss == 900){
+mapannounce "tur_d04_i","Illusion of Abyss : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(1000-($Ill_abyss)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_abyss == 750){
+mapannounce "tur_d04_i","Illusion of Abyss : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(1000-($Ill_abyss)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_abyss == 500){
+mapannounce "tur_d04_i","Illusion of Abyss : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(1000-($Ill_abyss)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_abyss == 0){
+mapannounce "tur_d04_i","Illusion of Abyss : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(1000-($Ill_abyss)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+$Ill_abyss += 1;
+if($Ill_abyss >= 1000){
+monster "tur_d04_i",0,0,"Ominous Turtle General",3804,1,strnpcinfo(0)+"::OnEnd";
+$Ill_abyssBOSS += 1;
+announce "Illusion of Abyss : ขณะนี้บอสได้ปรากฏตัวออกมาแล้ว นักผจญภัยทุกท่านโปรดระวังตัวให้ดี !!",bc_all,0xFFFF00;
+sleep 2000;
+mapannounce "tur_d04_i","Ominous Turtle General : นานแล้วนะที่ไม่มีใครกล้าเหยียบเข้ามาในถ้ำของข้า เจ้าเตรียมใจมาแล้วสินะ !!",bc_map,0xFFFF00,FW_NORMAL,16;
+end;
+}
+}
+end;
+
+
+
+OnEnd:
+initnpctimer;
+$Ill_abyss_delay = 1;
+mapannounce "tur_d04_i","Ominous Turtle General :  วันแห่งโชคชะตาจะนำพาเจ้ากับข้ามาเจอกัน เมื่อถึงวันนั้น ไฟแห่งความแค้นของข้าจะแผดเผาเจ้าให้ไหม้เป็นจุล !!",bc_map,0xFFFF00,FW_NORMAL,16;
+sleep 2000;
+announce "Illusion of Abyss : เหลือเวลาอีก "+ (120-($Ill_abyss_delay)) +" นาที บอสจะฟื้นคืนชีพอีกครั้ง !!",bc_all,0xFFFF00;
+$Ill_abyss = 0;
+$Ill_abyssBOSS = 0;
+end;
+
+
+OnTimer60000:
+	$Ill_abyss_delay += 1;
+
+	if ($Ill_abyss_delay < 120) { // unknown delay (currently 100 mins)
+		initnpctimer;
+	}
+	else {
+		stopnpctimer;		
+		$Ill_abyss_delay = 0;
+		//mapannounce "tur_d04_i","Illusion of Abyss : Ominous Turtle General พร้อมแล้ว",bc_map,0xFFFF00,FW_NORMAL,16;
+	}
+	end;
+
+}
+

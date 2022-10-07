@@ -1,0 +1,286 @@
+ein_dun01,190,84,4	script	Entrance#teddy	4_energy_blue,{
+	mes "[ Entrance ]";
+	menu
+	"^FF0000•^000000 Illusion of Teddy [ Lv 150+ ]",go1,
+	"^FF0000•^000000 Cancle",cancle;
+	go1:
+	if(baselevel > 149){
+	warp "ein_d02_i",164,184;
+	end;
+	}
+	mes "Base Lv ของเจ้าน้อยเกินไป";
+	end;
+	cancle:
+	end;
+}
+
+
+/*
+ein_d02_i,177,158,4	script	Illusion Teddy Bear#ill_Teddy	1622,{
+	mes "[ Illusion Teddy Bear ]";
+	mes "ต้องการอะไร?";
+	next;
+	switch(select("Illusion Teddy Bear:Upgrade Weapon.:Upgrade Armor.")){
+		case 1:
+			mes "[ Illusion Teddy Bear ]";
+			mes "ข้าจะถลุงแร่ Illusion Gemstone","โดยอยู่ที่อัตรา 5:1";
+			next;
+			mes "[ Illusion Teddy Bear ]";
+			mes "เจ้าจะทำไหม";
+			next;
+			if (select ("ทำ:ไม่ทำ") == 2 ) end;
+			if (countitem(25272) < 5 ) {
+				mes "[ Illusion Teddy Bear ]";
+				mes "รบกวยนำ Illusion Gemstone มาด้วย";
+				end;
+			}
+			.@stone_trade = countitem(25272)/5;
+			delitem 25272,.@stone_trade*5;
+			getitem 25271,.@stone_trade;
+			mes "[ Illusion Teddy Bear ]";
+			mes "เรียบร้อย นี้ Illusion stome ของเจ้า";
+			close;
+			
+		case 2:
+			disable_items;
+			if(checkweight(25271,1) == 0 || (MaxWeight - Weight) < 1000){
+				mes "- คุณถือของมากเกินไป. -";
+				close;
+			}
+			mes "[ Illusion Teddy Bear ]";
+			mes "ข้าทำของได้ตามนี้.";
+			for(.@i = 0; .@i < getarraysize(.weapons$); .@i++){
+				explode(.@T$,.weapons$[.@i],"|");
+				.@item_id = atoi(.@T$[0]);
+				mes "<ITEM>"+getitemname(.@item_id)+"<INFO>"+.@item_id+"</INFO></ITEM>";
+			}
+			next;
+			mes "[ Illusion Teddy Bear ]";
+			mes "ให้แน่ใจว่า ^0000FFอุปกรณ์ของท่านต้องมีระดับตีบวกมากกว่า 9^000000 ก่อนจะนำมาให้ข้า.";
+			next;
+			mes "[ Illusion Teddy Bear ]";
+			mes "ที่สำคัญ, ^0000FFการ์ด และตีบวกจะหายไปทั้งหมด.^000000";
+			next;
+			mes "[ Illusion Teddy Bear ]";
+			mes "วัตถุดิบที่ต้องการจะมี ^0000FFIllusion Stones และของบางอย่าง^000000 สำหรับการพัฒนาอุปกรณ์.";
+			next;
+			for(.@i = 0; .@i < getarraysize(.weapons$); .@i++){
+				explode(.@T$,.weapons$[.@i],"|");
+				.@item_id = atoi(.@T$[0]);
+				.@menu$ += getitemname(.@item_id) +":";
+			}
+			.@s = select(.@menu$) - 1;
+			explode(.@T$,.weapons$[.@s],"|");
+			explode(.@TT$,.@T$[2],",");
+			mes "[ Illusion Teddy Bear ]";
+			mes "นี้คือของที่ต้องการ.";
+			mes "^0000FF+9 " + getitemname(atoi(.@T$[1])) + " []^000000";
+			for(.@i = 0; .@i < getarraysize(.@TT$); .@i++){
+				explode(.@data$,.@TT$[.@i],":");
+				.@item_id[.@i] = atoi(.@data$[0]);
+				.@amount[.@i] = atoi(.@data$[1]);
+				mes "^0000FF" + .@amount[.@i] +" "+ getitemname(.@item_id[.@i]) + "^000000";
+			}
+			mes "พัฒนาอุปกรณ์นี้เลยไหม";
+			next;
+			if(select("เอาเลย.:ยังต้องการวัตถุดิบเพิ่มเติม") == 2){
+				mes "[ Illusion Teddy Bear ]";
+				mes "มาหาข้า เมื่อเจ้าพร้อม.";
+				close;
+			}
+			if(getequipid(EQI_HAND_R) != atoi(.@T$[1])){
+				mes "[ Illusion Teddy Bear ]";
+				mes "กรุณาสวมใส่ " + getitemname(atoi(.@T$[1])) + " ก่อน.";
+				close;
+			}
+			for(.@i = 0; .@i < getarraysize(.@item_id); .@i++){
+				if(countitem(.@item_id[.@i]) < .@amount[.@i])
+					.@miss++;
+			}
+			if(getequiprefinerycnt(EQI_HAND_R) < 9 || .@miss > 0){
+				mes "[ Illusion Teddy Bear ]";
+				mes "วัตถุดิบไม่เพียงพอ หรือ อุปกรณ์ของเจ้าตีบวกไม่ถึงเกณฑ์";
+				end;
+			}
+			mes "[Illusion Researcher]";
+			mes "กำลังจัดทำ.";
+			delequip(EQI_HAND_R);
+			for(.@i = 0; .@i < getarraysize(.@item_id); .@i++)
+				delitem .@item_id[.@i],.@amount[.@i];
+			getitem atoi(.@T$[0]),1;			
+			break;
+			
+			
+		case 3:
+			disable_items;
+			if(checkweight(25271,1) == 0 || (MaxWeight - Weight) < 1000){
+				mes "- คุณถือของมากเกินไป. -";
+				close;
+			}
+			mes "[ Illusion Teddy Bear ]";
+			mes "ข้าทำของได้ตามนี้.";
+			for(.@i = 0; .@i < getarraysize(.armors$); .@i++){
+				explode(.@T$,.armors$[.@i],"|");
+				.@item_id = atoi(.@T$[0]);
+				mes "<ITEM>"+getitemname(.@item_id)+"<INFO>"+.@item_id+"</INFO></ITEM>";
+			}
+			next;
+			mes "[ Illusion Teddy Bear ]";
+			mes "ให้แน่ใจว่า ^0000FFอุปกรณ์ของท่านต้องมีระดับตีบวกมากกว่า 9^000000 ก่อนจะนำมาให้ข้า.";
+			next;
+			mes "[ Illusion Teddy Bear ]";
+			mes "ที่สำคัญ, ^0000FFการ์ด และตีบวกจะหายไปทั้งหมด.^000000";
+			next;
+			mes "[ Illusion Teddy Bear ]";
+			mes "วัตถุดิบที่ต้องการจะมี ^0000FFIllusion Stones และของบางอย่าง^000000 สำหรับการพัฒนาอุปกรณ์.";
+			next;
+			for(.@i = 0; .@i < getarraysize(.armors$); .@i++){
+				explode(.@T$,.armors$[.@i],"|");
+				.@item_id = atoi(.@T$[0]);
+				.@menu$ += getitemname(.@item_id) +":";
+			}
+			.@s = select(.@menu$) - 1;
+			explode(.@T$,.armors$[.@s],"|");
+			explode(.@TT$,.@T$[2],",");
+			.@slot = atoi(.@T$[3]);
+			mes "[ Illusion Teddy Bear ]";
+			mes "นี้คือของที่ต้องการ.";
+			mes "^0000FF+9 " + getitemname(atoi(.@T$[1])) + "^000000";
+			for(.@i = 0; .@i < getarraysize(.@TT$); .@i++){
+				explode(.@data$,.@TT$[.@i],":");
+				.@item_id[.@i] = atoi(.@data$[0]);
+				.@amount[.@i] = atoi(.@data$[1]);
+				mes "^0000FF" + .@amount[.@i] +" "+ getitemname(.@item_id[.@i]) + "^000000";
+			}
+			mes "พัฒนาอุปกรณ์นี้เลยไหม";
+			next;
+			if(select("เอาเลย.:ยังต้องการวัตถุดิบเพิ่มเติม") == 2){
+				mes "[ Illusion Teddy Bear ]";
+				mes "มาหาข้า เมื่อเจ้าพร้อม.";
+				close;
+			}
+			if(getequipid(.@slot) != atoi(.@T$[1])){
+				mes "[ Illusion Teddy Bear ]";
+				mes "กรุณาสวมใส่ " + getitemname(atoi(.@T$[1])) + " ก่อน.";
+				close;
+			}
+			for(.@i = 0; .@i < getarraysize(.@item_id); .@i++){
+				if(countitem(.@item_id[.@i]) < .@amount[.@i])
+					.@miss += 1;
+			}
+			if(getequiprefinerycnt(.@slot) < 9 || .@miss > 0){
+				mes "[ Illusion Teddy Bear ]";
+				mes "วัตถุดิบไม่เพียงพอ หรือ อุปกรณ์ของเจ้าตีบวกไม่ถึงเกณฑ์";
+				end;
+			}
+			mes "[Illusion Researcher]";
+			mes "กำลังจัดทำ.";
+			delequip(.@slot);
+			for(.@i = 0; .@i < getarraysize(.@item_id); .@i++)
+				delitem .@item_id[.@i],.@amount[.@i];
+			getitem atoi(.@T$[0]),1;			
+			break;
+	}
+	next;
+	mes "[ Illusion Teddy Bear ]";
+	mes "เสร็จแล้ว.";
+	end;
+	
+OnInit:
+	setarray .weapons$,
+		"28745|1242|25271:95,25616:75,25617:50",
+		"28244|13167|25271:95,25618:75,25615:150",
+		"2051|1618|1620:1,25271:125,25619:15,25618:100,25617:100",
+		"2051|1620|1618:1,25271:125,25619:4,25618:100,25617:100";
+
+	setarray .armors$,
+		"22190|2406|25271:85,25616:50,25618:50|2",
+		"19344|5070|25271:115,25619:5,25617:50,25615:100|6";
+
+end;
+}
+*/
+// Monster Spawn
+ein_d02_i,0,0	monster	Red Teddy Bear	20255,50,5000,5000,"#Ill_teddy::OnIllMobDead"
+ein_d02_i,0,0	monster	Yellow Teddy Bear	20256,50,5000,5000,"#Ill_teddy::OnIllMobDead"
+ein_d02_i,0,0	monster	Green Teddy Bear	20257,50,5000,5000,"#Ill_teddy::OnIllMobDead"
+ein_d02_i,0,0	monster	White Teddy Bear	20258,25,5000,5000,"#Ill_teddy::OnIllMobDead"
+ein_d02_i,0,0	monster	Blue Teddy Bear	20259,25,5000,5000,"#Ill_teddy::OnIllMobDead"
+ein_d02_i,0,0	monster	Hardworking Pitman	20261,30,5000,5000,"#Ill_teddy::OnIllMobDead"
+ein_d02_i,0,0	monster	Soul Fragment	20262,20,5000,5000,"#Ill_teddy::OnIllMobDead"
+ein_d02_i,0,0	monster	Sinister Dwelling Obsidian	20263,20,5000,5000,"#Ill_teddy::OnIllMobDead"
+
+
+ein_d02_i,0,0,0	script	#Ill_teddy	-1,{
+
+OnInit:
+$Ill_teddy = 0;
+$Ill_teddy_delay = 0;
+$Ill_teddyBOSS = 0;
+end;
+
+OnIllMobDead:
+if($Ill_teddy_delay == 0 && $Ill_teddyBOSS == 0){
+if($Ill_teddy == 2450){
+mapannounce "ein_d02_i","Illusion of Teddy : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(2500-($Ill_teddy)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_teddy == 2400){
+mapannounce "ein_d02_i","Illusion of Teddy : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(2500-($Ill_teddy)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_teddy == 2250){
+mapannounce "ein_d02_i","Illusion of Teddy : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(2500-($Ill_teddy)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_teddy == 2000){
+mapannounce "ein_d02_i","Illusion of Teddy : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(2500-($Ill_teddy)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_teddy == 1500){
+mapannounce "ein_d02_i","Illusion of Teddy : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(2500-($Ill_teddy)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_teddy == 1000){
+mapannounce "ein_d02_i","Illusion of Teddy : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(2500-($Ill_teddy)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_teddy == 500){
+mapannounce "ein_d02_i","Illusion of Teddy : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(2500-($Ill_teddy)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+if($Ill_teddy == 0){
+mapannounce "ein_d02_i","Illusion of Teddy : ต้องสังหารมอนเตอร์ในแผนที่นี้อีก "+callfunc("F_InsertComma",(2500-($Ill_teddy)))+" ตัว บอสจึงจะปรากฏตัวขึ้น !!",bc_map,0xFFFF00,FW_NORMAL,16;
+}
+$Ill_teddy += 1;
+if($Ill_teddy >= 2500){
+monster "ein_d02_i",0,0,"Shining Teddy Bear",20260,1,strnpcinfo(0)+"::OnEnd";
+$Ill_teddyBOSS += 1;
+announce "Illusion of Teddy : ขณะนี้บอสได้ปรากฏตัวออกมาแล้ว นักผจญภัยทุกท่านโปรดระวังตัวให้ดี !!",bc_all,0xFFFF00;
+sleep 2000;
+mapannounce "ein_d02_i","Shining Teddy Bear : ใครกันที่มันกล้ามาทำร้ายเหล่าลูก ๆ ที่แสนน่ารักของข้า !!",bc_map,0xFFFF00,FW_NORMAL,16;
+end;
+}
+}
+end;
+
+
+
+OnEnd:
+initnpctimer;
+$Ill_teddy_delay = 1;
+mapannounce "ein_d02_i","Shining Teddy Bear : เมื่อถึงเวลานั้นเจ้าจะต้องชดใช้เจ้านักผจญภัยโอหัง !!",bc_map,0xFFFF00,FW_NORMAL,16;
+sleep 2000;
+announce "Illusion of Teddy : เหลือเวลาอีก "+ (120-($Ill_teddy_delay)) +" นาที บอสจะฟื้นคืนชีพอีกครั้ง !!",bc_all,0xFFFF00;
+$Ill_teddy = 0;
+$Ill_teddyBOSS = 0;
+end;
+
+
+OnTimer60000:
+	$Ill_teddy_delay += 1;
+
+	if ($Ill_teddy_delay < 120) { // unknown delay (currently 100 mins)
+		initnpctimer;
+	}
+	else {
+		stopnpctimer;		
+		$Ill_teddy_delay = 0;
+		//mapannounce "ein_d02_i","Illusion of Teddy : Shining Teddy Bear พร้อมแล้ว",bc_map,0xFFFF00,FW_NORMAL,16;
+	}
+	end;
+
+}

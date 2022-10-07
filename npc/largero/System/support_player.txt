@@ -1,0 +1,224 @@
+moroccz,180,111,6	script	Support Player::SPC	729,{
+
+	callfunc "SupportPlayer","ช่วยเหลือผู้เล่น",0;
+
+	end;
+}
+
+
+function	script	SupportPlayer	{
+
+	.@npc_name$ = getarg(0);
+
+	mes "[ ^0000FF"+ .@npc_name$ +"^000000 ]";
+
+	//cutin "ep13_ahat_f",2;
+
+	mes "สวัสดีท่าน ^0000FF" + strcharinfo(0) + "^000000 มีอะไรให้ข้าช่วย";
+
+	next;
+
+	switch(select("• กลับจุดเซฟ","• เปลี่ยนรหัสผ่าน","• รีเซทการแต่งกาย","• ออก"))
+
+	{
+
+	case 1:
+
+		mes "[ ^0000FF"+ .@npc_name$ +"^000000 ]";
+
+		mes "กรุณาใส่ชื่อตัวละครที่จะกลับจุดเซฟ";
+
+		input @name1$;
+
+		next;
+
+		mes "[ ^0000FF"+ .@npc_name$ +"^000000 ]";
+
+		mes "กรุณาใส่ ID ของตัวละครนี้";
+
+		input @name2$;
+
+		next;
+
+		set @checkchar,0;
+
+		set @checkid,0;
+
+		set @savemap$,"";
+
+		set @savex,0;
+
+		set @savey,0;
+
+		query_sql "SELECT `account_id`,`save_map`,`save_x`,`save_y` FROM `char` WHERE `name`='"+escape_sql(@name1$)+"'",@checkchar,@savemap$,@savex,@savey;
+
+		query_sql "SELECT `account_id` FROM `login` WHERE `userid`='"+escape_sql(@name2$)+"'",@checkid;
+
+		if(getarraysize(@checkchar) == 1&&getarraysize(@checkid) == 1&&@checkchar[0]==@checkid[0])
+
+		{
+
+			query_sql "UPDATE `char` SET `last_map`='@savemap$[0]',`last_x`='@savex[0]',`last_y`='@savey[0]' WHERE `name`='"+escape_sql(@name1$)+"'";
+
+			mes "[ ^0000FF"+ .@npc_name$ +"^000000 ]";
+
+			mes "ID ^FF0000"+@name1$+"^000000 ตัวละคร ^FF0000"+@name2$+"^000000 ได้กลับจุดเซิฟแล้ว";
+
+			mes "หากตัวละครมีปัญหา ก็มาหาได้ !!";
+
+			cutin "",255;
+
+		}
+
+		else
+
+		{
+
+			mes "[ ^0000FF"+ .@npc_name$ +"^000000 ]";
+
+			mes "มีการใส่ข้อมูลผิดพลาด";
+
+			cutin "",255;
+
+		}
+
+		break;
+
+
+
+	case 2:
+
+		mes "[ ^0000FF"+ .@npc_name$ +"^000000 ]";
+
+		mes "กรุณาใส่ ID ของท่าน";
+
+		input @name1$;
+
+		next;
+
+		mes "[ ^0000FF"+ .@npc_name$ +"^000000 ]";
+
+		mes "กรุณาใส่ Password เดิม";
+
+		input @name2$;
+
+		next;
+
+		mes "[ ^0000FF"+ .@npc_name$ +"^000000 ]";
+
+		mes "กรุณาใส่ Password ใหม่";
+
+		input @name3$;
+
+		next;
+
+		set @checkid,0;
+
+		query_sql "SELECT `account_id` FROM `login` WHERE `userid`='"+escape_sql(@name1$)+"' AND `user_pass`='"+escape_sql(@name2$)+"' ",@checkid;
+
+		if(getarraysize(@checkid)==1&&@name3$!="")
+
+		{
+
+			query_sql "UPDATE `login` SET `user_pass`='"+escape_sql(@name3$)+"' WHERE `userid`='"+escape_sql(@name1$)+"'";
+
+			mes "[ ^0000FF"+ .@npc_name$ +"^000000 ]";
+
+			mes "ID ^FF0000"+@name1$+"^000000 ได้ถูกเปลี่ยนพาสแล้ว";
+
+			cutin "",255;
+
+		}
+
+		else
+
+		{
+
+			mes "[ ^0000FF"+ .@npc_name$ +"^000000 ]";
+
+			mes "มีการใส่ข้อมูลผิดพลาด";
+
+			cutin "",255;
+
+		}
+
+		break;
+
+	
+
+	case 3:
+
+		mes "[ ^0000FF"+ .@npc_name$ +"^000000 ]";
+
+		mes "กรุณาใส่ชื่อตัวละครที่ต้องการรีเซท";
+
+		input @name1$;
+
+		next;
+
+		mes "[ ^0000FF"+ .@npc_name$ +"^000000 ]";
+
+		mes "กรุณาใส่ ID ของตัวละครนี้";
+
+		input @name2$;
+
+		next;
+
+		set @checkchar,0;
+
+		set @checkid,0;
+
+		query_sql "SELECT `account_id` FROM `char` WHERE `name`='"+escape_sql(@name1$)+"'",@checkchar;
+
+		query_sql "SELECT `account_id` FROM `login` WHERE `userid`='"+escape_sql(@name2$)+"'",@checkid;
+
+		if(getarraysize(@checkchar) == 1 && getarraysize(@checkid) == 1 && @checkchar[0]==@checkid[0])
+
+		{
+
+			query_sql "UPDATE `char` SET `hair`='1',`hair_color`='0',`clothes_color`='0' WHERE `name`='"+escape_sql(@name1$)+"' AND `account_id`='"+@checkid[0]+"'";
+
+			mes "[ ^0000FF"+ .@npc_name$ +"^000000 ]";
+
+			mes "ID ^FF0000"+@name2$+"^000000";
+
+			mes "ตัวละคร ^FF0000"+@name1$+"^000000";
+
+			mes "ได้รีเซทการแต่งกายแล้ว คุณต้องออกจากเกม";
+
+			mes "แล้วเข้ามาใหม่ ถึงจะเห็นผล !!";
+
+			cutin "",255;
+
+		}
+
+		else
+
+		{
+
+			mes "[ ^0000FF"+ .@npc_name$ +"^000000 ]";
+
+			mes "มีการใส่ข้อมูลผิดพลาด";
+
+			cutin "",255;
+
+		}
+
+		break;
+
+	case 4:
+
+		mes "[ ^0000FF"+ .@npc_name$ +"^000000 ]";
+
+		mes "แล้วเจอกัน";
+
+		cutin "",255;
+
+		break;
+
+	}
+
+	close;
+
+}
+

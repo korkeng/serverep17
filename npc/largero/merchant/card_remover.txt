@@ -1,0 +1,191 @@
+moroccz,143,74,4	script	นักถอดการ์ด	918,{
+
+	set .zenycost,2000000;    // ค่าใช้จ่ายในการให้บริการถอดการ์ด ( Zeny)
+	set .percardcost,250000;  // ค่าใช้จ่ายต่อ การ์ด ของการให้บริการถอดการ์ด (Zeny)
+	set .faildestroy,1;      // ควรตั้งค่า การถอดการ์ด ให้มีโอกาศของความล้มเหลวในการถอดการ์ด หรือไม่ ? (1=ใช่, 0=ไม่)
+
+	disable_items;
+	mes "[Wise Old Woman]";
+	mes "สวัสดี, ฉันสามารถทำการถอดการ์ดที่ไอเท็ม";
+	next;
+	switch(select("• ถอดแบบธรรมดา:• ถอด 100% (^FF0000 500 Cash^000000):• ค่าใช้บริการ.")) {
+	case 1:
+		mes "[Wise Old Woman]";
+		mes "ดีมาก.รายการไอเท็มซึ่งฉันจะต้องตรวจสอบให้คุณ ";
+		next;
+
+		setarray .@indices[1], EQI_HEAD_TOP, EQI_ARMOR, EQI_HAND_L, EQI_HAND_R, EQI_GARMENT, EQI_SHOES, EQI_ACC_L, EQI_ACC_R, EQI_HEAD_MID, EQI_HEAD_LOW;
+		for( set .@i,1; .@i <= 10; set .@i,.@i+1 ) {
+			if( getequipisequiped(.@indices[.@i]) )
+				set .@menu$, .@menu$ + F_getpositionname(.@indices[.@i]) + "-[" + getequipname(.@indices[.@i]) + "]";
+			set .@menu$, .@menu$ + ":";
+		}
+		set .@part, .@indices[ select(.@menu$) ];
+		if(!getequipisequiped(.@part)) {
+			mes "[Wise Old Woman]";
+			mes "ดูเหมือนคุณไม่ได้สวมใส่อุปกรณ์ที่มีการ์ดอยู่ แล้วฉันควรจะทำอย่างไรดี ?.";
+			close;
+		}
+		if(getequipcardcnt(.@part) == 0) {
+			mes "[Wise Old Woman]";
+			mes "ไม่มีการ์ดที่ถูกประกอบในรายการไอเท็ม ฉันไม่สามารถทำอะไรกับมัน, ฉันไม่ค่อยชอบใจสักเท่าไร.";
+			close;
+		}
+		set .@cardcount,getequipcardcnt(.@part);
+		
+		if (!checkweight(1202,(.@cardcount+1))) { 
+			mes "^3355FFรอสักครู่!";
+			mes "ฉันไม่สามารถให้บริการ ใดๆ ของฉันให้กับคุณได้เพราะ";
+			mes "คุณกำลังแบกน้ำหนักของคุณมากเกินไป";
+			mes "นำสิ่งที่คุณคิดว่าไม่น่าจะเป็นรายการพิเศษของคุณ";
+			mes "นำไปจัดเก็บ กับ คาฟร่า และ กลับมาอีกครั้ง~";
+			close;
+		}
+		mes "[Wise Old Woman]";
+		mes "ไอเทมนี้มีการ์ดอยู่จำนวน " + .@cardcount + " ใบ";
+		mes "คุณต้องการให้ฉันถอดมันต่อเลยหรือไม่ ?";
+		mes "สิ่งของที่จะต้องใช้คือ  " + callfunc("F_InsertComma",.zenycost+(.@cardcount * .percardcost)) + " Zeny, ^0000FFStar Crumb^000000, และ ^0000FFYellow Gemstone^000000.";
+		next;
+		if(select("ดีมาก. ทำมันเลย.:ไม่เป็นไร.") == 2) {
+			mes "[Wise Old Woman]";
+			mes "ดีมาก. และกลับมาอีกครั้งถ้าเมื่อไรคุณต้องการใช้บริการ.";
+			close;
+		}
+		if((zeny < (.zenycost+(.@cardcount * .percardcost))) || (countitem(1000) < 1) || (countitem(715) < 1)) {
+			mes "[Wise Old Woman]";
+			mes "คุณมีรายการไอเท็มที่จำเป็นต่อการทำงานของฉัน. กลับมาอีกครั้งถ้าคิดว่าพร้อมแล้ว.";
+			close;
+		}
+		mes "[Wise Old Woman]";
+		mes "ก่อนที่ผมจะเริ่มต้น ผมต้องเตือนคุณ, ว่าฉันอาจจะล้มเหลว. ถ้าผมทำ, อาจจะทำลายการ์ด, และ ไอเท็มไปด้วย, หรือ ทั้งสองอย่าง. และ ฉันจะไม่คืนเงินให้ตามที่กล่าวไว้. ซึ่งมันเป็นสิ่งสำคัญสำหรับคุณ : ต้องการที่จะรักษา การ์ด, หรือ ไอเท็ม ?";
+		next;
+		switch(select("ฉันเปลี่ยนใจเกี่ยวกับเรื่องนี้.:เก็บไอเท็ม.:เก็บการ์ด.")) {
+		case 1:
+			mes "[Wise Old Woman]";
+			mes "ดีมาก. และกลับมาอีกครั้งถ้าเมื่อไรคุณต้องการใช้บริการ.";
+			close;
+		case 2:
+			set .@failtype,1;
+			break;
+		case 3:
+			set .@failtype,2;
+		}
+		mes "[Wise Old Woman]";
+		mes "ดีมาก. ฉันจะเริ่มต้นเดียวนี้.";
+		set Zeny, Zeny - (.zenycost+(.@cardcount * .percardcost));
+		delitem 1000,1; //Star_Crumb
+		delitem 715,1; //Yellow_Gemstone
+		
+		// เปลี่ยนค่าคงที่ในอีก 3 ค่า ที่มีค่ามีโอกาศล้มเหลวที่กำหนดไว้ใน refine_db.txt
+		// ค่าแรก = โอกาศล้มเหลวทั้งหมด (การ์ด และ ไอเท็ม จะถูกทำลาย)
+		// ค่าสอง = มีโอกาศล้มเหลวบางส่วน (สิ่งหนึ่งหรืออื่นๆ จะถูกทำลาย,ตามที่ผู้เล่นกำหนดที่จะรักษาไอเท็มหรือการ์ดไว้)
+		// ค่าสาม = มีโอกาศล้มเหลวแต่ไอเท็มและการ์ดไม่เสียหาย (แต่ทั้งหมดที่หายไปคือ ค่าบริการ และ การลงทุน ทั้งหมด)
+
+		set .@failchance,rand(100);
+		if (.faildestroy==1) {
+			if(.@failchance < 2) {
+				next;
+				failedremovecards .@part,0;
+				mes "[Wise Old Woman]";
+				mes "ในขณะที่ฉันกำลังจัดการเพื่อเอาการ์ดออกจากรายการนั้น. กระบวนการเป็นความล้มเหลวทั้งหมด การ์ด และ ไอเท็ม ได้ถูกทำลาย.";
+				close;
+			}
+
+			if(.@failchance < 8) {
+				if (.@failtype == 1) {
+					next;
+					failedremovecards .@part,1;
+					mes "[Wise Old Woman]";
+					mes "ในขณะที่ฉันกำลังจัดการเพื่อเอาการ์ดออกจากรายการนั้น, การ์ดได้เกิดความล้มเหลวในกระบวนการ การนำออก. แต่ไอเท็ม, ยังคงไม่เป็นอะไร....";
+					close;
+				}
+
+				if (.@failtype == 2) {
+					next;
+					failedremovecards .@part,2;
+					mes "[Wise Old Woman]";
+					mes "ส่วนใหญ่ที่จะโชคร้ายที่ผมประสบความสำเร็จในการนำ การ์ดออกจากไอเท็ม. แต่ ไอเท็มนั้นได้ถูกทำลายระหว่างการดำเนินการ, ";
+					close;
+				}
+			}
+		}
+
+		if(.@failchance < 10) {
+			next;
+			failedremovecards .@part,3;
+			mes "[Wise Old Woman]";
+			mes "จากกระบวนการที่ทำการถอดการ์ดนั้นไม่ประสบผลสำเร็จ. แต่ยังโชคดี, ที่ทั้งสองรายการ ไอเท็ม และ การ์ด ยังคงอยู่สภาพเดิม.";
+			close;
+		}
+		next;
+		successremovecards .@part;
+		mes "[Wise Old Woman]";
+		mes "กระบวนการ การถอดการ์ดประสบผลสำเร็จ. และ ไอเท็ม และ การ์ด ไม่ถูกทำลายทั้งสองอย่าง โชคดี.";
+		close;
+		
+		case 2:
+		mes "[Wise Old Woman]";
+		mes "ดีมาก.รายการไอเท็มซึ่งฉันจะต้องตรวจสอบให้คุณ ";
+		next;
+
+		setarray .@indices[1], EQI_HEAD_TOP, EQI_ARMOR, EQI_HAND_L, EQI_HAND_R, EQI_GARMENT, EQI_SHOES, EQI_ACC_L, EQI_ACC_R, EQI_HEAD_MID, EQI_HEAD_LOW;
+		for( set .@i,1; .@i <= 10; set .@i,.@i+1 ) {
+			if( getequipisequiped(.@indices[.@i]) )
+				set .@menu$, .@menu$ + F_getpositionname(.@indices[.@i]) + "-[" + getequipname(.@indices[.@i]) + "]";
+			set .@menu$, .@menu$ + ":";
+		}
+		set .@part, .@indices[ select(.@menu$) ];
+		if(!getequipisequiped(.@part)) {
+			mes "[Wise Old Woman]";
+			mes "ดูเหมือนคุณไม่ได้สวมใส่อุปกรณ์ที่มีการ์ดอยู่ แล้วฉันควรจะทำอย่างไรดี ?.";
+			close;
+		}
+		if(getequipcardcnt(.@part) == 0) {
+			mes "[Wise Old Woman]";
+			mes "ไม่มีการ์ดที่ถูกประกอบในรายการไอเท็ม ฉันไม่สามารถทำอะไรกับมัน, ฉันไม่ค่อยชอบใจสักเท่าไร.";
+			close;
+		}
+		set .@cardcount,getequipcardcnt(.@part);
+		
+		if (!checkweight(1202,(.@cardcount+1))) { 
+			mes "^3355FFรอสักครู่!";
+			mes "ฉันไม่สามารถให้บริการ ใดๆ ของฉันให้กับคุณได้เพราะ";
+			mes "คุณกำลังแบกน้ำหนักของคุณมากเกินไป";
+			mes "นำสิ่งที่คุณคิดว่าไม่น่าจะเป็นรายการพิเศษของคุณ";
+			mes "นำไปจัดเก็บ กับ คาฟร่า และ กลับมาอีกครั้ง~";
+			close;
+		}
+		mes "[Wise Old Woman]";
+		mes "การถอดในครั้งนี้คุณต้องเสีย 500 Cash Point";
+		next;
+		if(select("ดีมาก. ทำมันเลย.:ไม่เป็นไร.") == 2) {
+			mes "[Wise Old Woman]";
+			mes "ดีมาก. และกลับมาอีกครั้งถ้าเมื่อไรคุณต้องการใช้บริการ.";
+			close;
+		}
+		if(#CASHPOINTS  < 500) {
+			mes "[Wise Old Woman]";
+			mes "คุณมี Cash Point ไม่พอสำหรับค่าบริการ.";
+			close;
+		}
+		mes "[Wise Old Woman]";
+		mes "ดีมาก. ฉันจะเริ่มต้นเดียวนี้.";
+		set #CASHPOINTS,#CASHPOINTS - 500;
+		
+		next;
+		successremovecards .@part;
+		mes "[Wise Old Woman]";
+		mes "กระบวนการ การถอดการ์ดประสบผลสำเร็จ. และ ไอเท็ม และ การ์ด ไม่ถูกทำลายทั้งสองอย่าง โชคดี.";
+		close;
+	case 3:
+		mes "[Wise Old Woman]";
+		mes "ข้าคิดค่าบริการ "+callfunc("F_InsertComma",.zenycost)+" Zeny, บวก "+callfunc("F_InsertComma",.percardcost)+" Zeny สำหรับแต่ละ การ์ด จากรายการไอเท็ม. นอกจากนี้, ฉันยังต้องการ star crumb และ  yellow gemstone เพื่อเริ่มกระบวนการ.";
+		close;
+OnInit:
+while (1) {
+			showscript "[ บริการถอดการ์ด ]";
+			sleep 500;
+		}
+end;
+}
+}

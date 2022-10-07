@@ -1,0 +1,27 @@
+moroccz,171,113,4	script	Delete Stats	4_M_3RDPRIN2 3,{
+	mes "[ Status Deleter ]";
+	mes "หากต้องการจะลบ Status ออก";
+	mes "คุณจะไม่ได้สเตตัสคืน";
+	mes "และบริการนี้ ฟรี !!";	
+	next;
+	if(select("• ตกลง ! ข้าเข้าใจแล้ว","• ยกเลิก") == 2) end;
+	next;
+	switch(select("• Str","• Agi","• Vit ","• Int","• Dex","• Luk")){
+		case 1: callsub S_STATSDELETE,"Str";
+		case 2: callsub S_STATSDELETE,"Agi";
+		case 3: callsub S_STATSDELETE,"Vit";
+		case 4: callsub S_STATSDELETE,"Int";
+		case 5: callsub S_STATSDELETE,"Dex";
+		case 6: callsub S_STATSDELETE,"Luk";
+	}
+	end;
+		
+	S_STATSDELETE:
+		input .@integer;
+		if(.@integer <= 0){
+			message strcharinfo(0),"ท่านใส่ข้อมูลไม่ถูกต้อง ตัวเลขที่ใส่จะต้องมีค่ามากกว่า 0";
+			end;
+		}
+		atcommand "@" + getarg(0) + " " + - .@integer;
+		end;
+}

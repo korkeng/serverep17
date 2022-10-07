@@ -1,0 +1,159 @@
+moroccz,108,72,6	script	Optioner	460,{
+	disable_items;
+	mes .header$;
+	mes "สวัสดี " + strcharinfo(0);
+	mes "ข้ามีบริการสุ่ม ^0000FF Option ^000000ให้แก่ไอเทมของท่าน";
+	mes "ในราคาที่เป็นมิตรเพียง ^FF0000200 Cash ^000000";
+	mes "เลือกอุปกรณ์ที่ท่านจะออฟ";
+	next;
+	for(set .@i, 0; .@i < getarraysize(.indice); set .@i, .@i + 1){
+		if(getequipisequiped(.indice[.@i])) {
+			set .@menu$, .@menu$ + "^58ACFA" + F_getpositionname(.indice[.@i]) + "^000000 • [ " + getequipname(.indice[.@i]) + " ]";
+		}
+		set .@menu$, .@menu$ + ":";
+	}
+	if(.@menu$ == ""){
+		mes .header$;
+		mes "ท่านไม่ได้สวมใส่อุปกรณ์ใดๆอยู่เลย";
+		mes "กลับมาหาข้าใหม่ภายหลังนะ";
+		end;
+	}
+	set .@part, .indice[select(.@menu$)-1];
+	mes .header$;
+	mes "ท่านสนใจบริการไหนล่ะ ?";
+	mes "- โอกาสในการสุ่มออฟ -";
+	for(set .@i, 0; .@i < getarraysize(.option_rate); set .@i, .@i + 1){
+		mes "ช่องที่ ^FF6699" + (.@i+1) + "^000000 ^0000FF" + .option_rate[.@i] + "%^000000";
+	}
+	next;
+	switch(select("• สุ่มออฟชั่น","• รีออฟชั่นบางช่อง","• ข้าแค่ผ่านมา")){
+		case 1:
+			mes .header$;
+			mes "ค่าใช้จ่ายครั้งละ ^FF0000" + .cost + (.cost > 1 ? " Cash" : " Cash") + "^000000";
+			mes "ท่านต้องการสุ่มเลยไหม ?";
+			for(set .@i, 0; .@i < MAX_ITEM_RDM_OPT; set .@i, .@i + 1){
+				if(getequiprandomoption(.@part,.@i,ROA_ID) && getequiprandomoption(.@part,.@i,ROA_ID) != .nothing_option){
+					set .@option_amount, .@option_amount + 1;
+				}
+			}
+			if(.@option_amount > 0){
+				next;
+				mes .header$;
+				mes "ไอเทมของท่านมีออฟชั่นอยู่";
+				mes "หากท่านทำการออฟชั่นนี้";
+				mes "^FF0000ออฟชั่นที่มีอยู่ของท่านจะถูก^000000";
+				mes "^FF0000รีเซตทั้งหมด^000000 ท่านแน่ใจหรือไม่";
+			}
+			next;
+			if(select("• แน่ใจ เริ่มเลย","• ยัง") == 2) end;
+			if(#CASHPOINTS < .cost){
+				mes .header$;
+				mes "ท่านมี Cashpoint";
+				mes "ไม่เพียงพอ ....";
+				end;
+			}
+			set #CASHPOINTS, #CASHPOINTS - .cost;
+			
+			// ================ Remove all randopt -> Used nothing opt
+			for(set .@i, 0; .@i < .@option_amount; set .@i, .@i + 1){
+				setrandomoption(.@part,.@i,.nothing_option,0,0);	
+			}
+			
+			for(set .@i, 0; .@i < getarraysize(.option_rate); set .@i, .@i + 1){
+				if(rand(1,100) <= .option_rate[.@i]){
+					set .@success_slot, .@success_slot + 1;
+				}
+			}
+			for(set .@i, 0; .@i < .@success_slot; set .@i, .@i + 1){
+				if(rand(1,100) <= .rare_option_rate){
+					set .@id, .rare_rate_option[rand(0,getarraysize(.rare_rate_option)-1)];
+					set .@value, .rare_rate_value[rand(0,getarraysize(.rare_rate_value)-1)];
+				} else {
+					set .@id, .easy_rate_option[rand(0,getarraysize(.easy_rate_option)-1)];
+					set .@value, .easy_rate_value[rand(0,getarraysize(.easy_rate_value)-1)];
+				}
+				setrandomoption(.@part,.@i,.@id,.@value,0);	
+			}
+			specialeffect2 62;
+			dispbottom .header$ + " : ทำการออฟชั่นใช้ Cashpoint ไปเป็นจำนวน " + .cost + " คงเหลือ " + #CASHPOINTS;
+			break;
+			
+		case 2:
+			for(set .@i, 0; .@i < MAX_ITEM_RDM_OPT; set .@i, .@i + 1){
+				if(getequiprandomoption(.@part,.@i,ROA_ID) && getequiprandomoption(.@part,.@i,ROA_ID) != .nothing_option){
+					set .@option_amount, .@option_amount + 1;
+					setarray .@real_slot[.@i], .@i;
+				}
+			}
+			if(.@option_amount == 0){
+				mes .header$;
+				mes "ไอเทมของท่านยังไม่มี option";
+				mes "ไม่สามารถใช้บริการนี้ได้";
+				end;
+			}
+			mes .header$;
+			mes "ท่านต้องการรีเซตออฟ";
+			mes "และสุ่มออฟใหม่ในช่องไหน";
+			mes "ค่าใช้จ่ายครั้งละ ^FF0000" + .reset_cost + (.reset_cost > 1 ? " CashPoint" : " Cash Point") + "^000000";
+			mes "กรุณาเลือก^0000FFช่องที่ต้องการลบ^000000";
+			for(set .@i, 0; .@i < .@option_amount; set .@i, .@i + 1){
+				set .@slot_menu$, .@slot_menu$ + "• ช่องที่ " + (.@i+1);
+				set .@slot_menu$, .@slot_menu$ + ":";
+			}
+			next;
+			set .@slot_selected, .@real_slot[select(.@slot_menu$)-1];
+			if(#CASHPOINTS < .reset_cost){
+				mes .header$;
+				mes "ท่านมี Cashpoint";
+				mes "ไม่เพียงพอ ....";
+				end;
+			}
+			set #CASHPOINTS, #CASHPOINTS - .reset_cost;
+			if(rand(1,100) <= .rare_option_rate){
+				set .@id, .rare_rate_option[rand(0,getarraysize(.rare_rate_option)-1)];
+				set .@value, .rare_rate_value[rand(0,getarraysize(.rare_rate_value)-1)];
+			} else {
+				set .@id, .easy_rate_option[rand(0,getarraysize(.easy_rate_option)-1)];
+				set .@value, .easy_rate_value[rand(0,getarraysize(.easy_rate_value)-1)];
+			}
+			setrandomoption(.@part,.@slot_selected,.@id,.@value,0);	
+			specialeffect2 65;
+			dispbottom .header$ + " : ทำการออฟชั่นใช้ Cashpoint ไปเป็นจำนวน " + .reset_cost + " คงเหลือ " + #CASHPOINTS;
+			break;
+			
+		default:
+			break;
+	}
+OnInit: 
+while (1) {
+			showscript "[ บริการออฟชั่น ]";
+			sleep 500;
+		}
+end;
+	// โอกาสที่จะออฟชั่นติด (เรียงตามช่อง)
+		setarray .option_rate, 100,70;
+	// โอกาสที่จะสุ่มได้ออฟชั่นติดยาก (ต่อช่อง)
+		set .rare_option_rate, 10;
+	// ราคาสุ่มออฟ 2 ช่อง (แคช)
+		set .cost, 200;
+	// ราคาที่ใช้รีเซตออฟชั่นเลือกได้ว่ารีช่องไหน (แคช)
+		set .reset_cost, 200;
+	// ออฟชั่นที่จะสุ่มอีกครั้งเมื่อสุ่มได้ออฟชั่นติดง่าย
+		setarray .easy_rate_option, RDMOPT_VAR_STRAMOUNT, RDMOPT_VAR_AGIAMOUNT, RDMOPT_VAR_VITAMOUNT, RDMOPT_VAR_INTAMOUNT,
+									RDMOPT_VAR_DEXAMOUNT, RDMOPT_VAR_LUKAMOUNT, RDMOPT_VAR_ALLAMOUNT;
+	// ค่าของออฟชั่นที่จะสุ่มได้เมื่อติดออฟชั่นแบบง่าย
+		setarray .easy_rate_value, 1,2,3,4,5,6,7,8,9,10;
+	// ออฟชั่นที่จะสุ่มอีกครั้งเมื่อสุ่มได้ออฟชั่นติดยาก
+		setarray .rare_rate_option, RDMOPT_VAR_MAXHPPERCENT, RDMOPT_VAR_MAXSPPERCENT,
+									RDMOPT_DAMAGE_SIZE_SMALL_TARGET, RDMOPT_DAMAGE_SIZE_MIDIUM_TARGET, RDMOPT_DAMAGE_SIZE_LARGE_TARGET,
+									RDMOPT_MDAMAGE_SIZE_SMALL_TARGET,RDMOPT_MDAMAGE_SIZE_MIDIUM_TARGET,RDMOPT_MDAMAGE_SIZE_LARGE_TARGET,
+									RDMOPT_CLASS_DAMAGE_BOSS_TARGET, RDMOPT_CLASS_MDAMAGE_BOSS,
+									RDMOPT_VAR_ATKPERCENT,RDMOPT_VAR_MAGICATKPERCENT;	
+	// ค่าของออฟชั่นที่จะสุ่มได้เมื่อติดออฟชั่นแบบง่าย
+		setarray .rare_rate_value, 1,2,3;
+	// อุปกรณ์ช่องไหนสามารถออฟชั่นได้
+		setarray .indice,EQI_HEAD_TOP,EQI_COSTUME_HEAD_MID;
+	// ออฟชั่นว่าง (ใช้สำหรับรีเซตออฟชั่น ) -> ห้ามแก้ไข
+		set .nothing_option, RDMOPT_VAR_NOTHING;
+		end;
+}

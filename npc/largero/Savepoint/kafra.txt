@@ -1,0 +1,197 @@
+function	script	Universal Rental NPC	{
+	if (ismounting()) {
+		message strcharinfo(0),"You must first remove your mount.";
+		end;
+	} else if (((eaclass()&EAJ_THIRDMASK)==EAJ_RANGER) && !countitem(6124)) {
+		if (!checkfalcon() && getskilllv("HT_FALCON") && !checkwug()) {
+			if(select(" • Falcon: • Warg")==1) setfalcon;
+			else getitem 6124,1; //Wolf's_Flute
+		} else getitem 6124,1; //Wolf's_Flute
+	} else if (((eaclass()&EAJ_THIRDMASK)==EAJ_MECHANIC) && !checkcart() && getskilllv("MC_PUSHCART")) {
+		if (!checkmadogear() && getskilllv("NC_MADOLICENCE")) {
+			if(select(" • Cart: • Mado")==1) setcart;
+			else setmadogear;
+		} else setcart;
+	} else if (!checkcart() && getskilllv("MC_PUSHCART")) setcart;
+	else if (!checkfalcon() && getskilllv("HT_FALCON") && !checkwug()) setfalcon;
+	else if (!checkriding() && !checkdragon() && getskilllv("KN_RIDING")) {
+		if ((eaclass()&EAJ_THIRDMASK)==EAJ_RUNE_KNIGHT) setdragon;
+		else setriding;
+	} else if (!checkmadogear() && getskilllv("NC_MADOLICENCE")) setmadogear;
+	else {
+		message strcharinfo(0),"You do not meet requirements to rent.";
+		end;
+	}
+	specialeffect2 EF_TEIHIT3;	
+	end;
+}
+
+function	script	Guild Manage	{
+	mes "[ Guild Manager ]";
+	mes "เลือกเมนูที่คุณต้องการ";
+	next;
+	switch(select("• สร้างกิล","• โอนหัวกิล","• อัพเลเวลกิลด์","• ลบกิล")){
+		mes "[ Guild Manager ]";
+		case 1: 
+			mes "ตั้งชื่อกิลของท่านได้เลยค่ะ";
+			next;
+			input .@guildname$;
+			atcommand "@guild "+.@guildname$;
+			end;
+		case 2: 
+			if(agitcheck() || agitcheck2()){
+				mes "ไม่สามารถเปลี่ยนหัวกิลด์";
+				mes "ในขณะที่กิลด์วอกำลังดำเนินอยู่ได้";
+				end;
+			}
+			if(strcharinfo(0) != getguildmaster(getcharid(2))){
+				mes "ไม่สามารถเปลี่ยนหัวกิลด์";
+				mes "เนื่องจากท่านไม่ใช่หัวหน้ากิลด์";
+				end;
+			}
+			mes "ใส่ชื่อหัวกิลที่จะโอนจ้า";
+			next;
+			input .@name$;
+			atcommand "@changegm "+.@name$+"";
+			end;
+		case 3:
+			atcommand "@guildlvup 99";
+			end;
+		case 4: 
+			mes "ท่านแน่ใจหรอที่จะลบกิล";
+			if(select("• ข้าแน่ใจ","• ไม่แล้ว") == 2) end;
+			atcommand "@breakguild";
+			end;
+	}
+}
+
+function	script	Custom_homunculus	{
+	switch(select("• อัพเลเวล โฮมุนคูลัส:• พัฒนาโฮมุนคูลัส:• เพิ่มความสนิทสนมโฮมุนคูลัส:• เพิ่มความอิ่มโฮมุนคูลัส")) {
+		case 1:
+			if( !gethominfo(0) ){
+				mes "คุณไม่มีโฮมุนคูลัส.";
+				close;
+			}
+			mes "เพิ่มเลเวลให้โฮมุนคูลัสเรียบร้อยแล้ว";
+			atcommand "@homlvup 99";
+			break;
+			
+		case 2:
+			if( !gethominfo(0) ){
+				mes "คุณไม่มีโฮมุนคูลัส.";
+				close;
+			}
+			mes "พัฒนาร่างโฮมุนคูลัสเรียบร้อยแล้ว";
+			atcommand "@homevolution";
+			break;
+			
+		case 3:
+			if( !gethominfo(0) ){
+				mes "คุณไม่มีโฮมุนคูลัส.";
+				close;
+			}
+			mes "เพิ่มความสนิทสนมโฮมุนคูลัสเรียบร้อยแล้ว";
+			atcommand "@homfriendly 1000";
+			break;
+			
+		case 4:
+			if( !gethominfo(0) ){
+				mes "คุณไม่มีโฮมุนคูลัส.";
+				close;
+			}
+			mes "เพิ่มความอิ่มโฮมุนคูลัสเรียบร้อยแล้ว";
+			atcommand "@homhungry 1000";
+			break;
+	}
+	return;
+}
+
+-	script	KafraServices::KFSV	-1,{
+	mes "" + .header$;
+mes "ยินดีต้อนรับ : ^FF0000 "+strcharinfo(0)+" ^000000";
+//mes "Account Id: ^00aa00"+ getcharid(3) +"^000000";
+mes "Char Id: ^00aa00"+ getcharid(0) +"^000000";
+mes "Guild Id ของคุณคือ : "+((getcharid(2)==0)?"^ff0000Guild Id^000000":"^00aa00"+ getcharid(2) +"^000000");
+mes "Party Id ของคุณคือ: "+((getcharid(1)==0)?"^ff0000Party Id^000000":"^00aa00"+ getcharid(1) +"^000000"); 
+	mes "คุณต้องการให้ฉันช่วยอะไร ?";
+	next;
+	switch(select("• เซฟจุดเกิด","• เก็บของ","• ตรวจสอบข้อมูลส่วนตัว","• เช่านก / รถเข็น / ปิโกะ","• รับสกิลเสริม ","• อัพเวลโฮมุน","• เรียกลูกกิล / ปาร์ตี้")){
+		case 1: //  Save
+			getmapxy(.@map$, .@x, .@y, BL_PC);
+			save .@map$,.@x,.@y;
+			mes "" + .header$;
+			mes "คุณได้ทำการเซฟเรียบร้อยแล้ว";
+			break;
+		case 2: // Storage
+			mes "" + .header$;
+			mes "เปิดโกดังสำเร็จแล้ว...";
+			close2;
+			openstorage;
+			break;
+		case 3:
+			mes "" + .header$;
+			mes "ข้อมูลตัวละคร: ^ff6699"+ strcharinfo(0) +"^000000";
+			mes "Account Id: ^ff6699"+ getcharid(3) +"^000000";
+			mes "Char Id: ^ff6699"+ getcharid(0) +"^000000";
+			mes "Guild Id: "+((getcharid(2)==0)?"^ff6699 < Not Guild Member > ^000000":"^ff6699"+ getcharid(2) +"^000000");
+			mes "Party Id: "+((getcharid(1)==0)?"^ff6699 < Not Party Member > ^000000":"^ff6699"+ getcharid(1) +"^000000");
+			break;
+		case 4:
+			callfunc "Universal Rental NPC";
+			break;
+		case 5:
+			callfunc "F_GetPlatinumSkills";
+			break;
+		case 6:
+			callfunc "Custom_homunculus";
+			break;
+		case 7: // Recall
+			.@gleader = (getcharid(0) == getguildmasterid(getcharid(2)));
+			.@pleader = (getcharid(0) == getpartyleader(getcharid(1),2));
+			switch(.@gleader){
+				case 1: set .@CS1$, "คุณเป็นหัวหน้าของกิลด์"; break;
+				case 0: set .@CS1$, "คุณยังไม่ได้เข้าร่วมกิลด์"; break;
+				default: set .@CS1$, "คุณเป็นสมาชิกของกิลด์"; break;
+			}
+			switch(.@pleader){
+				case 1: set .@CS3$, "คุณเป็นหัวหน้าของปาร์ตี้"; break;
+				case 0: set .@CS3$, "คุณยังไม่ได้เข้าร่วมปาร์ตี้"; break;
+				default: set .@CS3$, "คุณเป็นสมาชิกของปาร์ตี้"; break;
+			}
+			mes "" + .header$;
+			mes "สวัสดีคุณ ^FF0000"+strcharinfo(0)+"^000000";
+			mes "สถานะของคุณขณะนี้คือ";
+			mes "^008080"+.@CS1$+"^000000";
+			mes "^0000FF"+.@CS3$+"^000000";
+			switch(select(.@gleader ? "• เรียกสมาชิกกิลด์" : "",.@pleader ? "• เรียกสมาชิกปาร์ตี้" : "","• ยกเลิก")) {
+				case 1:
+					atcommand "@guildrecall " +getcharid(2);
+					break;
+				case 2:
+					atcommand "@partyrecall "+getcharid(1);
+					break;
+				case 3:
+					break;
+			}
+			break;
+	}
+	end;
+	
+OnInit:
+while (1) {
+			showscript "[ Kafra Service ]";
+			sleep 500;
+		}
+end;
+}
+
+moroccz,153,99,4	duplicate(KFSV)	Kafra Service#1	10179
+moroccz,97,113,4	duplicate(KFSV)	Kafra Service#2	10179
+moroccz,216,108,4	duplicate(KFSV)	Kafra Service#3	10179
+moroccz,166,37,4	duplicate(KFSV)	Kafra Service#4	10179
+moroccz,86,39,4	duplicate(KFSV)	Kafra Service#5	10179
+moroccz,166,256,4	duplicate(KFSV)	Kafra Service#6	10179
+moroccz,277,211,4	duplicate(KFSV)	Kafra Service#7	10179
+moroccz,32,172,4	duplicate(KFSV)	Kafra Service#8	10179
+moroccz,28,290,4	duplicate(KFSV)	Kafra Service#9	10179
+moroccz,238,43,4	duplicate(KFSV)	Kafra Service#10	10179

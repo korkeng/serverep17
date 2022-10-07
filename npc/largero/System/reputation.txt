@@ -1,0 +1,30 @@
+izlude,123,142,6	script	Orc Reputation	1190,{
+	callfunc("F_ReputationTest", "[Orc Lord]", "Orc Village", 1);
+}
+
+izlude,127,142,4	script	Goblin Reputation	1299,{
+	callfunc("F_ReputationTest", "[Goblin Leader]", "Goblin Village", 2);
+}
+
+izlude,131,142,4	script	Gray Wolf Reputation	10396,{
+	callfunc("F_ReputationTest", "[Gray Wolf]", "Gray Wolf Village", 3);
+}
+
+function	script	F_ReputationTest	{
+	mes getarg(0);
+	mes "Your `" + getarg(1) + "` reputation is " + reputation_get(getarg(2)) + ".";
+	next;
+	if (select("Raise my reputation") ==  1) {
+		mes getarg(0);
+		mes "Input the amount";
+		next;
+		input .@amount;
+		next;
+		if (select("Plus:Minus")==2)
+			.@amount *= -1;
+		reputation_modify(getarg(2), .@amount);
+		mes getarg(0);
+		mes "Done!";
+		close;
+	}
+}

@@ -1,0 +1,1153 @@
+/*
+hu_in01,95,322,5	script	Redhead	4_M_NOV_HUNT,{
+mes "ต้องการแลกชุด Abyss 4 หรือไม่";
+	switch (select("ต้องการ:ยังดีกว่า")) {
+	case 1:
+		next;
+		mes "[แลกของAbyss 4]";
+		mes "รายการที่แลกได้";
+		mes "<ITEM>Red Dragon Plate [1]<INFO>15391</INFO></ITEM>";
+		mes "<ITEM>Green Dragon Plate [1]<INFO>15392</INFO></ITEM>";
+		mes "<ITEM>Gold Dragon Plate [1]<INFO>15393</INFO></ITEM>";
+		mes "<ITEM>Purple Dragon Plate [1]<INFO>15394</INFO></ITEM>";
+		next;
+		mes "[แลกของAbyss 4]";
+		mes "<ITEM>Blue Dragon Plate [1]<INFO>15395</INFO></ITEM>";
+		mes "<ITEM>Silver Dragon Plate [1]<INFO>15396</INFO></ITEM>";
+		mes "<ITEM>Dragon Scale Hood [1]<INFO>20946</INFO></ITEM>";
+		mes "<ITEM>Dragon Scale Boots [1]<INFO>22208</INFO></ITEM>";
+		next;
+		mes "[แลกของAbyss 4]";
+		mes "<ITEM>Burning Dragon's Power<INFO>100144</INFO></ITEM>";
+		mes "<ITEM>Hot Dragon's Power<INFO>100145</INFO></ITEM>";
+		mes "<ITEM>Turbulence Dragon's Power<INFO>23981</INFO></ITEM>";
+		mes "<ITEM>Stable Dragon's Power<INFO>100142 </INFO></ITEM>";
+		mes "คุณต้องการแลกเปลี่ยนอะไรเลือกได้เลย";
+		next;
+		switch (select("Red Dragon Plate [1]:Green Dragon Plate [1]:Gold Dragon Plate [1]:Purple Dragon Plate [1]:Blue Dragon Plate [1]:Silver Dragon Plate [1]:Dragon Scale Hood [1]:Dragon Scale Boots [1]:Burning Dragon's Power:Hot Dragon's Power:Turbulence Dragon's Power:Stable Dragon's Power:ยังดีกว่า")) {
+			case 13:	
+				mes "[แลกของAbyss 4]";
+				mes "ไม่เป็นไร หากพร้อมให้กลับมาใหม่";
+				close;
+			case 1:
+				mes "[แลกของAbyss 4]";
+				mes "เจ้าต้องการแลก <ITEM>Red Dragon Plate [1]<INFO>15391</INFO></ITEM> ";
+				mes "เจ้าจำเป็นต้องมีของดังนี้";
+				mes "<ITEM>Red Dragon Orb<INFO>25761</INFO></ITEM> จำนวน 50 ea";
+				mes "<ITEM>Dragon Canine<INFO>1035</INFO></ITEM> จำนวน 75 ea";
+				mes "<ITEM>Dragon Scale<INFO>1036</INFO></ITEM> จำนวน 100 ea";
+				mes "<ITEM>Dragon Tail<INFO>1037</INFO></ITEM> จำนวน 50 ea";
+				mes "<ITEM>Dragon Skin<INFO>7123</INFO></ITEM> จำนวน 100 ea";
+				mes "<ITEM>Green Bijou<INFO>7445</INFO></ITEM> จำนวน 35 ea";
+				mes "<ITEM>Blue Bijou<INFO>7446</INFO></ITEM> จำนวน 35 ea";
+				mes "<ITEM>Red Bijou<INFO>7447</INFO></ITEM> จำนวน 35 ea";
+				mes "<ITEM>Yellow Bijou<INFO>7448</INFO></ITEM> จำนวน 35 ea";
+				mes "<ITEM>Large Dragon Bone<INFO>25765</INFO></ITEM> จำนวน 3 ea";
+				mes "<ITEM>Small Dragon Bone<INFO>25766</INFO></ITEM> จำนวน 15 ea";
+			menu "ใช้เริ่มทำได้เลย",o1,"ยังก่อนดีกว่า",n1;
+o1:
+	if (countitem(25761) >= 50 && countitem(1035) >= 75 && countitem(1036) >= 100 && countitem(1037) >= 50 && countitem(7123) >= 100 && countitem(7445) >= 35 && countitem(7446) >= 35 && countitem(7447) >= 35 && countitem(7448) >= 35 && countitem(25765) >= 3 && countitem(25766) >= 15) {
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~";
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~#!!";
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~!@!@";
+				next;
+				delitem 25761,50;
+				delitem 1035,75;
+				delitem 1036,100;
+				delitem 1037,50;
+				delitem 7123,100;
+				delitem 7445,35;
+				delitem 7446,35;
+				delitem 7447,35;
+				delitem 7448,35;
+				delitem 25765,3;
+				delitem 25766,15;
+				getitem 15391,1;
+				mes "[แลกของAbyss 4]";
+				mes "เรียบร้อยเปิดกระเป๋าดูได้เลย ~";
+				close;
+				} else {
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "เจ้ายังมีของไม่ครบ";
+				close;
+n1:
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "หากเจ้าพร้อมกลับมาหาข้าได้ตลอดเวลา";
+				close;
+}
+			case 2:
+				mes "[แลกของAbyss 4]";
+				mes "เจ้าต้องการแลก <ITEM>Green Dragon Plate [1]<INFO>15392</INFO></ITEM> ";
+				mes "เจ้าจำเป็นต้องมีของดังนี้";
+				mes "<ITEM>Green Dragon Orb<INFO>25759</INFO></ITEM> จำนวน 50 ea";
+				mes "<ITEM>Dragon Canine<INFO>1035</INFO></ITEM> จำนวน 75 ea";
+				mes "<ITEM>Dragon Scale<INFO>1036</INFO></ITEM> จำนวน 100 ea";
+				mes "<ITEM>Dragon Tail<INFO>1037</INFO></ITEM> จำนวน 50 ea";
+				mes "<ITEM>Dragon Skin<INFO>7123</INFO></ITEM> จำนวน 100 ea";
+				mes "<ITEM>Green Bijou<INFO>7445</INFO></ITEM> จำนวน 35 ea";
+				mes "<ITEM>Blue Bijou<INFO>7446</INFO></ITEM> จำนวน 35 ea";
+				mes "<ITEM>Red Bijou<INFO>7447</INFO></ITEM> จำนวน 35 ea";
+				mes "<ITEM>Yellow Bijou<INFO>7448</INFO></ITEM> จำนวน 35 ea";
+				mes "<ITEM>Large Dragon Bone<INFO>25765</INFO></ITEM> จำนวน 3 ea";
+				mes "<ITEM>Small Dragon Bone<INFO>25766</INFO></ITEM> จำนวน 15 ea";
+			menu "ใช้เริ่มทำได้เลย",o2,"ยังก่อนดีกว่า",n2;
+o2:
+	if (countitem(25759) >= 50 && countitem(1035) >= 75 && countitem(1036) >= 100 && countitem(1037) >= 50 && countitem(7123) >= 100 && countitem(7445) >= 35 && countitem(7446) >= 35 && countitem(7447) >= 35 && countitem(7448) >= 35 && countitem(25765) >= 3 && countitem(25766) >= 15) {
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~";
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~#!!";
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~!@!@";
+				next;
+				delitem 25759,50;
+				delitem 1035,75;
+				delitem 1036,100;
+				delitem 1037,50;
+				delitem 7123,100;
+				delitem 7445,35;
+				delitem 7446,35;
+				delitem 7447,35;
+				delitem 7448,35;
+				delitem 25765,3;
+				delitem 25766,15;
+				getitem 15392,1;
+				mes "[แลกของAbyss 4]";
+				mes "เรียบร้อยเปิดกระเป๋าดูได้เลย ~";
+				close;
+				} else {
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "เจ้ายังมีของไม่ครบ";
+				close;
+n2:
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "หากเจ้าพร้อมกลับมาหาข้าได้ตลอดเวลา";
+				close;
+			}
+			case 3:
+				mes "[แลกของAbyss 4]";
+				mes "เจ้าต้องการแลก <ITEM>Gold Dragon Plate [1]<INFO>15393</INFO></ITEM> ";
+				mes "เจ้าจำเป็นต้องมีของดังนี้";
+				mes "<ITEM>Gold Dragon Orb<INFO>25762</INFO></ITEM> จำนวน 50 ea";
+				mes "<ITEM>Dragon Canine<INFO>1035</INFO></ITEM> จำนวน 75 ea";
+				mes "<ITEM>Dragon Scale<INFO>1036</INFO></ITEM> จำนวน 100 ea";
+				mes "<ITEM>Dragon Tail<INFO>1037</INFO></ITEM> จำนวน 50 ea";
+				mes "<ITEM>Dragon Skin<INFO>7123</INFO></ITEM> จำนวน 100 ea";
+				mes "<ITEM>Green Bijou<INFO>7445</INFO></ITEM> จำนวน 35 ea";
+				mes "<ITEM>Blue Bijou<INFO>7446</INFO></ITEM> จำนวน 35 ea";
+				mes "<ITEM>Red Bijou<INFO>7447</INFO></ITEM> จำนวน 35 ea";
+				mes "<ITEM>Yellow Bijou<INFO>7448</INFO></ITEM> จำนวน 35 ea";
+				mes "<ITEM>Large Dragon Bone<INFO>25765</INFO></ITEM> จำนวน 3 ea";
+				mes "<ITEM>Small Dragon Bone<INFO>25766</INFO></ITEM> จำนวน 15 ea";
+			menu "ใช้เริ่มทำได้เลย",o3,"ยังก่อนดีกว่า",n3;
+o3:
+	if (countitem(25762) >= 50 && countitem(1035) >= 75 && countitem(1036) >= 100 && countitem(1037) >= 50 && countitem(7123) >= 100 && countitem(7445) >= 35 && countitem(7446) >= 35 && countitem(7447) >= 35 && countitem(7448) >= 35 && countitem(25765) >= 3 && countitem(25766) >= 15) {
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~";
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~#!!";
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~!@!@";
+				next;
+				delitem 25762,50;
+				delitem 1035,75;
+				delitem 1036,100;
+				delitem 1037,50;
+				delitem 7123,100;
+				delitem 7445,35;
+				delitem 7446,35;
+				delitem 7447,35;
+				delitem 7448,35;
+				delitem 25765,3;
+				delitem 25766,15;
+				getitem 15393,1;
+				mes "[แลกของAbyss 4]";
+				mes "เรียบร้อยเปิดกระเป๋าดูได้เลย ~";
+				close;
+				} else {
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "เจ้ายังมีของไม่ครบ";
+				close;
+n3:
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "หากเจ้าพร้อมกลับมาหาข้าได้ตลอดเวลา";
+				close;
+			}
+			case 4:
+				mes "[แลกของAbyss 4]";
+				mes "เจ้าต้องการแลก <ITEM>Purple Dragon Plate [1]<INFO>15394</INFO></ITEM> ";
+				mes "เจ้าจำเป็นต้องมีของดังนี้";
+				mes "<ITEM>Purple Dragon Orb<INFO>25763</INFO></ITEM> จำนวน 50 ea";
+				mes "<ITEM>Dragon Canine<INFO>1035</INFO></ITEM> จำนวน 75 ea";
+				mes "<ITEM>Dragon Scale<INFO>1036</INFO></ITEM> จำนวน 100 ea";
+				mes "<ITEM>Dragon Tail<INFO>1037</INFO></ITEM> จำนวน 50 ea";
+				mes "<ITEM>Dragon Skin<INFO>7123</INFO></ITEM> จำนวน 100 ea";
+				mes "<ITEM>Green Bijou<INFO>7445</INFO></ITEM> จำนวน 35 ea";
+				mes "<ITEM>Blue Bijou<INFO>7446</INFO></ITEM> จำนวน 35 ea";
+				mes "<ITEM>Red Bijou<INFO>7447</INFO></ITEM> จำนวน 35 ea";
+				mes "<ITEM>Yellow Bijou<INFO>7448</INFO></ITEM> จำนวน 35 ea";
+				mes "<ITEM>Large Dragon Bone<INFO>25765</INFO></ITEM> จำนวน 3 ea";
+				mes "<ITEM>Small Dragon Bone<INFO>25766</INFO></ITEM> จำนวน 15 ea";
+			menu "ใช้เริ่มทำได้เลย",o4,"ยังก่อนดีกว่า",n4;
+o4:
+	if (countitem(25763) >= 50 && countitem(1035) >= 75 && countitem(1036) >= 100 && countitem(1037) >= 50 && countitem(7123) >= 100 && countitem(7445) >= 35 && countitem(7446) >= 35 && countitem(7447) >= 35 && countitem(7448) >= 35 && countitem(25765) >= 3 && countitem(25766) >= 15) {
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~";
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~#!!";
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~!@!@";
+				next;
+				delitem 25763,50;
+				delitem 1035,75;
+				delitem 1036,100;
+				delitem 1037,50;
+				delitem 7123,100;
+				delitem 7445,35;
+				delitem 7446,35;
+				delitem 7447,35;
+				delitem 7448,35;
+				delitem 25765,3;
+				delitem 25766,15;
+				getitem 15394,1;
+				mes "[แลกของAbyss 4]";
+				mes "เรียบร้อยเปิดกระเป๋าดูได้เลย ~";
+				close;
+				} else {
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "เจ้ายังมีของไม่ครบ";
+				close;
+n4:
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "หากเจ้าพร้อมกลับมาหาข้าได้ตลอดเวลา";
+				close;
+			}
+			case 5:
+				mes "[แลกของAbyss 4]";
+				mes "เจ้าต้องการแลก <ITEM>Blue Dragon Plate [1]<INFO>15395</INFO></ITEM> ";
+				mes "เจ้าจำเป็นต้องมีของดังนี้";
+				mes "<ITEM>Blue Dragon Orb<INFO>25760</INFO></ITEM> จำนวน 50 ea";
+				mes "<ITEM>Dragon Canine<INFO>1035</INFO></ITEM> จำนวน 75 ea";
+				mes "<ITEM>Dragon Scale<INFO>1036</INFO></ITEM> จำนวน 100 ea";
+				mes "<ITEM>Dragon Tail<INFO>1037</INFO></ITEM> จำนวน 50 ea";
+				mes "<ITEM>Dragon Skin<INFO>7123</INFO></ITEM> จำนวน 100 ea";
+				mes "<ITEM>Green Bijou<INFO>7445</INFO></ITEM> จำนวน 35 ea";
+				mes "<ITEM>Blue Bijou<INFO>7446</INFO></ITEM> จำนวน 35 ea";
+				mes "<ITEM>Red Bijou<INFO>7447</INFO></ITEM> จำนวน 35 ea";
+				mes "<ITEM>Yellow Bijou<INFO>7448</INFO></ITEM> จำนวน 35 ea";
+				mes "<ITEM>Large Dragon Bone<INFO>25765</INFO></ITEM> จำนวน 3 ea";
+				mes "<ITEM>Small Dragon Bone<INFO>25766</INFO></ITEM> จำนวน 15 ea";
+			menu "ใช้เริ่มทำได้เลย",o5,"ยังก่อนดีกว่า",n5;
+o5:
+	if (countitem(25760) >= 50 && countitem(1035) >= 75 && countitem(1036) >= 100 && countitem(1037) >= 50 && countitem(7123) >= 100 && countitem(7445) >= 35 && countitem(7446) >= 35 && countitem(7447) >= 35 && countitem(7448) >= 35 && countitem(25765) >= 3 && countitem(25766) >= 15) {
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~";
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~#!!";
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~!@!@";
+				next;
+				delitem 25760,50;
+				delitem 1035,75;
+				delitem 1036,100;
+				delitem 1037,50;
+				delitem 7123,100;
+				delitem 7445,35;
+				delitem 7446,35;
+				delitem 7447,35;
+				delitem 7448,35;
+				delitem 25765,3;
+				delitem 25766,15;
+				getitem 15395,1;
+				mes "[แลกของAbyss 4]";
+				mes "เรียบร้อยเปิดกระเป๋าดูได้เลย ~";
+				close;
+				} else {
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "เจ้ายังมีของไม่ครบ";
+				close;
+n5:
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "หากเจ้าพร้อมกลับมาหาข้าได้ตลอดเวลา";
+				close;
+			}
+			case 6:
+				mes "[แลกของAbyss 4]";
+				mes "เจ้าต้องการแลก <ITEM>Silver Dragon Plate [1]<INFO>15392</INFO></ITEM> ";
+				mes "เจ้าจำเป็นต้องมีของดังนี้";
+				mes "<ITEM>Silver Dragon Orb<INFO>25764</INFO></ITEM> จำนวน 50 ea";
+				mes "<ITEM>Dragon Canine<INFO>1035</INFO></ITEM> จำนวน 75 ea";
+				mes "<ITEM>Dragon Scale<INFO>1036</INFO></ITEM> จำนวน 100 ea";
+				mes "<ITEM>Dragon Tail<INFO>1037</INFO></ITEM> จำนวน 50 ea";
+				mes "<ITEM>Dragon Skin<INFO>7123</INFO></ITEM> จำนวน 100 ea";
+				mes "<ITEM>Green Bijou<INFO>7445</INFO></ITEM> จำนวน 35 ea";
+				mes "<ITEM>Blue Bijou<INFO>7446</INFO></ITEM> จำนวน 35 ea";
+				mes "<ITEM>Red Bijou<INFO>7447</INFO></ITEM> จำนวน 35 ea";
+				mes "<ITEM>Yellow Bijou<INFO>7448</INFO></ITEM> จำนวน 35 ea";
+				mes "<ITEM>Large Dragon Bone<INFO>25765</INFO></ITEM> จำนวน 3 ea";
+				mes "<ITEM>Small Dragon Bone<INFO>25766</INFO></ITEM> จำนวน 15 ea";
+			menu "ใช้เริ่มทำได้เลย",o6,"ยังก่อนดีกว่า",n6;
+o6:
+	if (countitem(25764) >= 50 && countitem(1035) >= 75 && countitem(1036) >= 100 && countitem(1037) >= 50 && countitem(7123) >= 100 && countitem(7445) >= 35 && countitem(7446) >= 35 && countitem(7447) >= 35 && countitem(7448) >= 35 && countitem(25765) >= 3 && countitem(25766) >= 15) {
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~";
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~#!!";
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~!@!@";
+				next;
+				delitem 25764,50;
+				delitem 1035,75;
+				delitem 1036,100;
+				delitem 1037,50;
+				delitem 7123,100;
+				delitem 7445,35;
+				delitem 7446,35;
+				delitem 7447,35;
+				delitem 7448,35;
+				delitem 25765,3;
+				delitem 25766,15;
+				getitem 15396,1;
+				mes "[แลกของAbyss 4]";
+				mes "เรียบร้อยเปิดกระเป๋าดูได้เลย ~";
+				close;
+				} else {
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "เจ้ายังมีของไม่ครบ";
+				close;
+n6:
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "หากเจ้าพร้อมกลับมาหาข้าได้ตลอดเวลา";
+				close;
+			}
+			case 7:
+				mes "[แลกของAbyss 4]";
+				mes "เจ้าต้องการแลก <ITEM>Dragon Scale Hood [1]<INFO>20946</INFO></ITEM> ";
+				mes "เจ้าจำเป็นต้องมีของดังนี้";
+				mes "<ITEM>Dragon Canine<INFO>1035</INFO></ITEM> จำนวน 15 ea";
+				mes "<ITEM>Dragon Scale<INFO>1036</INFO></ITEM> จำนวน 75 ea";
+				mes "<ITEM>Dragon Tail<INFO>1037</INFO></ITEM> จำนวน 15 ea";
+				mes "<ITEM>Dragon Skin<INFO>7123</INFO></ITEM> จำนวน 75 ea";
+				mes "<ITEM>Green Bijou<INFO>7445</INFO></ITEM> จำนวน 25 ea";
+				mes "<ITEM>Blue Bijou<INFO>7446</INFO></ITEM> จำนวน 25 ea";
+				mes "<ITEM>Red Bijou<INFO>7447</INFO></ITEM> จำนวน 25 ea";
+				mes "<ITEM>Yellow Bijou<INFO>7448</INFO></ITEM> จำนวน 25 ea";
+				mes "<ITEM>Large Dragon Bone<INFO>25765</INFO></ITEM> จำนวน 2 ea";
+				mes "<ITEM>Small Dragon Bone<INFO>25766</INFO></ITEM> จำนวน 6 ea";
+			menu "ใช้เริ่มทำได้เลย",o7,"ยังก่อนดีกว่า",n7;
+o7:
+	if (countitem(1035) >= 15 && countitem(1036) >= 75 && countitem(1037) >= 15 && countitem(7123) >= 75 && countitem(7445) >= 25 && countitem(7446) >= 25 && countitem(7447) >= 25 && countitem(7448) >= 25 && countitem(25765) >= 2 && countitem(25766) >= 6) {
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~";
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~#!!";
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~!@!@";
+				next;
+				delitem 1035,15;
+				delitem 1036,75;
+				delitem 1037,15;
+				delitem 7123,75;
+				delitem 7445,25;
+				delitem 7446,25;
+				delitem 7447,25;
+				delitem 7448,25;
+				delitem 25765,2;
+				delitem 25766,6;
+				getitem 20946,1;
+				mes "[แลกของAbyss 4]";
+				mes "เรียบร้อยเปิดกระเป๋าดูได้เลย ~";
+				close;
+				} else {
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "เจ้ายังมีของไม่ครบ";
+				close;
+n7:
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "หากเจ้าพร้อมกลับมาหาข้าได้ตลอดเวลา";
+				close;
+			}
+			case 8:
+				mes "[แลกของAbyss 4]";
+				mes "เจ้าต้องการแลก <ITEM>Dragon Scale Boots [1]<INFO>22208</INFO></ITEM> ";
+				mes "เจ้าจำเป็นต้องมีของดังนี้";
+				mes "<ITEM>Dragon Canine<INFO>1035</INFO></ITEM> จำนวน 30 ea";
+				mes "<ITEM>Dragon Scale<INFO>1036</INFO></ITEM> จำนวน 60 ea";
+				mes "<ITEM>Dragon Tail<INFO>1037</INFO></ITEM> จำนวน 40 ea";
+				mes "<ITEM>Dragon Skin<INFO>7123</INFO></ITEM> จำนวน 60 ea";
+				mes "<ITEM>Green Bijou<INFO>7445</INFO></ITEM> จำนวน 25 ea";
+				mes "<ITEM>Blue Bijou<INFO>7446</INFO></ITEM> จำนวน 25 ea";
+				mes "<ITEM>Red Bijou<INFO>7447</INFO></ITEM> จำนวน 25 ea";
+				mes "<ITEM>Yellow Bijou<INFO>7448</INFO></ITEM> จำนวน 25 ea";
+				mes "<ITEM>Large Dragon Bone<INFO>25765</INFO></ITEM> จำนวน 1 ea";
+				mes "<ITEM>Small Dragon Bone<INFO>25766</INFO></ITEM> จำนวน 8 ea";
+			menu "ใช้เริ่มทำได้เลย",o8,"ยังก่อนดีกว่า",n8;
+o8:
+	if (countitem(1035) >= 30 && countitem(1036) >= 60 && countitem(1037) >= 40 && countitem(7123) >= 60 && countitem(7445) >= 25 && countitem(7446) >= 25 && countitem(7447) >= 25 && countitem(7448) >= 25 && countitem(25765) >= 1 && countitem(25766) >= 8) {
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~";
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~#!!";
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~!@!@";
+				next;
+				delitem 1035,30;
+				delitem 1036,60;
+				delitem 1037,40;
+				delitem 7123,60;
+				delitem 7445,25;
+				delitem 7446,25;
+				delitem 7447,25;
+				delitem 7448,25;
+				delitem 25765,1;
+				delitem 25766,8;
+				getitem 22208,1;
+				mes "[แลกของAbyss 4]";
+				mes "เรียบร้อยเปิดกระเป๋าดูได้เลย ~";
+				close;
+				} else {
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "เจ้ายังมีของไม่ครบ";
+				close;
+n8:
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "หากเจ้าพร้อมกลับมาหาข้าได้ตลอดเวลา";
+				close;
+			}
+			case 9:
+				mes "[แลกของAbyss 4]";
+				mes "เจ้าต้องการแลก <ITEM>Burning Dragon's Power<INFO>100144</INFO></ITEM> ";
+				mes "เจ้าจำเป็นต้องมีของดังนี้";
+				mes "แบบที่ 1";
+				mes "<ITEM>Large Dragon Bone<INFO>25765</INFO></ITEM> จำนวน 1 ea";
+				mes "<ITEM>Small Dragon Bone<INFO>25766</INFO></ITEM> จำนวน 2 ea";
+				mes "แบบที่ 2";
+				mes "<ITEM>Red Dragon Orb<INFO>25761</INFO></ITEM> จำนวน 8 ea";
+				mes "<ITEM>Green Dragon Orb<INFO>25759</INFO></ITEM> จำนวน 8 ea";
+				mes "<ITEM>Gold Dragon Orb<INFO>25762</INFO></ITEM> จำนวน 8 ea";
+				mes "<ITEM>Purple Dragon Orb<INFO>25763</INFO></ITEM> จำนวน 8 ea";
+				mes "<ITEM>Blue Dragon Orb<INFO>25760</INFO></ITEM> จำนวน 8 ea";
+				mes "<ITEM>Silver Dragon Orb<INFO>25764</INFO></ITEM> จำนวน 8 ea";
+			menu "แบบที่ 1",r11,"แบบที่ 2",r21; 
+r11:
+next;
+				mes "[แลกของAbyss 4]";
+				mes "เจ้าเลือกแบบที่ 1";
+				mes "เจ้าจำเป็นต้องมีของดังนี้";
+				mes "<ITEM>Large Dragon Bone<INFO>25765</INFO></ITEM> จำนวน 1 ea";
+				mes "<ITEM>Small Dragon Bone<INFO>25766</INFO></ITEM> จำนวน 2 ea";
+			menu "ใช้เริ่มทำได้เลย",ro11,"ยังก่อนดีกว่า",rn11;
+ro11:
+	if (countitem(25765) >= 1 && countitem(25766) >= 2) {
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~";
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~#!!";
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~!@!@";
+				next;
+				delitem 25765,1;
+				delitem 25766,2;
+				getitem 100144,1;
+				mes "[แลกของAbyss 4]";
+				mes "เรียบร้อยเปิดกระเป๋าดูได้เลย ~";
+				close;
+				} else {
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "เจ้ายังมีของไม่ครบ";
+				close;
+rn11:
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "หากเจ้าพร้อมกลับมาหาข้าได้ตลอดเวลา";
+				close;
+}
+//
+r21:
+next;
+				mes "[แลกของAbyss 4]";
+				mes "เจ้าเลือกแบบที่ 2";
+				mes "เจ้าจำเป็นต้องมีของดังนี้";
+				mes "<ITEM>Red Dragon Orb<INFO>25761</INFO></ITEM> จำนวน 8 ea";
+				mes "<ITEM>Green Dragon Orb<INFO>25759</INFO></ITEM> จำนวน 8 ea";
+				mes "<ITEM>Gold Dragon Orb<INFO>25762</INFO></ITEM> จำนวน 8 ea";
+				mes "<ITEM>Purple Dragon Orb<INFO>25763</INFO></ITEM> จำนวน 8 ea";
+				mes "<ITEM>Blue Dragon Orb<INFO>25760</INFO></ITEM> จำนวน 8 ea";
+				mes "<ITEM>Silver Dragon Orb<INFO>25764</INFO></ITEM> จำนวน 8 ea";
+			menu "ใช้เริ่มทำได้เลย",ro21,"ยังก่อนดีกว่า",rn21;
+ro21:
+	if (countitem(25759) >= 8 && countitem(25760) >= 8 && countitem(25761) >= 8 && countitem(25762) >= 8 && countitem(25763) >= 8 && countitem(25764) >= 8) {
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~";
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~#!!";
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~!@!@";
+				next;
+				delitem 25759,8;
+				delitem 25760,8;
+				delitem 25761,8;
+				delitem 25762,8;
+				delitem 25763,8;
+				delitem 25764,8;
+				getitem 100144,1;
+				mes "[แลกของAbyss 4]";
+				mes "เรียบร้อยเปิดกระเป๋าดูได้เลย ~";
+				close;
+				} else {
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "เจ้ายังมีของไม่ครบ";
+				close;
+rn21:
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "หากเจ้าพร้อมกลับมาหาข้าได้ตลอดเวลา";
+				close;
+}
+			case 10:
+				mes "[แลกของAbyss 4]";
+				mes "เจ้าต้องการแลก <ITEM>Hat Dragon's Power<INFO>100145</INFO></ITEM> ";
+				mes "เจ้าจำเป็นต้องมีของดังนี้";
+				mes "แบบที่ 1";
+				mes "<ITEM>Large Dragon Bone<INFO>25765</INFO></ITEM> จำนวน 1 ea";
+				mes "<ITEM>Small Dragon Bone<INFO>25766</INFO></ITEM> จำนวน 1 ea";
+				mes "แบบที่ 2";
+				mes "<ITEM>Red Dragon Orb<INFO>25761</INFO></ITEM> จำนวน 7 ea";
+				mes "<ITEM>Green Dragon Orb<INFO>25759</INFO></ITEM> จำนวน 7 ea";
+				mes "<ITEM>Gold Dragon Orb<INFO>25762</INFO></ITEM> จำนวน 7 ea";
+				mes "<ITEM>Purple Dragon Orb<INFO>25763</INFO></ITEM> จำนวน 7 ea";
+				mes "<ITEM>Blue Dragon Orb<INFO>25760</INFO></ITEM> จำนวน 7 ea";
+				mes "<ITEM>Silver Dragon Orb<INFO>25764</INFO></ITEM> จำนวน 7 ea";
+			menu "แบบที่ 1",r12,"แบบที่ 2",r22; 
+r12:
+next;
+				mes "[แลกของAbyss 4]";
+				mes "เจ้าเลือกแบบที่ 1";
+				mes "เจ้าจำเป็นต้องมีของดังนี้";
+				mes "<ITEM>Large Dragon Bone<INFO>25765</INFO></ITEM> จำนวน 1 ea";
+				mes "<ITEM>Small Dragon Bone<INFO>25766</INFO></ITEM> จำนวน 1 ea";
+			menu "ใช้เริ่มทำได้เลย",ro12,"ยังก่อนดีกว่า",rn12;
+ro12:
+	if (countitem(25765) >= 1 && countitem(25766) >= 1) {
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~";
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~#!!";
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~!@!@";
+				next;
+				delitem 25765,1;
+				delitem 25766,1;
+				getitem 100145,1;
+				mes "[แลกของAbyss 4]";
+				mes "เรียบร้อยเปิดกระเป๋าดูได้เลย ~";
+				close;
+				} else {
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "เจ้ายังมีของไม่ครบ";
+				close;
+rn12:
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "หากเจ้าพร้อมกลับมาหาข้าได้ตลอดเวลา";
+				close;
+}
+//
+r22:
+next;
+				mes "[แลกของAbyss 4]";
+				mes "เจ้าเลือกแบบที่ 2";
+				mes "เจ้าจำเป็นต้องมีของดังนี้";
+				mes "<ITEM>Red Dragon Orb<INFO>25761</INFO></ITEM> จำนวน 8 ea";
+				mes "<ITEM>Green Dragon Orb<INFO>25759</INFO></ITEM> จำนวน 8 ea";
+				mes "<ITEM>Gold Dragon Orb<INFO>25762</INFO></ITEM> จำนวน 8 ea";
+				mes "<ITEM>Purple Dragon Orb<INFO>25763</INFO></ITEM> จำนวน 8 ea";
+				mes "<ITEM>Blue Dragon Orb<INFO>25760</INFO></ITEM> จำนวน 8 ea";
+				mes "<ITEM>Silver Dragon Orb<INFO>25764</INFO></ITEM> จำนวน 8 ea";
+			menu "ใช้เริ่มทำได้เลย",ro22,"ยังก่อนดีกว่า",rn22;
+ro22:
+	if (countitem(25759) >= 7 && countitem(25760) >= 7 && countitem(25761) >= 7 && countitem(25762) >= 7 && countitem(25763) >= 7 && countitem(25764) >= 7) {
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~";
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~#!!";
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~!@!@";
+				next;
+				delitem 25759,7;
+				delitem 25760,7;
+				delitem 25761,7;
+				delitem 25762,7;
+				delitem 25763,7;
+				delitem 25764,7;
+				getitem 100145,1;
+				mes "[แลกของAbyss 4]";
+				mes "เรียบร้อยเปิดกระเป๋าดูได้เลย ~";
+				close;
+				} else {
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "เจ้ายังมีของไม่ครบ";
+				close;
+rn22:
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "หากเจ้าพร้อมกลับมาหาข้าได้ตลอดเวลา";
+				close;
+}
+		case 11:
+				mes "[แลกของAbyss 4]";
+				mes "เจ้าต้องการแลก <ITEM>Turbulence Dragon's Power<INFO>23981</INFO></ITEM> ";
+				mes "เจ้าจำเป็นต้องมีของดังนี้";
+				mes "แบบที่ 1";
+				mes "<ITEM>Large Dragon Bone<INFO>25765</INFO></ITEM> จำนวน 1 ea";
+				mes "<ITEM>Small Dragon Bone<INFO>25766</INFO></ITEM> จำนวน 5 ea";
+				mes "แบบที่ 2";
+				mes "<ITEM>Red Dragon Orb<INFO>25761</INFO></ITEM> จำนวน 12 ea";
+				mes "<ITEM>Green Dragon Orb<INFO>25759</INFO></ITEM> จำนวน 12 ea";
+				mes "<ITEM>Gold Dragon Orb<INFO>25762</INFO></ITEM> จำนวน 12 ea";
+				mes "<ITEM>Purple Dragon Orb<INFO>25763</INFO></ITEM> จำนวน 12 ea";
+				mes "<ITEM>Blue Dragon Orb<INFO>25760</INFO></ITEM> จำนวน 12 ea";
+				mes "<ITEM>Silver Dragon Orb<INFO>25764</INFO></ITEM> จำนวน 12 ea";
+			menu "แบบที่ 1",r13,"แบบที่ 2",r32; 
+r13:
+next;
+				mes "[แลกของAbyss 4]";
+				mes "เจ้าเลือกแบบที่ 1";
+				mes "เจ้าจำเป็นต้องมีของดังนี้";
+				mes "<ITEM>Large Dragon Bone<INFO>25765</INFO></ITEM> จำนวน 1 ea";
+				mes "<ITEM>Small Dragon Bone<INFO>25766</INFO></ITEM> จำนวน 5 ea";
+			menu "ใช้เริ่มทำได้เลย",ro13,"ยังก่อนดีกว่า",rn13;
+ro13:
+	if (countitem(25765) >= 1 && countitem(25766) >= 5) {
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~";
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~#!!";
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~!@!@";
+				next;
+				delitem 25765,1;
+				delitem 25766,5;
+				getitem 23981,1;
+				mes "[แลกของAbyss 4]";
+				mes "เรียบร้อยเปิดกระเป๋าดูได้เลย ~";
+				close;
+				} else {
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "เจ้ายังมีของไม่ครบ";
+				close;
+rn13:
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "หากเจ้าพร้อมกลับมาหาข้าได้ตลอดเวลา";
+				close;
+}
+//
+r23:
+next;
+				mes "[แลกของAbyss 4]";
+				mes "เจ้าเลือกแบบที่ 2";
+				mes "เจ้าจำเป็นต้องมีของดังนี้";
+				mes "<ITEM>Red Dragon Orb<INFO>25761</INFO></ITEM> จำนวน 12 ea";
+				mes "<ITEM>Green Dragon Orb<INFO>25759</INFO></ITEM> จำนวน 12 ea";
+				mes "<ITEM>Gold Dragon Orb<INFO>25762</INFO></ITEM> จำนวน 12 ea";
+				mes "<ITEM>Purple Dragon Orb<INFO>25763</INFO></ITEM> จำนวน 12 ea";
+				mes "<ITEM>Blue Dragon Orb<INFO>25760</INFO></ITEM> จำนวน 12 ea";
+				mes "<ITEM>Silver Dragon Orb<INFO>25764</INFO></ITEM> จำนวน 12 ea";
+			menu "ใช้เริ่มทำได้เลย",ro32,"ยังก่อนดีกว่า",rn32;
+ro32:
+	if (countitem(25759) >= 12 && countitem(25760) >= 12 && countitem(25761) >= 12 && countitem(25762) >= 12 && countitem(25763) >= 12 && countitem(25764) >= 12) {
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~";
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~#!!";
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~!@!@";
+				next;
+				delitem 25759,12;
+				delitem 25760,12;
+				delitem 25761,12;
+				delitem 25762,12;
+				delitem 25763,12;
+				delitem 25764,12;
+				getitem 23981,1;
+				mes "[แลกของAbyss 4]";
+				mes "เรียบร้อยเปิดกระเป๋าดูได้เลย ~";
+				close;
+				} else {
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "เจ้ายังมีของไม่ครบ";
+				close;
+rn32:
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "หากเจ้าพร้อมกลับมาหาข้าได้ตลอดเวลา";
+				close;
+}
+			case 12:
+				mes "[แลกของAbyss 4]";
+				mes "เจ้าต้องการแลก <ITEM>Stable Dragon's Power<INFO>100142</INFO></ITEM> ";
+				mes "เจ้าจำเป็นต้องมีของดังนี้";
+				mes "<ITEM>Turbulence Dragon's Power<INFO>23981</INFO></ITEM> จำนวน 5 ea";
+			menu "ใช้เริ่มทำได้เลย",o12,"ยังก่อนดีกว่า",n12;
+o12:
+	if (countitem(1035) >= 5) {
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~";
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~#!!";
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "อึกอัก~!@!@";
+				next;
+				delitem 23981,5;
+				getitem 100142,1;
+				mes "[แลกของAbyss 4]";
+				mes "เรียบร้อยเปิดกระเป๋าดูได้เลย ~";
+				close;
+				} else {
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "เจ้ายังมีของไม่ครบ";
+				close;
+n12:
+				next;
+				mes "[แลกของAbyss 4]";
+				mes "หากเจ้าพร้อมกลับมาหาข้าได้ตลอดเวลา";
+				close;
+			}
+			break;
+}
+	case 2:
+		next;
+		mes "[แลกของAbyss 4]";
+		mes "หากพร้อมแล้วมากลับมาใหม่ได้เสมอ";
+		close;
+
+}
+OnInit:
+	//waitingroom "",0;
+	setunitdata getnpcid(0),UNPC_GROUP_ID,1016;
+	end;	
+
+}
+*/
+
+//===== rAthena Script =======================================
+//= Euphy's Quest Shop
+//===== By: ==================================================
+//= Euphy
+//===== Update Hat Maker By: ==================================================
+//= Boy
+//===== Current Version: =====================================
+//= 1.4a
+//===== Compatible With: =====================================
+//= rAthena SVN r15340+
+//===== Description: =========================================
+//= A dynamic quest shop based on Lunar's, with easier config.
+//= Includes support for multiple shops & cashpoints.
+//= Item Preview script by ToastOfDoom.
+//============================================================
+					
+hu_in01,93,322,4	script	Bluehead	3199,{
+
+	disable_items;
+	if(checkweight(25271,1) == 0 || (MaxWeight - Weight) < 1000){
+	mes "[Abyss 4th Exchange]";
+	mes "- คุณถือของมากเกินไป. -";
+	close;
+	}
+	mes "[Abyss 4th Exchange]";
+	mes "นักผจญภัย ท่านต้องการแลกเปลี่ยนอะไร?";
+	next;
+	switch(select("^0000FFDragon Bone^000000 แลกเปลี่ยน ^0000FFDragon Power^000000:^0000FFDragon Orb  ^000000 แลกเปลี่ยน ^0000FFDragon Power^000000:")){
+		case 1:
+			callshop "DragonExchange",1;
+			end;
+			
+		case 2:
+			mes "[Abyss 4th Exchange]";
+			mes "ข้าทำของได้ตามนี้.";
+			for(.@i = 0; .@i < getarraysize(.weapons$); .@i++){
+				explode(.@T$,.weapons$[.@i],"|");
+				.@item_id = atoi(.@T$[0]);
+				mes "<ITEM>"+getitemname(.@item_id)+"<INFO>"+.@item_id+"</INFO></ITEM>";
+			}
+			next;
+			mes "[Abyss 4th Exchange]";
+			mes "เจ้าต้องการแลกเปลี่ยนรายการใด";
+			next;
+			for(.@i = 0; .@i < getarraysize(.weapons$); .@i++){
+				explode(.@T$,.weapons$[.@i],"|");
+				.@item_id = atoi(.@T$[0]);
+				.@menu$ += getitemname(.@item_id) +":";
+			}
+			.@s = select(.@menu$) - 1;
+			explode(.@T$,.weapons$[.@s],"|");
+			explode(.@TT$,.@T$[2],",");
+			input .@count;
+			if(.@count == 0){
+			.@count = 1;
+			}
+			mes "[Abyss 4th Exchange]";
+			mes "นี้คือของที่ต้องการ.";
+			for(.@i = 0; .@i < getarraysize(.@TT$); .@i++){
+				explode(.@data$,.@TT$[.@i],":");
+				.@item_id[.@i] = atoi(.@data$[0]);
+				.@amount[.@i] = atoi(.@data$[1]);
+//				mes "^0000FF" + .@amount[.@i]*.@count +" "+ getitemname(.@item_id[.@i]) + "^000000";
+				mes "<ITEM>"+ getitemname(.@item_id[.@i]) + "<INFO>"+(.@item_id[.@i])+ "</INFO></ITEM> จำนวน " + .@amount[.@i]*.@count +" ชิ้น";
+			}
+			mes "ท่านต้องการแลกเปลี่ยน ไอเทมเลยไหม ?";
+			next;
+			if(select("เอาเลย.:ยังต้องการวัตถุดิบเพิ่มเติม") == 2){
+				mes "[Abyss 4th Exchange]";
+				mes "มาหาข้า เมื่อเจ้าพร้อม.";
+				close;
+			}
+			for(.@i = 0; .@i < getarraysize(.@item_id); .@i++){
+				if(countitem(.@item_id[.@i]) < .@amount[.@i]*.@count)
+					.@miss++;
+			}
+				if(.@miss > 0){
+				mes "[Abyss 4th Exchange]";
+				mes "เจ้ามีวัตถุดิบไม่เพียงพอ";
+				end;
+			}
+			mes "[Abyss 4th Exchange]";
+			mes "กำลังจัดทำ.";
+			for(.@i = 0; .@i < getarraysize(.@item_id); .@i++)
+			delitem .@item_id[.@i],.@amount[.@i]*.@count;
+			getitem atoi(.@T$[0]),1*.@count;			
+			break;
+			
+			
+		case 3:
+			mes "[Abyss 4th Exchange]";
+			mes "ข้าทำของได้ตามนี้.";
+			for(.@i = 0; .@i < getarraysize(.armors$); .@i++){
+				explode(.@T$,.armors$[.@i],"|");
+				.@item_id = atoi(.@T$[0]);
+				mes "<ITEM>"+getitemname(.@item_id)+"<INFO>"+.@item_id+"</INFO></ITEM>";
+			}
+			next;
+			mes "[Abyss 4th Exchange]";
+			mes "เจ้าต้องการแลกเปลี่ยนรายการใด";
+			next;
+			for(.@i = 0; .@i < getarraysize(.armors$); .@i++){
+				explode(.@T$,.armors$[.@i],"|");
+				.@item_id = atoi(.@T$[0]);
+				.@menu$ += getitemname(.@item_id) +":";
+			}
+			.@s = select(.@menu$) - 1;
+			explode(.@T$,.armors$[.@s],"|");
+			explode(.@TT$,.@T$[2],",");
+			.@slot = atoi(.@T$[3]);
+			input .@count;
+			if(.@count == 0){
+			.@count = 1;
+			}
+			mes "[Abyss 4th Exchange]";
+			mes "นี้คือของที่ต้องการ.";
+			for(.@i = 0; .@i < getarraysize(.@TT$); .@i++){
+				explode(.@data$,.@TT$[.@i],":");
+				.@item_id[.@i] = atoi(.@data$[0]);
+				.@amount[.@i] = atoi(.@data$[1]);
+//				mes "^0000FF" + .@amount[.@i]*.@count +" "+ getitemname(.@item_id[.@i]) + "^000000";
+				mes "<ITEM>"+ getitemname(.@item_id[.@i]) + "<INFO>"+(.@item_id[.@i])+ "</INFO></ITEM> จำนวน " + .@amount[.@i]*.@count +" ชิ้น";
+			}
+			mes "ท่านต้องการแลกเปลี่ยน ไอเทมเลยไหม ?";
+			next;
+			if(select("เอาเลย.:ยังต้องการวัตถุดิบเพิ่มเติม") == 2){
+				mes "[Abyss 4th Exchange]";
+				mes "มาหาข้า เมื่อเจ้าพร้อม.";
+				close;
+			}
+			for(.@i = 0; .@i < getarraysize(.@item_id); .@i++){
+				if(countitem(.@item_id[.@i]) < .@amount[.@i]*.@count)
+					.@miss += 1;
+			}
+			if(.@miss > 0){
+				mes "[Abyss 4th Exchange]]";
+				mes "เจ้ามีวัตถุดิบไม่เพียงพอ";
+				end;
+			}
+			mes "[Abyss 4th Exchange]";
+			mes "กำลังจัดทำ.";
+			for(.@i = 0; .@i < getarraysize(.@item_id); .@i++)
+			delitem .@item_id[.@i],.@amount[.@i]*.@count;
+			getitem atoi(.@T$[0]),1*.@count;			
+			break;
+	}
+	next;
+	mes "[Abyss 4th Exchange]";
+	mes "เสร็จแล้ว.";
+	end;
+	
+OnInit:
+	setarray .weapons$,
+		"100144||25759:8,25760:8,25761:8,25762:8,25763:8,25764:8",
+		"100145||25759:7,25760:7,25761:7,25762:7,25763:7,25764:7",
+		"23981||25759:12,25760:12,25761:12,25762:12,25763:12,25764:12";
+	setarray .armors$,
+		"15391||25761:50,1035:75,1036:100,1037:50,7123:100,7445:35,7446:35,7447:35,7448:35,25765:3,25766:15",
+		"15392||25759:50,1035:75,1036:100,1037:50,7123:100,7445:35,7446:35,7447:35,7448:35,25765:3,25766:15",
+		"15393||25762:50,1035:75,1036:100,1037:50,7123:100,7445:35,7446:35,7447:35,7448:35,25765:3,25766:15",
+		"15394||25763:50,1035:75,1036:100,1037:50,7123:100,7445:35,7446:35,7447:35,7448:35,25765:3,25766:15",
+		"15395||25760:50,1035:75,1036:100,1037:50,7123:100,7445:35,7446:35,7447:35,7448:35,25765:3,25766:15",
+		"15396||25764:50,1035:75,1036:100,1037:50,7123:100,7445:35,7446:35,7447:35,7448:35,25765:3,25766:15",
+		"20946||1035:15,1036:75,1037:15,7123:75,7445:25,7446:25,7447:25,7448:25,25765:2,25766:6",
+		"22208||1035:30,1036:60,1037:40,7123:60,7445:25,7446:25,7447:25,7448:25,25765:1,25766:8";
+//		npcshopadditem "<Shop Name>",<Item>,<Quantity>,<Zeny Cost>,<Cost Item 1>,<Cost Amount 1>,<Cost Refine 1>,........<Cost Item 5>,<Cost Amount 5>,<Cost Refine 5>;
+//		npcshopadditem "#DragonExchange",100144,-1,0,25765,1,0,25766,2,0,0,0,0,0,0,0,0,0,0;
+//		npcshopadditem "#DragonExchange",100145,-1,0,25765,1,0,25766,1,0,0,0,0,0,0,0,0,0,0;
+//		npcshopadditem "#DragonExchange",23981,-1,0,25765,1,0,25766,5,0,0,0,0,0,0,0,0,0,0;
+//		npcshopadditem "#DragonExchange",100142,-1,0,23981,5,0,0,0,0,0,0,0,0,0,0,0,0,0;
+	
+	setunitdata getnpcid(0),UNPC_GROUP_ID,8;
+	end;	
+
+}
+
+
+//===== rAthena Script =======================================
+//= Euphy's Quest Shop
+//===== By: ==================================================
+//= Euphy
+//===== Update Hat Maker By: ==================================================
+//= Boy
+//===== Current Version: =====================================
+//= 1.4a
+//===== Compatible With: =====================================
+//= rAthena SVN r15340+
+//===== Description: =========================================
+//= A dynamic quest shop based on Lunar's, with easier config.
+//= Includes support for multiple shops & cashpoints.
+//= Item Preview script by ToastOfDoom.
+//============================================================
+					
+hu_in01,95,322,4	script	Redhead	1449,{
+	mes "[Abyss 4th Exchange]";
+	mes "ต้องการอะไร?";
+	next;
+	switch(select("::Armor Exchange")){
+		case 1:
+			close;
+			
+		case 2:
+			disable_items;
+			if(checkweight(25271,1) == 0 || (MaxWeight - Weight) < 1000){
+				mes "- คุณถือของมากเกินไป. -";
+				close;
+			}
+			mes "[Abyss 4th Exchange]";
+			mes "ข้าทำของได้ตามนี้.";
+			for(.@i = 0; .@i < getarraysize(.weapons$); .@i++){
+				explode(.@T$,.weapons$[.@i],"|");
+				.@item_id = atoi(.@T$[0]);
+				mes "<ITEM>"+getitemname(.@item_id)+"<INFO>"+.@item_id+"</INFO></ITEM>";
+			}
+			next;
+			mes "[Abyss 4th Exchange]";
+			mes "เจ้าต้องการแลกเปลี่ยนรายการใด";
+			next;
+			for(.@i = 0; .@i < getarraysize(.weapons$); .@i++){
+				explode(.@T$,.weapons$[.@i],"|");
+				.@item_id = atoi(.@T$[0]);
+				.@menu$ += getitemname(.@item_id) +":";
+			}
+			.@s = select(.@menu$) - 1;
+			explode(.@T$,.weapons$[.@s],"|");
+			explode(.@TT$,.@T$[2],",");
+			mes "[Abyss 4th Exchange]";
+			mes "นี้คือของที่ต้องการ.";
+			for(.@i = 0; .@i < getarraysize(.@TT$); .@i++){
+				explode(.@data$,.@TT$[.@i],":");
+				.@item_id[.@i] = atoi(.@data$[0]);
+				.@amount[.@i] = atoi(.@data$[1]);
+//				mes "^0000FF" + .@amount[.@i] +" "+ getitemname(.@item_id[.@i]) + "^000000";
+				mes "<ITEM>"+ getitemname(.@item_id[.@i]) + "<INFO>"+(.@item_id[.@i])+ "</INFO></ITEM> จำนวน "+ .@amount[.@i]+" ชิ้น";
+			}
+			mes "ท่านต้องการแลกเปลี่ยน ไอเทมเลยไหม ?";
+			next;
+			if(select("เอาเลย.:ยังต้องการวัตถุดิบเพิ่มเติม") == 2){
+				mes "[Abyss 4th Exchange]";
+				mes "มาหาข้า เมื่อเจ้าพร้อม.";
+				close;
+			}
+			for(.@i = 0; .@i < getarraysize(.@item_id); .@i++){
+				if(countitem(.@item_id[.@i]) < .@amount[.@i])
+					.@miss++;
+			}
+				if(.@miss > 0){
+				mes "[Abyss 4th Exchange]";
+				mes "เจ้ามีวัตถุดิบไม่เพียงพอ";
+				end;
+			}
+			mes "[Abyss 4th Exchange]";
+			mes "กำลังจัดทำ.";
+			for(.@i = 0; .@i < getarraysize(.@item_id); .@i++)
+			delitem .@item_id[.@i],.@amount[.@i];
+			getitem atoi(.@T$[0]),1;			
+			break;
+			
+			
+		case 3:
+			disable_items;
+			if(checkweight(25271,1) == 0 || (MaxWeight - Weight) < 1000){
+				mes "- คุณถือของมากเกินไป. -";
+				close;
+			}
+			mes "[Abyss 4th Exchange]";
+			mes "ข้าทำของได้ตามนี้.";
+			for(.@i = 0; .@i < getarraysize(.armors$); .@i++){
+				explode(.@T$,.armors$[.@i],"|");
+				.@item_id = atoi(.@T$[0]);
+				mes "<ITEM>"+getitemname(.@item_id)+"<INFO>"+.@item_id+"</INFO></ITEM>";
+			}
+			next;
+			mes "[Abyss 4th Exchange]";
+			mes "เจ้าต้องการแลกเปลี่ยนรายการใด";
+			next;
+			for(.@i = 0; .@i < getarraysize(.armors$); .@i++){
+				explode(.@T$,.armors$[.@i],"|");
+				.@item_id = atoi(.@T$[0]);
+				.@menu$ += getitemname(.@item_id) +":";
+			}
+			.@s = select(.@menu$) - 1;
+			explode(.@T$,.armors$[.@s],"|");
+			explode(.@TT$,.@T$[2],",");
+			.@slot = atoi(.@T$[3]);
+			mes "[Abyss 4th Exchange]";
+			mes "นี้คือของที่ต้องการ.";
+			for(.@i = 0; .@i < getarraysize(.@TT$); .@i++){
+				explode(.@data$,.@TT$[.@i],":");
+				.@item_id[.@i] = atoi(.@data$[0]);
+				.@amount[.@i] = atoi(.@data$[1]);
+//				mes "^0000FF" + .@amount[.@i]+" "+ getitemname(.@item_id[.@i]) + "^000000";
+				mes "<ITEM>"+ getitemname(.@item_id[.@i]) + "<INFO>"+(.@item_id[.@i])+ "</INFO></ITEM> จำนวน "+ .@amount[.@i]+" ชิ้น";
+
+				
+			}
+			mes "ท่านต้องการแลกเปลี่ยน ไอเทมเลยไหม ?";
+			next;
+			if(select("เอาเลย.:ยังต้องการวัตถุดิบเพิ่มเติม") == 2){
+				mes "[Abyss 4th Exchange]";
+				mes "มาหาข้า เมื่อเจ้าพร้อม.";
+				close;
+			}
+			for(.@i = 0; .@i < getarraysize(.@item_id); .@i++){
+				if(countitem(.@item_id[.@i]) < .@amount[.@i])
+					.@miss += 1;
+			}
+			if(.@miss > 0){
+				mes "[Abyss 4th Exchange]]";
+				mes "เจ้ามีวัตถุดิบไม่เพียงพอ";
+				end;
+			}
+			mes "[Abyss 4th Exchange]";
+			mes "กำลังจัดทำ.";
+			for(.@i = 0; .@i < getarraysize(.@item_id); .@i++)
+			delitem .@item_id[.@i],.@amount[.@i];
+			getitem atoi(.@T$[0]),1;			
+			break;
+	}
+	next;
+	mes "[Abyss 4th Exchange]";
+	mes "เสร็จแล้ว.";
+	end;
+	
+OnInit:
+	setarray .weapons$,
+		"100144||25765:2,25766:1",
+		"100144||25759:8,25760:8,25761:8,25762:8,25763:8,25764:8",
+		"100145||25765:1,25766:1",
+		"100145||25759:7,25760:7,25761:7,25762:7,25763:7,25764:7",
+		"23981||25765:1,25766:5",
+		"23981||25759:12,25760:12,25761:12,25762:12,25763:12,25764:12",
+		"100142||23981:5";
+	setarray .armors$,
+		"15391||25761:50,1035:75,1036:100,1037:50,7123:100,7445:35,7446:35,7447:35,7448:35,25765:3,25766:15",
+		"15392||25759:50,1035:75,1036:100,1037:50,7123:100,7445:35,7446:35,7447:35,7448:35,25765:3,25766:15",
+		"15393||25762:50,1035:75,1036:100,1037:50,7123:100,7445:35,7446:35,7447:35,7448:35,25765:3,25766:15",
+		"15394||25763:50,1035:75,1036:100,1037:50,7123:100,7445:35,7446:35,7447:35,7448:35,25765:3,25766:15",
+		"15395||25760:50,1035:75,1036:100,1037:50,7123:100,7445:35,7446:35,7447:35,7448:35,25765:3,25766:15",
+		"15396||25764:50,1035:75,1036:100,1037:50,7123:100,7445:35,7446:35,7447:35,7448:35,25765:3,25766:15",
+		"20946||1035:15,1036:75,1037:15,7123:75,7445:25,7446:25,7447:25,7448:25,25765:2,25766:6",
+		"22208||1035:30,1036:60,1037:40,7123:60,7445:25,7446:25,7447:25,7448:25,25765:1,25766:8";
+
+
+	setunitdata getnpcid(0),UNPC_GROUP_ID,8;
+	end;	
+}
+
+

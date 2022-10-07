@@ -1,0 +1,46 @@
+// Boss Auto Drop
+//============================================================
+-	script	KillBossAutoDrop	-1,{
+
+end;
+
+	OnNPCKillEvent:
+		if (getmonsterinfo(killedrid,MOB_MVPEXP) > 0 ){
+			if(rand(1,100) < 100) {
+				#MVPRewards += 1;
+				dispbottom "คุณได้รับ แต้ม MVP +1 / มีทั้งหมด "+#MVPRewards+" แต้ม.";
+			}
+			if(rand(1,100) < 50) {
+				getitem 61041,1;
+			}
+		}
+	end;
+}
+
+-	script	MVPPointsCommand	-1,{
+
+	//= คำสั่งเพิ่มแต้ม MVP
+	OnMVPPointsUP:
+		input .PointsUP;
+		set #MVPRewards,#MVPRewards+.PointsUP;
+		dispbottom "คุณได้รับ แต้ม MVP "+.PointsUP+" แต้ม / คงเหลือ "+#MVPRewards+" แต้ม.";	
+	end;
+	
+	//= คำสั่งรีเซ็ตแต้ม MVP
+	OnMVPPointsReset:
+		set #MVPRewards,#MVPRewards - #MVPRewards;
+		dispbottom "รีเซ็ตแต้ม MVP เรียบร้อยแล้ว!";
+	end;
+
+	OnInit:	//= คำสั่งสำหรับ GM
+		//= คำสั่งเพิ่มค่าความเหนื่อยล้า : @MVPPoints
+		bindatcmd "MVPPoints",strnpcinfo(3)+"::OnMVPPointsUP",99,99;
+		//= คำสั่งรีเซ็ตค่าความเหนื่อยล้า : @MVPPointsReset
+		bindatcmd "MVPPointsReset",strnpcinfo(3)+"::OnMVPPointsReset",99,99;
+	end;
+}
+
+// --------------------------------------------------
+//	Shop: ร้านค้าแต้ม MVP
+// --------------------------------------------------
+moroccz,152,83,5	pointshop	ร้านค้าแต้ม MVP	743,#MVPRewards,7227:1
