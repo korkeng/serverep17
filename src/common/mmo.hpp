@@ -211,6 +211,8 @@ const t_itemid WEDDING_RING_F = 2635;
 #define MAX_ACHIEVEMENT_DEPENDENTS 20 /// Maximum different dependents in achievement_db.yml
 #define ACHIEVEMENT_NAME_LENGTH 50 /// Max Achievement Name length
 
+#define MAX_COLLECTION_ITEM 50 //collection
+
 enum item_types {
 	IT_HEALING = 0,
 	IT_UNKNOWN, //1
@@ -581,6 +583,7 @@ struct mmo_charstatus {
 	short robe;
 
 	char name[NAME_LENGTH];
+	int reputation_id;
 	unsigned int base_level,job_level;
 	unsigned short str,agi,vit,int_,dex,luk;
 	unsigned short pow,sta,wis,spl,con,crt;

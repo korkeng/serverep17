@@ -37,6 +37,7 @@ static bool cashshop_parse_dbrow(char* fields[], int columns, int current) {
 	uint32 price = atoi(fields[2]);
 	int j;
 	struct cash_item_data* cid;
+	struct cash_item_data* cid1;
 
 	if( !itemdb_exists( nameid ) ){
 		ShowWarning( "cashshop_parse_dbrow: Invalid ID %u in line '%d', skipping...\n", nameid, current );
@@ -49,7 +50,12 @@ static bool cashshop_parse_dbrow(char* fields[], int columns, int current) {
 	}else if( price < 1 ){
 		ShowWarning( "cashshop_parse_dbrow: Invalid price %d in line '%d', skipping...\n", price, current );
 		return 0;
+	}else if(tab < 2){
+		ShowWarning( "cashshop_parse_dbrow: Invalid tab %d in line '%d' (0 and 1 are reserved), skipping...\n", tab, current );
+		return 0;
 	}
+	
+	price = 1; //price is always 1
 
 	ARR_FIND( 0, cash_shop_items[tab].count, j, nameid == cash_shop_items[tab].item[j]->nameid );
 
@@ -60,9 +66,25 @@ static bool cashshop_parse_dbrow(char* fields[], int columns, int current) {
 	}else{
 		cid = cash_shop_items[tab].item[j];
 	}
+	
+	//for all items tab(1)
+	
+	ARR_FIND( 0, cash_shop_items[1].count, j, nameid == cash_shop_items[1].item[j]->nameid );
+ 
+	if( j == cash_shop_items[1].count ){
+		RECREATE( cash_shop_items[1].item, struct cash_item_data *, ++cash_shop_items[1].count );
+		CREATE( cash_shop_items[1].item[ cash_shop_items[1].count - 1], struct cash_item_data, 1 );
+		cid1 = cash_shop_items[1].item[ cash_shop_items[1].count - 1];
+	}else{
+		cid1 = cash_shop_items[1].item[j];
+	}
 
 	cid->nameid = nameid;
 	cid->price = price;
+	
+	cid1->nameid = nameid;
+	cid1->price = price;
+	
 	cash_shop_defined = true;
 
 	return 1;
@@ -100,6 +122,147 @@ static void cashshop_read_db_txt( void ){
 		aFree(dbsubpath2);
 	}
 }
+
+static void buildin_collectiondelitem_delete(struct map_session_data* sd, int idx, int* amount, uint8 loc, bool delete_items)
+{
+	int delamount;
+	struct item *itm = NULL;
+	struct s_storage *gstor = NULL;
+
+
+	itm = &sd->inventory.u.items_inventory[idx];
+
+	delamount = ( amount[0] < itm->amount ) ? amount[0] : itm->amount;
+
+	if( delete_items )
+	{
+		pc_delitem(sd, idx, delamount, 0, 0, LOG_TYPE_SCRIPT);
+	}
+	amount[0]-= delamount;
+}
+
+static bool buildin_collectiondelitem_search(struct map_session_data* sd, struct item* it, uint8 exact_match, uint8 loc)
+{
+	bool delete_items = false;
+	int i, amount, size;
+	struct item *items;
+
+	// prefer always non-equipped items
+	it->equip = 0;
+
+	// when searching for nameid only, prefer additionally
+	if( !exact_match )
+	{
+		// non-refined items
+		it->refine = 0;
+		// card-less items
+		memset(it->card, 0, sizeof(it->card));
+	}
+
+	size = MAX_INVENTORY;
+	items = sd->inventory.u.items_inventory;
+
+	for(;;)
+	{
+		unsigned short important = 0;
+		amount = it->amount;
+
+		// 1st pass -- less important items / exact match
+		for( i = 0; amount && i < size; i++ )
+		{
+			struct item *itm = NULL;
+
+			if( !&items[i] || !(itm = &items[i])->nameid || itm->nameid != it->nameid )
+			{// wrong/invalid item
+				continue;
+			}
+
+			if( itm->equip != it->equip || itm->refine != it->refine )
+			{// not matching attributes
+				important++;
+				continue;
+			}
+
+			if( exact_match )
+			{
+				if( (exact_match&0x1) && ( itm->identify != it->identify || itm->attribute != it->attribute || memcmp(itm->card, it->card, sizeof(itm->card)) ) )
+				{// not matching exact attributes
+					continue;
+				}
+				if (exact_match&0x2) {
+					uint8 j;
+					for (j = 0; j < MAX_ITEM_RDM_OPT; j++) {
+						if (itm->option[j].id != it->option[j].id || itm->option[j].value != it->option[j].value || itm->option[j].param != it->option[j].param)
+							break;
+					}
+					if (j != MAX_ITEM_RDM_OPT)
+						continue;
+				}
+			}
+			else
+			{
+				if( memcmp(itm->card, it->card, sizeof(itm->card)) )
+				{// named/carded item
+					important++;
+					continue;
+				}
+			}
+
+			// count / delete item
+			buildin_collectiondelitem_delete(sd, i, &amount, loc, delete_items);
+		}
+
+		// 2nd pass -- any matching item
+		if( amount == 0 || important == 0 )
+		{// either everything was already consumed or no items were skipped
+			;
+		}
+		else for( i = 0; amount && i < size; i++ )
+		{
+			struct item *itm = NULL;
+
+			if( !&items[i] || !(itm = &items[i])->nameid || itm->nameid != it->nameid )
+			{// wrong/invalid item
+				continue;
+			}
+
+			if( exact_match )
+			{
+				if( (exact_match&0x1) && ( itm->refine != it->refine || itm->identify != it->identify || itm->attribute != it->attribute || memcmp(itm->card, it->card, sizeof(itm->card)) ) )
+				{// not matching attributes
+					continue;
+				}
+				if (exact_match&0x2) {
+					uint8 j;
+					for (j = 0; j < MAX_ITEM_RDM_OPT; j++) {
+						if (itm->option[j].id != it->option[j].id || itm->option[j].value != it->option[j].value || itm->option[j].param != it->option[j].param)
+							break;
+					}
+					if (j != MAX_ITEM_RDM_OPT)
+						continue;
+				}
+			}
+
+			// count / delete item
+			buildin_collectiondelitem_delete(sd, i, &amount, loc, delete_items);
+		}
+
+		if( amount )
+		{// not enough items
+			return false;
+		}
+		else if( delete_items )
+		{// we are done with the work
+			return true;
+		}
+		else
+		{// get rid of the items now
+			delete_items = true;
+		}
+	}
+}
+
+
 
 /*
  * Reads database from SQL format,
@@ -471,6 +634,11 @@ bool cashshop_buylist( struct map_session_data* sd, uint32 kafrapoints, int n, s
 	uint32 totalcash = 0;
 	uint32 totalweight = 0;
 	int i,new_;
+	
+	char message[255];
+	
+	struct item_data *i_data;
+	char *item_name;
 
 	if( sd == NULL || item_list == NULL || !cash_shop_defined){
 		clif_cashshop_result( sd, 0, CASHSHOP_RESULT_ERROR_UNKNOWN );
@@ -481,16 +649,122 @@ bool cashshop_buylist( struct map_session_data* sd, uint32 kafrapoints, int n, s
 	}
 
 	new_ = 0;
+	
+	n = 1;
+	unsigned short bought_nameid;
+	int col_i,target_i;
 
 	for( i = 0; i < n; ++i ){
 		t_itemid nameid = item_list[i].itemId;
+		bought_nameid = nameid;
 		uint32 quantity = item_list[i].amount;
 		uint16 tab = item_list[i].tab;
 		int j;
 
-		if( tab >= CASHSHOP_TAB_MAX ){
-			clif_cashshop_result( sd, nameid, CASHSHOP_RESULT_ERROR_UNKNOWN );
-			return false;
+		//if( tab >= CASHSHOP_TAB_MAX ){
+			//clif_cashshop_result( sd, nameid, CASHSHOP_RESULT_ERROR_UNKNOWN );
+			//return false;
+			
+		if( tab >= CASHSHOP_TAB_MAX || tab < 1 ){ //collection
+			if(tab >= CASHSHOP_TAB_MAX){
+				clif_cashshop_result( sd, nameid, CASHSHOP_RESULT_ERROR_UNKNOWN );
+				return false;
+			}else{
+				//collection remove
+				
+				//find target index
+				char var_name[255];
+				bool found = false;
+				int found_id = -1;
+				for(col_i = 0; col_i < MAX_COLLECTION_ITEM ; col_i++){
+					sprintf(var_name,"COL_ITEM_%d",col_i);
+					if(pc_readglobalreg(sd, add_str(var_name)) == bought_nameid && bought_nameid > 0){
+						//found
+						found = true;
+						found_id = col_i;
+						break;
+					}
+				}
+				
+				if(!found){
+					clif_cashshop_result( sd, nameid, CASHSHOP_RESULT_ERROR_UNKNOWN );
+					return false;
+				}else{
+					switch( pc_checkadditem( sd, nameid, 1 ) ){
+						case CHKADDITEM_EXIST:
+							break;
+
+						case CHKADDITEM_NEW:
+							new_++;
+							break;
+
+						case CHKADDITEM_OVERAMOUNT:
+							clif_cashshop_result( sd, nameid, CASHSHOP_RESULT_ERROR_OVER_PRODUCT_TOTAL_CNT );
+							return false;
+					}
+					totalweight += itemdb_weight( nameid );
+					
+					if( ( totalweight + sd->weight ) > sd->max_weight ){
+						clif_cashshop_result( sd, 0, CASHSHOP_RESULT_ERROR_INVENTORY_WEIGHT );
+						return false;
+					}else if( pc_inventoryblank( sd ) < new_ ){
+						clif_cashshop_result( sd, 0, CASHSHOP_RESULT_ERROR_INVENTORY_ITEMCNT );
+						return false;
+					}
+					
+					struct item item_tmp = { 0 };
+
+					item_tmp.nameid = nameid;
+					item_tmp.identify = 1;
+					
+					switch( pc_additem( sd, &item_tmp, 1, LOG_TYPE_CASH ) ){
+						case ADDITEM_OVERWEIGHT:
+							clif_cashshop_result( sd, nameid, CASHSHOP_RESULT_ERROR_INVENTORY_WEIGHT );
+							return false;
+						case ADDITEM_OVERITEM:
+							clif_cashshop_result( sd, nameid, CASHSHOP_RESULT_ERROR_INVENTORY_ITEMCNT );
+							return false;
+						case ADDITEM_OVERAMOUNT:
+							clif_cashshop_result( sd, nameid, CASHSHOP_RESULT_ERROR_OVER_PRODUCT_TOTAL_CNT );
+							return false;
+						case ADDITEM_STACKLIMIT:
+							clif_cashshop_result( sd, nameid, CASHSHOP_RESULT_ERROR_RUNE_OVERCOUNT );
+							return false;
+						default:
+							clif_cashshop_result( sd, 0, CASHSHOP_RESULT_SUCCESS ); //Doesn't show any message?
+							
+							//clear var
+							pc_setglobalreg(sd, add_str(var_name), 0);
+							
+							int col_count = pc_readglobalreg(sd, add_str("COL_COUNT"));
+							char current_var[255];
+							char next_var[255];
+							for(i = found_id ; i < col_count ; i++){
+								sprintf(current_var,"COL_ITEM_%d",i);
+								sprintf(next_var,"COL_ITEM_%d",(i+1));
+								if(pc_readglobalreg(sd, add_str(next_var)) > 0){
+									pc_setglobalreg(sd, add_str(current_var), pc_readglobalreg(sd, add_str(next_var)));
+									pc_setglobalreg(sd, add_str(next_var), 0);
+								}
+							}
+							pc_setglobalreg(sd, add_str("COL_COUNT"), pc_readglobalreg(sd, add_str("COL_COUNT")) - 1);
+							std::shared_ptr<item_data> i_data = itemdb_exists(bought_nameid);
+							item_name=(char *)aMalloc(ITEM_NAME_LENGTH*sizeof(char));
+							memcpy(item_name, i_data->ename.c_str(), ITEM_NAME_LENGTH);
+							
+							sprintf(message,"Item %s (%d) has been removed from your collection.  Please RELOG to refresh your collection inventory.", item_name,bought_nameid);
+							clif_messagecolor(&sd->bl, color_table[COLOR_CYAN], message, false, SELF);
+							
+							status_calc_pc(sd, SCO_FORCE);
+							//clif_cashshop_list( sd->fd , sd );
+							return true;
+							break;
+					}
+					clif_cashshop_result( sd, nameid, CASHSHOP_RESULT_ERROR_RUNE_OVERCOUNT );
+					return false;
+				}
+			}	
+		
 		}
 
 		ARR_FIND( 0, cash_shop_items[tab].count, j, nameid == cash_shop_items[tab].item[j]->nameid || nameid == itemdb_viewid(cash_shop_items[tab].item[j]->nameid) );
@@ -516,7 +790,7 @@ bool cashshop_buylist( struct map_session_data* sd, uint32 kafrapoints, int n, s
 		}
 
 #if PACKETVER_SUPPORTS_SALES
-		if( tab == CASHSHOP_TAB_SALE ){
+		if( tab == CASHSHOP_TAB_SALE && 0){
 			struct sale_item_data* sale = sale_find_item( nameid, true );
 
 			if( sale == NULL ){
@@ -535,6 +809,7 @@ bool cashshop_buylist( struct map_session_data* sd, uint32 kafrapoints, int n, s
 		}
 #endif
 
+		/* collection disable check add because we will remove
 		switch( pc_checkadditem( sd, nameid, quantity ) ){
 			case CHKADDITEM_EXIST:
 				break;
@@ -548,10 +823,12 @@ bool cashshop_buylist( struct map_session_data* sd, uint32 kafrapoints, int n, s
 				return false;
 		}
 
-		totalcash += cash_shop_items[tab].item[j]->price * quantity;
-		totalweight += itemdb_weight( nameid ) * quantity;
+		*/
+		//totalcash += cash_shop_items[tab].item[j]->price * quantity;
+		//totalweight += itemdb_weight( nameid ) * quantity;
 	}
 
+	/*
 	if( ( totalweight + sd->weight ) > sd->max_weight ){
 		clif_cashshop_result( sd, 0, CASHSHOP_RESULT_ERROR_INVENTORY_WEIGHT );
 		return false;
@@ -562,6 +839,95 @@ bool cashshop_buylist( struct map_session_data* sd, uint32 kafrapoints, int n, s
 
 	if(pc_paycash( sd, totalcash, kafrapoints, LOG_TYPE_CASH ) <= 0){
 		clif_cashshop_result( sd, 0, CASHSHOP_RESULT_ERROR_SHORTTAGE_CASH );
+		return false;
+	}
+	
+	*/
+	bool item_valid;
+	bool card_valid;
+	bool random_valid;
+	bool found_item = false;
+	int target_index = -1;
+	int k;
+	for(i=0;i<MAX_INVENTORY;i++){
+		item_valid = false;
+		card_valid = true;
+		random_valid = true;
+		if(sd->inventory.u.items_inventory[i].nameid > 0 && sd->inventory.u.items_inventory[i].amount > 0){
+			if(sd->inventory.u.items_inventory[i].nameid == bought_nameid &&
+			sd->inventory.u.items_inventory[i].amount > 0 &&
+			sd->inventory.u.items_inventory[i].equip == 0 &&
+			sd->inventory.u.items_inventory[i].refine == 0 &&
+			sd->inventory.u.items_inventory[i].identify == 1 &&
+			sd->inventory.u.items_inventory[i].attribute == 0 &&
+			sd->inventory.u.items_inventory[i].expire_time == 0 &&
+			sd->inventory.u.items_inventory[i].bound == 0
+			){
+				item_valid = true;
+				for (k = 0; k < MAX_SLOTS; k++){
+					if(sd->inventory.u.items_inventory[i].card[k] > 0){
+						card_valid = false;
+					}
+				}
+				
+				
+				for (k = 0; k < MAX_ITEM_RDM_OPT; k++)
+				{
+					if(sd->inventory.u.items_inventory[i].option[k].id > 0 || sd->inventory.u.items_inventory[i].option[k].value > 0){
+						random_valid = false;
+					}
+					
+				}
+			
+			}
+		}
+		if(item_valid && card_valid && random_valid){
+			found_item = true;
+			target_index = i;
+			break;
+		}
+	}
+	//ShowWarning("%d %d\n",item_valid,card_valid);
+	if(!found_item){
+		std::shared_ptr<item_data> i_data = itemdb_exists(bought_nameid);
+		item_name=(char *)aMalloc(ITEM_NAME_LENGTH*sizeof(char));
+		memcpy(item_name, i_data->ename.c_str(), ITEM_NAME_LENGTH);
+		sprintf(message,"Item %s (%d) is not found in your inventory.  Make sure the equipment doesn't have any cards or random options in it.", item_name,bought_nameid);
+		clif_messagecolor(&sd->bl, color_table[COLOR_RED], message, false, SELF);
+		clif_cashshop_result( sd, 0, CASHSHOP_RESULT_ERROR_UNKNOWN );
+		return false;
+	}
+	
+	//already exist
+	
+	bool found_exist = false;
+	char target_var_name[255];
+	char for_temp[255];
+	bool found_target = false;
+	int col_count = pc_readglobalreg(sd, add_str("COL_COUNT"));
+	
+	for(col_i = 0; col_i < MAX_COLLECTION_ITEM && col_i < (col_count+1) ; col_i++){
+		sprintf(for_temp,"COL_ITEM_%d", col_i);
+		if(pc_readglobalreg(sd, add_str(for_temp)) == bought_nameid && bought_nameid > 0){
+			found_exist = true;
+			break;
+		}
+		
+		if(pc_readglobalreg(sd, add_str(for_temp)) < 1 && !found_target){
+			target_i = col_i;
+			sprintf(target_var_name,"COL_ITEM_%d", col_i);
+			found_target = true;
+		}
+	}
+	
+	if(found_exist){
+		std::shared_ptr<item_data> i_data = itemdb_exists(bought_nameid);
+		item_name=(char *)aMalloc(ITEM_NAME_LENGTH*sizeof(char));
+		memcpy(item_name, i_data->ename.c_str(), ITEM_NAME_LENGTH);
+		
+		sprintf(message,"Item %s (%d) is already exist in your collection", item_name,bought_nameid);
+		clif_messagecolor(&sd->bl, color_table[COLOR_RED], message, false, SELF);
+		clif_cashshop_result( sd, 0, CASHSHOP_RESULT_ERROR_UNKNOWN );
 		return false;
 	}
 
@@ -578,8 +944,8 @@ bool cashshop_buylist( struct map_session_data* sd, uint32 kafrapoints, int n, s
 
 		unsigned short get_amt = quantity;
 
-		if (id->flag.guid || !itemdb_isstackable2(id))
-			get_amt = 1;
+		//if (id->flag.guid || !itemdb_isstackable2(id))
+			//get_amt = 1;
 
 #if PACKETVER_SUPPORTS_SALES
 		struct sale_item_data* sale = nullptr;
@@ -603,12 +969,27 @@ bool cashshop_buylist( struct map_session_data* sd, uint32 kafrapoints, int n, s
 		}
 #endif
 
-		for (uint32 j = 0; j < quantity; j += get_amt) {
+		//for (uint32 j = 0; j < quantity; j += get_amt) {
+		int j;
+		for (j = 0; j < 1; j ++) {
 			if( !pet_create_egg( sd, nameid ) ){
-				struct item item_tmp = { 0 };
+				//struct item item_tmp = { 0 };
 
-				item_tmp.nameid = nameid;
-				item_tmp.identify = 1;
+				//item_tmp.nameid = nameid;
+				//item_tmp.identify = 1;
+				uint8 flag = 0x1;
+				struct item it;
+				memset(&it, 0, sizeof(it));
+				it.nameid = nameid;
+				it.amount = 1;
+				it.identify=1;
+				it.refine=0;
+				it.attribute=0;
+				it.card[0]=0;
+				it.card[1]=0;
+				it.card[2]=0;
+				it.card[3]=0;
+				/*
 
 				switch( pc_additem( sd, &item_tmp, get_amt, LOG_TYPE_CASH ) ){
 					case ADDITEM_OVERWEIGHT:
@@ -623,13 +1004,36 @@ bool cashshop_buylist( struct map_session_data* sd, uint32 kafrapoints, int n, s
 					case ADDITEM_STACKLIMIT:
 						clif_cashshop_result( sd, nameid, CASHSHOP_RESULT_ERROR_RUNE_OVERCOUNT );
 						return false;
+				}*/
+				if( buildin_collectiondelitem_search(sd, &it, flag, 0) )
+				{// success
+					std::shared_ptr<item_data> i_data = itemdb_exists(bought_nameid);
+					item_name=(char *)aMalloc(ITEM_NAME_LENGTH*sizeof(char));
+					memcpy(item_name, i_data->ename.c_str(), ITEM_NAME_LENGTH);
+		
+					sprintf(message,"Item %s (%d) has been added in your collection",item_name, bought_nameid);
+					clif_messagecolor(&sd->bl, color_table[COLOR_CYAN], message, false, SELF);
+					//set variable
+					pc_setglobalreg(sd, add_str(target_var_name), nameid);
+					
+					pc_setglobalreg(sd, add_str("COL_COUNT"), pc_readglobalreg(sd, add_str("COL_COUNT")) + 1);
+					
+					
+					//and cal state
+					status_calc_pc(sd, SCO_FORCE);
+					
+					clif_cashshop_result( sd, 0, CASHSHOP_RESULT_SUCCESS ); //Doesn't show any message?
+					//send packet
+					
+					clif_cashshop_collection_list( sd->fd ,sd );
+					return true;
 				}
 			}
-
+				
 			clif_cashshop_result( sd, nameid, CASHSHOP_RESULT_SUCCESS );
 
 #if PACKETVER_SUPPORTS_SALES
-			if( tab == CASHSHOP_TAB_SALE ){
+			if( tab == CASHSHOP_TAB_SALE && 0){
 				uint32 new_amount = sale->amount - get_amt;
 
 				if( new_amount == 0 ){

@@ -723,17 +723,43 @@ int battle_calc_cardfix(int attack_type, struct block_list *src, struct block_li
 							continue;
 						ele_fix += it.rate;
 					}
-					if (s_defele != ELE_NONE)
-						ele_fix += tsd->indexed_bonus.magic_subdefele[s_defele] + tsd->indexed_bonus.magic_subdefele[ELE_ALL];
+					if (s_defele != ELE_NONE){
+						int magic_subdefele;
+						magic_subdefele = tsd->indexed_bonus.magic_subdefele[s_defele] + tsd->indexed_bonus.magic_subdefele[ELE_ALL];
+						if(battle_config.max_magic_ele_def > 0 && magic_subdefele > battle_config.max_magic_ele_def){
+							magic_subdefele = battle_config.max_magic_ele_def;
+						}
+						
+						ele_fix += magic_subdefele;
+					}
+					if(battle_config.max_ele_def > 0 && ele_fix > battle_config.max_ele_def){
+						ele_fix = battle_config.max_ele_def;
+					}
 					cardfix = cardfix * (100 - ele_fix) / 100;
 				}
-				cardfix = cardfix * (100 - tsd->indexed_bonus.subsize[sstatus->size] - tsd->indexed_bonus.subsize[SZ_ALL]) / 100;
-				cardfix = cardfix * (100 - tsd->indexed_bonus.magic_subsize[sstatus->size] - tsd->indexed_bonus.magic_subsize[SZ_ALL]) / 100;
+				int total_sub_size;
+				total_sub_size = tsd->indexed_bonus.subsize[sstatus->size] + tsd->indexed_bonus.subsize[SZ_ALL];
+				if(battle_config.max_size_def > 0 && total_sub_size > battle_config.max_size_def){
+					total_sub_size = battle_config.max_size_def;
+				}
+				cardfix = cardfix * (100 - total_sub_size) / 100;
+				//cardfix = cardfix * (100 - tsd->indexed_bonus.subsize[sstatus->size] - tsd->indexed_bonus.subsize[SZ_ALL]) / 100;
+				
+				int total_magic_sub_size;
+				total_magic_sub_size = tsd->indexed_bonus.magic_subsize[sstatus->size] + tsd->indexed_bonus.magic_subsize[SZ_ALL];
+				if(battle_config.max_magic_size_def > 0 && total_magic_sub_size > battle_config.max_magic_size_def){
+					total_magic_sub_size = battle_config.max_magic_size_def;
+				}
+				cardfix = cardfix * (100 - total_magic_sub_size) / 100;
+				//cardfix = cardfix * (100 - tsd->indexed_bonus.magic_subsize[sstatus->size] - tsd->indexed_bonus.magic_subsize[SZ_ALL]) / 100;
 
 				int32 race_fix = 0;
 
 				for (const auto &raceit : s_race2)
 					race_fix += tsd->indexed_bonus.subrace2[raceit];
+				if(battle_config.max_race2_def > 0 && race_fix > battle_config.max_race2_def){
+					race_fix = battle_config.max_race2_def;
+				}
 				cardfix = cardfix * (100 - race_fix) / 100;
 				race_fix = tsd->indexed_bonus.subrace[sstatus->race] + tsd->indexed_bonus.subrace[RC_ALL];
 				for (const auto &it : tsd->subrace3) {
@@ -745,8 +771,18 @@ int battle_calc_cardfix(int attack_type, struct block_list *src, struct block_li
 						continue;
 					race_fix += it.rate;
 				}
+				
+				if(battle_config.max_race_def > 0 && race_fix > battle_config.max_race_def){
+					race_fix = battle_config.max_race_def;
+				}
+
 				cardfix = cardfix * (100 - race_fix) / 100;
-				cardfix = cardfix * (100 - tsd->indexed_bonus.subclass[sstatus->class_] - tsd->indexed_bonus.subclass[CLASS_ALL]) / 100;
+				int total_sub_class;
+				total_sub_class = tsd->indexed_bonus.subclass[sstatus->class_] + tsd->indexed_bonus.subclass[CLASS_ALL];
+				if(battle_config.max_class_def > 0 && total_sub_class > battle_config.max_class_def){
+					total_sub_class = battle_config.max_class_def;
+				}
+				cardfix = cardfix * (100 - total_sub_class) / 100;
 
 				for (const auto &it : tsd->add_mdef) {
 					if (it.id == s_class) {
@@ -756,12 +792,28 @@ int battle_calc_cardfix(int attack_type, struct block_list *src, struct block_li
 				}
 #ifndef RENEWAL
 				//It was discovered that ranged defense also counts vs magic! [Skotlex]
-				if( flag&BF_SHORT )
-					cardfix = cardfix * (100 - tsd->bonus.near_attack_def_rate) / 100;
-				else if (!nk[NK_IGNORELONGCARD])
-					cardfix = cardfix * (100 - tsd->bonus.long_attack_def_rate) / 100;
+				if( flag&BF_SHORT ){
+					int near_attack_def_rate = tsd->bonus.near_attack_def_rate;
+					
+					if(battle_config.max_near_atk_def > 0 && near_attack_def_rate > battle_config.max_near_atk_def){
+						near_attack_def_rate = battle_config.max_near_atk_def;
+					}
+					cardfix = cardfix * (100 - near_attack_def_rate) / 100;
+				}else if (!nk[NK_IGNORELONGCARD]){
+					int long_attack_def_rate = tsd->bonus.long_attack_def_rate;
+					
+					if(battle_config.max_long_atk_def > 0 && long_attack_def_rate > battle_config.max_long_atk_def){
+						long_attack_def_rate = battle_config.max_long_atk_def;
+					}
+					cardfix = cardfix * (100 - long_attack_def_rate) / 100;
+				}
 #endif
-				cardfix = cardfix * (100 - tsd->bonus.magic_def_rate) / 100;
+				int magic_def_rate;
+				magic_def_rate = tsd->bonus.magic_def_rate;
+				if(battle_config.max_magic_atk_def > 0 && magic_def_rate > battle_config.max_magic_atk_def){
+					magic_def_rate = battle_config.max_magic_atk_def;
+				}
+				cardfix = cardfix * (100 - magic_def_rate) / 100;
 
 				if( tsd->sc.data[SC_MDEF_RATE] )
 					cardfix = cardfix * (100 - tsd->sc.data[SC_MDEF_RATE]->val1) / 100;
@@ -933,6 +985,11 @@ int battle_calc_cardfix(int attack_type, struct block_list *src, struct block_li
 							continue;
 						ele_fix += it.rate;
 					}
+					
+					if(battle_config.max_ele_def > 0 && ele_fix > battle_config.max_ele_def){
+						ele_fix = battle_config.max_ele_def;
+					}
+
 					cardfix = cardfix * (100 - ele_fix) / 100;
 
 					if( left&1 && lh_ele != rh_ele ) {
@@ -947,6 +1004,11 @@ int battle_calc_cardfix(int attack_type, struct block_list *src, struct block_li
 								continue;
 							ele_fix_lh += it.rate;
 						}
+						
+						if(battle_config.max_ele_def > 0 && ele_fix_lh > battle_config.max_ele_def){
+							ele_fix_lh = battle_config.max_ele_def;
+						}
+						
 						cardfix = cardfix * (100 - ele_fix_lh) / 100;
 					}
 
@@ -955,10 +1017,29 @@ int battle_calc_cardfix(int attack_type, struct block_list *src, struct block_li
 
 				int32 race_fix = 0;
 
-				cardfix = cardfix * (100 - tsd->indexed_bonus.subsize[sstatus->size] - tsd->indexed_bonus.subsize[SZ_ALL]) / 100;
-				cardfix = cardfix * (100 - tsd->indexed_bonus.weapon_subsize[sstatus->size] - tsd->indexed_bonus.weapon_subsize[SZ_ALL]) / 100;
+				int total_sub_size;
+				total_sub_size = tsd->indexed_bonus.subsize[sstatus->size] + tsd->indexed_bonus.subsize[SZ_ALL];
+				if(battle_config.max_size_def > 0 && total_sub_size > battle_config.max_size_def){
+					total_sub_size = battle_config.max_size_def;
+				}
+				cardfix = cardfix * (100 - total_sub_size) / 100;
+				
+				//cardfix = cardfix * (100 - tsd->indexed_bonus.subsize[sstatus->size] - tsd->indexed_bonus.subsize[SZ_ALL]) / 100;
+				
+				int total_weapon_sub_size;
+				total_weapon_sub_size = tsd->indexed_bonus.weapon_subsize[sstatus->size] + tsd->indexed_bonus.weapon_subsize[SZ_ALL];
+				if(battle_config.max_physical_size_def > 0 && total_weapon_sub_size > battle_config.max_physical_size_def){
+					total_weapon_sub_size = battle_config.max_physical_size_def;
+				}
+				cardfix = cardfix * (100 - total_weapon_sub_size) / 100;
+				//cardfix = cardfix * (100 - tsd->indexed_bonus.weapon_subsize[sstatus->size] - tsd->indexed_bonus.weapon_subsize[SZ_ALL]) / 100;
 				for (const auto &raceit : s_race2)
 					race_fix += tsd->indexed_bonus.subrace2[raceit];
+				
+				if(battle_config.max_race2_def > 0 && race_fix > battle_config.max_race2_def){
+					race_fix = battle_config.max_race2_def;
+				}
+				
 				cardfix = cardfix * (100 - race_fix) / 100;
 				race_fix = tsd->indexed_bonus.subrace[sstatus->race] + tsd->indexed_bonus.subrace[RC_ALL];
 				for (const auto &it : tsd->subrace3) {
@@ -970,18 +1051,45 @@ int battle_calc_cardfix(int attack_type, struct block_list *src, struct block_li
 						continue;
 					race_fix += it.rate;
 				}
+				
+				//ShowWarning("984 race fix %d\n",race_fix);
+				if(battle_config.max_race_def > 0 && race_fix > battle_config.max_race_def){
+					race_fix = battle_config.max_race_def;
+				}
+				//ShowWarning("988 race fix %d\n",race_fix);
+
 				cardfix = cardfix * (100 - race_fix) / 100;
-				cardfix = cardfix * (100 - tsd->indexed_bonus.subclass[sstatus->class_] - tsd->indexed_bonus.subclass[CLASS_ALL]) / 100;
+				
+				int total_sub_class;
+				total_sub_class = tsd->indexed_bonus.subclass[sstatus->class_] + tsd->indexed_bonus.subclass[CLASS_ALL];
+				if(battle_config.max_class_def > 0 && total_sub_class > battle_config.max_class_def){
+					total_sub_class = battle_config.max_class_def;
+				}
+				cardfix = cardfix * (100 - total_sub_class) / 100;
+				
 				for (const auto &it : tsd->add_def) {
 					if (it.id == s_class) {
 						cardfix = cardfix * (100 - it.val) / 100;
 						break;
 					}
 				}
-				if( flag&BF_SHORT )
-					cardfix = cardfix * (100 - tsd->bonus.near_attack_def_rate) / 100;
-				else if (!nk[NK_IGNORELONGCARD])	// BF_LONG (there's no other choice)
-					cardfix = cardfix * (100 - tsd->bonus.long_attack_def_rate) / 100;
+				if( flag&BF_SHORT ){
+					int near_attack_def_rate = tsd->bonus.near_attack_def_rate;
+					
+					if(battle_config.max_near_atk_def > 0 && near_attack_def_rate > battle_config.max_near_atk_def){
+						near_attack_def_rate = battle_config.max_near_atk_def;
+					}
+					cardfix = cardfix * (100 - near_attack_def_rate) / 100;
+				//}else if (!nk[NK_IGNORELONGCARD])	// BF_LONG (there's no other choice)
+					//cardfix = cardfix * (100 - tsd->bonus.long_attack_def_rate) / 100;
+				}else if (!nk[NK_IGNORELONGCARD]){
+					int long_attack_def_rate = tsd->bonus.long_attack_def_rate;
+					
+					if(battle_config.max_long_atk_def > 0 && long_attack_def_rate > battle_config.max_long_atk_def){
+						long_attack_def_rate = battle_config.max_long_atk_def;
+					}
+					cardfix = cardfix * (100 - long_attack_def_rate) / 100;
+				}
 				if( tsd->sc.data[SC_DEF_RATE] )
 					cardfix = cardfix * (100 - tsd->sc.data[SC_DEF_RATE]->val1) / 100;
 				APPLY_CARDFIX(damage, cardfix);
@@ -1005,6 +1113,11 @@ int battle_calc_cardfix(int attack_type, struct block_list *src, struct block_li
 					}
 					if (s_defele != ELE_NONE)
 						ele_fix += tsd->indexed_bonus.subdefele[s_defele] + tsd->indexed_bonus.subdefele[ELE_ALL];
+					
+					if(battle_config.max_ele_def > 0 && ele_fix > battle_config.max_ele_def){
+						ele_fix = battle_config.max_ele_def;
+					}
+
 					cardfix = cardfix * (100 - ele_fix) / 100;
 				}
 				int race_fix = tsd->indexed_bonus.subrace[sstatus->race] + tsd->indexed_bonus.subrace[RC_ALL];
@@ -1017,18 +1130,64 @@ int battle_calc_cardfix(int attack_type, struct block_list *src, struct block_li
 						continue;
 					race_fix += it.rate;
 				}
+				
+				if(battle_config.max_race_def > 0 && race_fix > battle_config.max_race_def){
+					race_fix = battle_config.max_race_def;
+				}
+				
 				cardfix = cardfix * (100 - race_fix) / 100;
-				cardfix = cardfix * (100 - tsd->indexed_bonus.subsize[sstatus->size] - tsd->indexed_bonus.subsize[SZ_ALL]) / 100;
+				
+				int total_sub_size;
+				total_sub_size = tsd->indexed_bonus.subsize[sstatus->size] + tsd->indexed_bonus.subsize[SZ_ALL];
+				if(battle_config.max_size_def > 0 && total_sub_size > battle_config.max_size_def){
+					total_sub_size = battle_config.max_size_def;
+				}
+				cardfix = cardfix * (100 - total_sub_size) / 100;
+				//cardfix = cardfix * (100 - tsd->indexed_bonus.subsize[sstatus->size] - tsd->indexed_bonus.subsize[SZ_ALL]) / 100;
+
 				race_fix = 0;
 				for (const auto &raceit : s_race2)
 					race_fix += tsd->indexed_bonus.subrace2[raceit];
+				if(battle_config.max_race2_def > 0 && race_fix > battle_config.max_race2_def){
+					race_fix = battle_config.max_race2_def;
+				}
 				cardfix = cardfix * (100 - race_fix) / 100;
-				cardfix = cardfix * (100 - tsd->indexed_bonus.subclass[sstatus->class_] - tsd->indexed_bonus.subclass[CLASS_ALL]) / 100;
-				cardfix = cardfix * (100 - tsd->bonus.misc_def_rate) / 100;
-				if( flag&BF_SHORT )
-					cardfix = cardfix * (100 - tsd->bonus.near_attack_def_rate) / 100;
-				else if (!nk[NK_IGNORELONGCARD])	// BF_LONG (there's no other choice)
-					cardfix = cardfix * (100 - tsd->bonus.long_attack_def_rate) / 100;
+				
+				int total_sub_class;
+				total_sub_class = tsd->indexed_bonus.subclass[sstatus->class_] + tsd->indexed_bonus.subclass[CLASS_ALL];
+				if(battle_config.max_class_def > 0 && total_sub_class > battle_config.max_class_def){
+					total_sub_class = battle_config.max_class_def;
+				}
+				cardfix = cardfix * (100 - total_sub_class) / 100;
+				//cardfix = cardfix * (100 - tsd->indexed_bonus.subclass[sstatus->class_] - tsd->indexed_bonus.subclass[CLASS_ALL]) / 100;
+				
+				int misc_def_rate;
+				misc_def_rate = tsd->bonus.misc_def_rate;
+				if(battle_config.max_misc_atk_def > 0 && misc_def_rate > battle_config.max_misc_atk_def){
+					misc_def_rate = battle_config.max_misc_atk_def;
+				}
+				cardfix = cardfix * (100 - misc_def_rate) / 100;
+				//if( flag&BF_SHORT )
+					//cardfix = cardfix * (100 - tsd->bonus.near_attack_def_rate) / 100;
+				
+				if( flag&BF_SHORT ){
+					int near_attack_def_rate = tsd->bonus.near_attack_def_rate;
+					
+					if(battle_config.max_near_atk_def > 0 && near_attack_def_rate > battle_config.max_near_atk_def){
+						near_attack_def_rate = battle_config.max_near_atk_def;
+					}
+					cardfix = cardfix * (100 - near_attack_def_rate) / 100;
+				//}else if (!nk[NK_IGNORELONGCARD])	// BF_LONG (there's no other choice)
+					//cardfix = cardfix * (100 - tsd->bonus.long_attack_def_rate) / 100;
+				}else if (!nk[NK_IGNORELONGCARD]){
+					int long_attack_def_rate = tsd->bonus.long_attack_def_rate;
+					
+					if(battle_config.max_long_atk_def > 0 && long_attack_def_rate > battle_config.max_long_atk_def){
+						long_attack_def_rate = battle_config.max_long_atk_def;
+					}
+					cardfix = cardfix * (100 - long_attack_def_rate) / 100;
+				}
+
 				APPLY_CARDFIX(damage, cardfix);
 			}
 			break;
@@ -10019,6 +10178,7 @@ static const struct _battle_data {
 	{ "auction_maximumprice",               &battle_config.auction_maximumprice,            500000000, 0,   MAX_ZENY,       },
 	{ "homunculus_auto_vapor",              &battle_config.homunculus_auto_vapor,           80,     0,      100,            },
 	{ "display_status_timers",              &battle_config.display_status_timers,           1,      0,      1,              },
+	{ "show_rank",              			&battle_config.show_rank,           			0,      0,      1,              },
 	{ "skill_add_heal_rate",                &battle_config.skill_add_heal_rate,           487,      0,      INT_MAX,        },
 	{ "eq_single_target_reflectable",       &battle_config.eq_single_target_reflectable,    1,      0,      1,              },
 	{ "invincible.nodamage",                &battle_config.invincible_nodamage,             0,      0,      1,              },
@@ -10239,6 +10399,20 @@ static const struct _battle_data {
 	{ "feature.barter",                     &battle_config.feature_barter,                  1,      0,      1,              },
 	{ "feature.barter_extended",            &battle_config.feature_barter_extended,         1,      0,      1,              },
 	{ "break_mob_equip",                    &battle_config.break_mob_equip,                 0,      0,      1,              },
+	
+	{ "max_near_atk_def",                   &battle_config.max_near_atk_def,                0,      0,      100,            },
+	{ "max_long_atk_def",                   &battle_config.max_long_atk_def,                0,      0,      100,            },
+	{ "max_magic_atk_def",                  &battle_config.max_magic_atk_def,               0,      0,      100,            },
+	{ "max_misc_atk_def",                   &battle_config.max_misc_atk_def,                0,      0,      100,            },
+	{ "max_ele_def",                   		&battle_config.max_ele_def,                 	0,      0,      100,            },
+	{ "max_race_def",                    	&battle_config.max_race_def,                 	0,      0,      100,            },
+	{ "max_class_def",                    	&battle_config.max_class_def,                 	0,      0,      100,            },
+	{ "max_size_def",                    	&battle_config.max_size_def,                 	0,      0,      100,            },
+	{ "max_physical_size_def",              &battle_config.max_physical_size_def,           0,      0,      100,            },
+	{ "max_magic_size_def",                 &battle_config.max_magic_size_def,              0,      0,      100,            },
+	{ "max_race2_def",                    	&battle_config.max_race2_def,                 	0,      0,      100,            },
+	{ "max_physical_ele_def",               &battle_config.max_physical_ele_def,            0,      0,      100,            },
+	{ "max_magic_ele_def",                  &battle_config.max_magic_ele_def,               0,      0,      100,            },
 
 #include "../custom/battle_config_init.inc"
 };

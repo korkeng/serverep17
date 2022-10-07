@@ -1221,6 +1221,8 @@ void clif_summon_hp_bar(struct mob_data& md);
 void clif_laphine_synthesis_open( struct map_session_data *sd, std::shared_ptr<s_laphine_synthesis> synthesis );
 void clif_laphine_upgrade_open( struct map_session_data* sd, std::shared_ptr<s_laphine_upgrade> upgrade );
 
+void clif_cashshop_collection_list( int fd , struct map_session_data* sd ); //collection
+
 void clif_npc_buy_result(struct map_session_data* sd, e_purchase_result result);
 
 #endif /* CLIF_HPP */

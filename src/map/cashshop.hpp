@@ -10,6 +10,10 @@
 #include "../common/mmo.hpp" // t_itemid
 #include "../common/timer.hpp" // ShowWarning, ShowStatus
 
+#include "map.hpp"
+#include "npc.hpp" 
+#include "pc.hpp" 
+
 struct map_session_data;
 
 void do_init_cashshop( void );

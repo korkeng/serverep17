@@ -490,6 +490,7 @@ struct Battle_Config
 	int auction_maximumprice;
 	int homunculus_auto_vapor;	//Keep Homunculus from Vaporizing when master dies. [L0ne_W0lf]
 	int display_status_timers;	//Show or hide skill buff/delay timers in recent clients [Sara]
+	int show_rank;
 	int skill_add_heal_rate;	//skills that bHealPower has effect on [Inkfish]
 	int eq_single_target_reflectable;
 	int invincible_nodamage;
@@ -711,6 +712,20 @@ struct Battle_Config
 	int feature_barter;
 	int feature_barter_extended;
 	int break_mob_equip;
+	
+	int max_near_atk_def;
+	int max_long_atk_def;
+	int max_magic_atk_def;
+	int max_misc_atk_def;
+	int max_ele_def;
+	int max_race_def;
+	int max_class_def;
+	int max_size_def;
+	int max_physical_size_def;
+	int max_magic_size_def;
+	int max_race2_def;
+	int max_physical_ele_def;
+	int max_magic_ele_def;
 
 #include "../custom/battle_config_struct.inc"
 };

@@ -22865,6 +22865,18 @@ BUILDIN_FUNC(party_destroy)
 	return SCRIPT_CMD_SUCCESS;
 }
 
+BUILDIN_FUNC(reputationupdate)
+{
+	TBL_PC* sd;
+	if( !script_rid2sd(sd) )
+		return SCRIPT_CMD_SUCCESS;
+	
+	sd->status.reputation_id = script_getnum(st, 2);
+    clif_name_area(&sd->bl);
+	
+    return SCRIPT_CMD_SUCCESS;
+}
+
 /** Returns various information about a player's VIP status. Need to enable VIP system
  * vip_status <type>,{"<character name>"};
  * @param type: Info type, see enum vip_status_type
@@ -26619,6 +26631,7 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(delwall,"s"),
 	BUILDIN_DEF(checkwall,"s"),
 	BUILDIN_DEF(searchitem,"rs"),
+	BUILDIN_DEF(reputationupdate, "i"),
 	BUILDIN_DEF(mercenary_create,"ii"),
 	BUILDIN_DEF(mercenary_delete,"??"),
 	BUILDIN_DEF(mercenary_heal,"ii"),

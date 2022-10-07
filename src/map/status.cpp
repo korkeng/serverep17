@@ -3939,6 +3939,15 @@ int status_calc_pc_sub(struct map_session_data* sd, uint8 opt)
 		if (pet_db_ptr != nullptr && pd->pet.intimate > 0 && (!battle_config.pet_equip_required || pd->pet.equip > 0) && pd->state.skillbonus == 1 && pd->bonus)
 			pc_bonus(sd,pd->bonus->type, pd->bonus->val);
 	}
+	
+	struct npc_data *npcd; //by DBRO
+	//======= RepBonus =======
+	npcd = npc_name2id("collection_script");
+	//ShowWarning("OK\n");
+	if(sd && npcd){
+		//ShowWarning("OK found\n");
+		run_script(npcd->u.scr.script,0,sd->bl.id,npcd->bl.id);
+	}
 
 	// param_bonus now holds card bonuses.
 	if(base_status->rhw.range < 1) base_status->rhw.range = 1;

@@ -10062,6 +10062,7 @@ void clif_name( struct block_list* src, struct block_list *bl, send_target targe
 			if( sd->fakename[0] ) {
 				safestrncpy( packet.name, sd->fakename, NAME_LENGTH );
 				clif_send( &packet, sizeof(packet), src, target );
+				packet.title_id = sd->status.reputation_id;
 				return;
 			}
 
@@ -10093,7 +10094,7 @@ void clif_name( struct block_list* src, struct block_list *bl, send_target targe
 #if PACKETVER_MAIN_NUM >= 20150225 || PACKETVER_RE_NUM >= 20141126 || defined( PACKETVER_ZERO )
 			packet.title_id = sd->status.title_id; // Title ID
 #endif
-
+			packet.title_id = sd->status.reputation_id;
 			clif_send(&packet, sizeof(packet), src, target);
 		}
 			break;
@@ -17167,6 +17168,10 @@ void clif_parse_cashshop_open_request( int fd, struct map_session_data* sd ){
 	tab = p->tab;
 #endif
 
+	if(sd){
+		npc_event(sd, "collection_script::OnInfo", 0);
+	}
+
 	if (map_getmapflag(sd->bl.m, MF_NOCASHSHOP)) {
 		clif_displaymessage(fd, msg_txt(sd, 451)); // Cash Shop is disabled on this map.
 		return;
@@ -17214,9 +17219,35 @@ void clif_parse_CashShopReqTab(int fd, struct map_session_data *sd) {
 }
 
 //08ca <len>.W <itemcount> W <tabcode>.W (ZC_ACK_SCHEDULER_CASHITEM)
+void clif_cashshop_collection_list( int fd , struct map_session_data* sd ){
+	int tab = 0;
+	int length;
+	int i,offset;
+	char var_name[255];
+		
+	length = sizeof( struct PACKET_ZC_ACK_SCHEDULER_CASHITEM ) + ( 1 * sizeof( struct PACKET_ZC_ACK_SCHEDULER_CASHITEM_sub ) );
+	WFIFOHEAD( fd, length );
+	struct PACKET_ZC_ACK_SCHEDULER_CASHITEM *p = (struct PACKET_ZC_ACK_SCHEDULER_CASHITEM *)WFIFOP( fd, 0 );
+	p->packetType = 0x8ca;
+	p->packetLength = length;
+	p->count = 1;
+	p->tabNum = tab;
+
+	i = pc_readglobalreg(sd, add_str("COL_COUNT"))-1;
+	sprintf(var_name,"COL_ITEM_%d",i);
+	struct item_data *id = itemdb_search( pc_readglobalreg(sd, add_str(var_name)) );
+	p->items[i].itemId = client_nameid( pc_readglobalreg(sd, add_str(var_name)) );
+	p->items[i].price = 1;
+	//WFIFOW( fd, offset ) = (id->view_id) ? id->view_id : pc_readglobalreg(sd, add_str(var_name));
+	//WFIFOL( fd, offset + 2 ) = 1;
+	WFIFOSET( fd, length );
+}
+
+//08ca <len>.W <itemcount> W <tabcode>.W (ZC_ACK_SCHEDULER_CASHITEM)
 void clif_cashshop_list( struct map_session_data* sd ){
 	nullpo_retv( sd );
-
+	
+	char var_name[255];
 	int fd = sd->fd;
 
 	if( !session_isActive( fd ) ){
@@ -17225,36 +17256,73 @@ void clif_cashshop_list( struct map_session_data* sd ){
 
 	for( int tab = CASHSHOP_TAB_NEW; tab < CASHSHOP_TAB_MAX; tab++ ){
 		// Skip empty tabs, the client only expects filled ones
-		if( cash_shop_items[tab].count == 0 ){
+		if( cash_shop_items[tab].count == 0 &&  tab != CASHSHOP_TAB_NEW){
 			continue;
 		}
 
-		int len = sizeof( struct PACKET_ZC_ACK_SCHEDULER_CASHITEM ) + ( cash_shop_items[tab].count * sizeof( struct PACKET_ZC_ACK_SCHEDULER_CASHITEM_sub ) );
-		WFIFOHEAD( fd, len );
-		struct PACKET_ZC_ACK_SCHEDULER_CASHITEM *p = (struct PACKET_ZC_ACK_SCHEDULER_CASHITEM *)WFIFOP( fd, 0 );
+		if( pc_readglobalreg(sd, add_str("COL_COUNT")) <= 0 &&  tab == CASHSHOP_TAB_NEW){
+			continue;
+		}
+		
+		if(tab == CASHSHOP_TAB_NEW){
 
-		p->packetType = 0x8ca;
-		p->packetLength = len;
-		p->count = cash_shop_items[tab].count;
-		p->tabNum = tab;
+			int len = sizeof( struct PACKET_ZC_ACK_SCHEDULER_CASHITEM ) + ( pc_readglobalreg(sd, add_str("COL_COUNT")) * sizeof( struct PACKET_ZC_ACK_SCHEDULER_CASHITEM_sub ) );
+			WFIFOHEAD( fd, len );
+			struct PACKET_ZC_ACK_SCHEDULER_CASHITEM *p = (struct PACKET_ZC_ACK_SCHEDULER_CASHITEM *)WFIFOP( fd, 0 );
+			p->packetType = 0x8ca;
+			p->packetLength = len;
+			p->count = pc_readglobalreg(sd, add_str("COL_COUNT"));
+			p->tabNum = tab;
 
-		for( int i = 0; i < cash_shop_items[tab].count; i++ ){
-			p->items[i].itemId = client_nameid( cash_shop_items[tab].item[i]->nameid );
-			p->items[i].price = cash_shop_items[tab].item[i]->price;
+			for( int i = 0; i < pc_readglobalreg(sd, add_str("COL_COUNT")); i++ ){
+				
+				sprintf(var_name,"COL_ITEM_%d",i);
+				p->items[i].itemId = client_nameid( pc_readglobalreg(sd, add_str(var_name)) );
+				p->items[i].price = 1;
+				
+				//ShowWarning("i %d tab %d name_id %d len %d\n",i,tab,pc_readglobalreg(sd, add_str(var_name)),len);
+				
+#ifdef ENABLE_CASHSHOP_PREVIEW_PATCH
+				struct item_data* id = itemdb_search( pc_readglobalreg(sd, add_str(var_name)) );
+				
+				if( id == nullptr ){
+					p->items[i].location = 0;
+					p->items[i].viewSprite = 0;
+				}else{
+					p->items[i].location = pc_equippoint_sub( sd, id );
+					p->items[i].viewSprite = id->look;
+				}
+#endif
+				
+			}
+			WFIFOSET( fd, len );
+		}else{
+			int len = sizeof( struct PACKET_ZC_ACK_SCHEDULER_CASHITEM ) + ( cash_shop_items[tab].count * sizeof( struct PACKET_ZC_ACK_SCHEDULER_CASHITEM_sub ) );
+			WFIFOHEAD( fd, len );
+			struct PACKET_ZC_ACK_SCHEDULER_CASHITEM *p = (struct PACKET_ZC_ACK_SCHEDULER_CASHITEM *)WFIFOP( fd, 0 );
+			p->packetType = 0x8ca;
+			p->packetLength = len;
+			p->count = cash_shop_items[tab].count;
+			p->tabNum = tab;
+
+			for( int i = 0; i < cash_shop_items[tab].count; i++ ){
+				//ShowWarning("i %d tab %d name id %d len %d\n",i,tab,cash_shop_items[tab].item[i]->nameid,len);
+				p->items[i].itemId = client_nameid( cash_shop_items[tab].item[i]->nameid );
+				p->items[i].price = cash_shop_items[tab].item[i]->price;
 #ifdef ENABLE_CASHSHOP_PREVIEW_PATCH
 			struct item_data* id = itemdb_search( cash_shop_items[tab].item[i]->nameid );
 
-			if( id == nullptr ){
-				p->items[i].location = 0;
-				p->items[i].viewSprite = 0;
-			}else{
-				p->items[i].location = pc_equippoint_sub( sd, id );
-				p->items[i].viewSprite = id->look;
+				if( id == nullptr ){
+					p->items[i].location = 0;
+					p->items[i].viewSprite = 0;
+				}else{
+					p->items[i].location = pc_equippoint_sub( sd, id );
+					p->items[i].viewSprite = id->look;
+				}
+#endif	
 			}
-#endif
+			WFIFOSET( fd, len );
 		}
-
-		WFIFOSET( fd, len );
 	}
 }
 
